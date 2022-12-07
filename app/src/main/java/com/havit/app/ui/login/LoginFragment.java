@@ -1,4 +1,4 @@
-package com.havit.app.ui.dashboard;
+package com.havit.app.ui.login;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.havit.app.databinding.FragmentDashboardBinding;
+import com.havit.app.databinding.FragmentLoginBinding;
 
-public class DashboardFragment extends Fragment {
+public class LoginFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentLoginBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        LoginViewModel notificationsViewModel =
+                new ViewModelProvider(this).get(LoginViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textNotifications;
+        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
