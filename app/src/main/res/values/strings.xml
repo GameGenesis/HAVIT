@@ -3,4 +3,5 @@
     <string name="title_profile">Profile</string>
     <string name="title_camera">Camera</string>
     <string name="title_timeline">Timeline</string>
+    <string name="button_capture">Capture</string>
 </resources>
