@@ -12,12 +12,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
+        android:background="@color/transparent"
         android:contentDescription="@string/add_habit_btn"
-        android:minHeight="48dp"
         android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:onClick="createNewHabit"
         android:src="@drawable/ic_add_habit"
         android:visibility="visible"
-        android:background="@color/transparent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
