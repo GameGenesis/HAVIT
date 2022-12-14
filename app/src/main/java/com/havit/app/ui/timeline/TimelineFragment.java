@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentTimelineBinding;
+import com.havit.app.ui.new_habit.NewHabitFragment;
 
 public class TimelineFragment extends Fragment {
 
@@ -33,14 +34,11 @@ public class TimelineFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getParentFragmentManager();;
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(mContainerId, fragment, fragment.toString());
-                fragmentTransaction.addToBackStack(fragment.toString());
+                fragmentTransaction.replace(R.id.navigation_timeline, new NewHabitFragment());
+                fragmentTransaction.addToBackStack(getParentFragment().toString());
                 fragmentTransaction.commit();
             }
         });
-
-        final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
