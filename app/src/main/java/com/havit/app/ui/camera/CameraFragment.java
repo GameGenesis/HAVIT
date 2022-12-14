@@ -26,6 +26,8 @@ public class CameraFragment extends Fragment {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private FragmentCameraBinding binding;
 
+    private PreviewView previewView;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         CameraViewModel cameraViewModel =
@@ -33,6 +35,8 @@ public class CameraFragment extends Fragment {
 
         binding = FragmentCameraBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        previewView = root.findViewById(R.id.previewView);
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
 
@@ -58,7 +62,7 @@ public class CameraFragment extends Fragment {
                 .build();
 
         // Unfinished code from here...
-        preview.setSurfaceProvider((PreviewView)root.findViewById(R.id.previewView).getSurfaceProvider());
+        preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
         Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview);
     }
