@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
+import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -16,6 +17,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.util.concurrent.ExecutionException;
@@ -56,7 +58,7 @@ public class CameraFragment extends Fragment {
                 .build();
 
         // Unfinished code from here...
-        preview.setSurfaceProvider(root.findViewById().getSurfaceProvider());
+        preview.setSurfaceProvider((PreviewView)root.findViewById(R.id.previewView).getSurfaceProvider());
 
         Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview);
     }
