@@ -22,6 +22,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.fragment_login);
 
+
+
+//        findViewById(R.id.mainLayout).setOnTouchListener(this);
+
+
 //        binding = ActivityMainBinding.inflate(getLayoutInflater());
 //
 //
@@ -40,5 +45,6 @@ public class MainActivity extends AppCompatActivity {
 //        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 //        NavigationUI.setupWithNavController(binding.navView, navController);
     }
+
 
 }

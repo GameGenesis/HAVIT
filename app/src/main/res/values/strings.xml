@@ -7,4 +7,5 @@
     <string name="login_name_text_field">Name</string>
     <string name="login_username_text_field">Username</string>
     <string name="login_password_text_field">Password</string>
+    <string name="login_submit_button">Submit</string>
 </resources>
