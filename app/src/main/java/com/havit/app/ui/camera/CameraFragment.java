@@ -38,7 +38,7 @@ public class CameraFragment extends Fragment {
 
         previewView = root.findViewById(R.id.previewView);
 
-        cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
+        cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
         cameraProviderFuture.addListener(() -> {
             try {
@@ -48,7 +48,7 @@ public class CameraFragment extends Fragment {
                 // No errors need to be handled for this Future.
                 // This should never be reached.
             }
-        }, ContextCompat.getMainExecutor(getContext()));
+        }, ContextCompat.getMainExecutor(requireContext()));
 
         return root;
     }
@@ -57,11 +57,10 @@ public class CameraFragment extends Fragment {
         Preview preview = new Preview.Builder()
                 .build();
 
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
+                CameraSelector cameraSelector = new CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build();
 
-        // Unfinished code from here...
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
         Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview);
