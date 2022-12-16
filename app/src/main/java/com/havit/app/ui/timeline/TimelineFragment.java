@@ -34,12 +34,7 @@ public class TimelineFragment extends Fragment {
         View root = binding.getRoot();
         ImageButton button = binding.imageButton;
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit);
-            }
-        });
+        button.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
         return root;
     }
 
