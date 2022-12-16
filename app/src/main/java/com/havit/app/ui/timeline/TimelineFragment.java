@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,14 +30,15 @@ public class TimelineFragment extends Fragment {
         binding = FragmentTimelineBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        Button button = root.findViewById(R.id.imageButton);
+        ImageButton button = root.findViewById(R.id.imageButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                FragmentManager fragmentManager = getParentFragmentManager();;
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.navigation_timeline, new NewHabitFragment());
-                fragmentTransaction.addToBackStack(getParentFragment().toString());
-                fragmentTransaction.commit();
+                Fragment fragment = new NewHabitFragment();
+
+                FragmentManager fm = getParentFragmentManager();
+                FragmentTransaction transaction = fm.beginTransaction();
+                transaction.replace(R.id.timelineFrame, fragment);
+                transaction.commit();
             }
         });
         return root;
