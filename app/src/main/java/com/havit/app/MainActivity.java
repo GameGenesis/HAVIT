@@ -1,5 +1,8 @@
 package com.havit.app;
 
+import android.content.Context;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -26,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -63,5 +66,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }
