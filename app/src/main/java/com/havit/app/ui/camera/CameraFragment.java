@@ -28,17 +28,17 @@ public class CameraFragment extends Fragment {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private FragmentCameraBinding binding;
 
-    private PreviewView previewView;
+        private PreviewView previewView;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
-        CameraViewModel cameraViewModel =
-                new ViewModelProvider(this).get(CameraViewModel.class);
+        public View onCreateView(@NonNull LayoutInflater inflater,
+                ViewGroup container, Bundle savedInstanceState) {
+            CameraViewModel cameraViewModel =
+                    new ViewModelProvider(this).get(CameraViewModel.class);
 
-        binding = FragmentCameraBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
+            binding = FragmentCameraBinding.inflate(inflater, container, false);
+            View root = binding.getRoot();
 
-        previewView = root.findViewById(R.id.previewView);
+            previewView = binding.previewView;
 
         // Check if the camera permission is granted...
         if (ContextCompat.checkSelfPermission(requireActivity(),
@@ -69,7 +69,7 @@ public class CameraFragment extends Fragment {
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
-        Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+        Camera camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview);
     }
 
     @Override
