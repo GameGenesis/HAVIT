@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/loginContainer"
     android:layout_width="match_parent"
@@ -8,8 +10,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="80dp"
-    tools:context=".ui.login.LoginFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    tools:context=".ui.login.LoginFragment">
 
     <TextView
         android:id="@+id/textView"
