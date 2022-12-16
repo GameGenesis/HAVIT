@@ -4,28 +4,25 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.havit.app.databinding.FragmentLoginBinding;
+import com.havit.app.databinding.FragmentNewHabitBinding;
 
 public class NewHabitFragment extends Fragment {
 
-    private FragmentLoginBinding binding;
+    private FragmentNewHabitBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        NewHabitViewModel notificationsViewModel =
+        NewHabitViewModel newHabitViewModel =
                 new ViewModelProvider(this).get(NewHabitViewModel.class);
 
-        binding = FragmentLoginBinding.inflate(inflater, container, false);
+        binding = FragmentNewHabitBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textNotifications;
-        notificationsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
