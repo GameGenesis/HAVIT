@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+    tools:context=".ui.new_habit.NewHabitFragment">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout3"
@@ -144,49 +144,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="S" />
+            android:text=""
+            android:textOn=""
+            android:textOff=""
+            />
+        <!--            android:background="@drawable/ic_nav_camera"-->
 
         <ToggleButton
             android:id="@+id/toggleButton5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="S" />
+            android:layout_weight="1" />
 
         <ToggleButton
             android:id="@+id/toggleButton6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="S" />
+            android:layout_weight="1" />
 
         <ToggleButton
             android:id="@+id/toggleButton7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="S" />
+            android:layout_weight="1" />
 
         <ToggleButton
             android:id="@+id/toggleButton8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="S" />
+            android:layout_weight="1" />
 
         <ToggleButton
             android:id="@+id/toggleButton9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="S" />
+            android:layout_weight="1" />
 
         <ToggleButton
             android:id="@+id/toggleButton10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="S" />
+            android:layout_weight="1" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
