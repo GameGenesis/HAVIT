@@ -1,4 +1,4 @@
-package com.havit.app.ui.new_habit;
+package com.havit.app.ui.habit;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,18 +9,18 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.havit.app.databinding.FragmentNewHabitBinding;
+import com.havit.app.databinding.FragmentHabitBinding;
 
-public class NewHabitFragment extends Fragment {
+public class HabitFragment extends Fragment {
 
-    private FragmentNewHabitBinding binding;
+    private FragmentHabitBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        NewHabitViewModel newHabitViewModel =
-                new ViewModelProvider(this).get(NewHabitViewModel.class);
+        HabitViewModel habitViewModel =
+                new ViewModelProvider(this).get(HabitViewModel.class);
 
-        binding = FragmentNewHabitBinding.inflate(inflater, container, false);
+        binding = FragmentHabitBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         return root;
