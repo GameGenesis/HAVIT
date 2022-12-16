@@ -29,7 +29,7 @@ public class TimelineFragment extends Fragment {
         binding = FragmentTimelineBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        Button button = root.findViewById(R.id.button);
+        Button button = root.findViewById(R.id.imageButton);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 FragmentManager fragmentManager = getParentFragmentManager();;
