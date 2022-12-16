@@ -24,7 +24,7 @@ public class TimelineFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        com.havit.app.ui.timeline.TimelineViewModel notificationsViewModel =
+        com.havit.app.ui.timeline.TimelineViewModel timelineViewModel =
                 new ViewModelProvider(this).get(com.havit.app.ui.timeline.TimelineViewModel.class);
 
         binding = FragmentTimelineBinding.inflate(inflater, container, false);
@@ -37,6 +37,7 @@ public class TimelineFragment extends Fragment {
 
                 FragmentManager fm = getParentFragmentManager();
                 FragmentTransaction transaction = fm.beginTransaction();
+
                 transaction.replace(R.id.timelineFrame, fragment);
                 transaction.commit();
             }
