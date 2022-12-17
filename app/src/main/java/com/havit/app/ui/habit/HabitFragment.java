@@ -33,7 +33,8 @@ public class HabitFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-                // Write logic here...
+                // NOTE: Only works for the back key on the phone, not the back button on the top bar
+                Navigation.findNavController(root).navigate(R.id.action_habit_to_timeline);
             }
         };
 
