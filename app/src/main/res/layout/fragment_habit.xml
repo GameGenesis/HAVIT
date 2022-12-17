@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="135dp"
         android:layout_marginEnd="38dp"
         android:hint="Name"
         app:endIconMode="clear_text"
@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="215dp"
+        android:layout_marginTop="200dp"
         android:layout_marginEnd="38dp"
         android:gravity="top"
         android:hint="Description"
@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="330dp"
+        android:layout_marginTop="315dp"
         android:layout_marginEnd="38dp"
         android:gravity="center"
         android:orientation="horizontal"
@@ -81,12 +81,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ToggleButton
-            android:id="@+id/toggleButton4"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -95,12 +95,12 @@
             android:textOn="S" />
 
         <ToggleButton
-            android:id="@+id/toggleButton5"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -109,12 +109,12 @@
             android:textOn="M" />
 
         <ToggleButton
-            android:id="@+id/toggleButton6"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -123,12 +123,12 @@
             android:textOn="T" />
 
         <ToggleButton
-            android:width="48dp"
-            android:height="48dp"
-            android:id="@+id/toggleButton7"
+            android:id="@+id/toggleButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -137,12 +137,12 @@
             android:textOn="W" />
 
         <ToggleButton
-            android:id="@+id/toggleButton8"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -151,12 +151,12 @@
             android:textOn="T" />
 
         <ToggleButton
-            android:width="48dp"
-            android:height="48dp"
-            android:id="@+id/toggleButton9"
+            android:id="@+id/toggleButton5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -165,12 +165,12 @@
             android:textOn="F" />
 
         <ToggleButton
-            android:width="48dp"
-            android:height="48dp"
-            android:id="@+id/toggleButton10"
+            android:id="@+id/toggleButton6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -179,11 +179,23 @@
             android:textOn="S" />
     </LinearLayout>
 
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="360dp"
+        android:layout_marginEnd="38dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        android:layout_marginTop="385dp"
+        android:layout_marginTop="570dp"
         android:paddingLeft="20dp"
         android:paddingTop="6dp"
         android:paddingRight="20dp"
