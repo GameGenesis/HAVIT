@@ -20,9 +20,11 @@
         android:scaleX="1.1"
         android:scaleY="1.1"
         android:src="@android:drawable/ic_input_add"
+        app:tint="?attr/colorOnPrimary"
         app:backgroundTint="?attr/colorOnSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="?attr/colorOnPrimary" />
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--app:backgroundTint="@color/purple_200"-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

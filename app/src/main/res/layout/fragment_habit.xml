@@ -25,9 +25,9 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="38dp"
         android:layout_marginTop="150dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="38dp"
         android:hint="Name"
         app:endIconMode="clear_text"
         app:endIconTint="?attr/colorOnSurface"
@@ -47,9 +47,9 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="38dp"
         android:layout_marginTop="215dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginEnd="38dp"
         android:gravity="top"
         android:hint="Description"
         android:inputType="text|textMultiLine"
@@ -62,8 +62,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="top"
-            />
+            android:gravity="top" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -72,85 +71,112 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
+        android:layout_marginStart="38dp"
         android:layout_marginTop="330dp"
-        android:layout_marginEnd="50dp"
-        android:orientation="horizontal"
+        android:layout_marginEnd="38dp"
         android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ToggleButton
             android:id="@+id/toggleButton4"
+            android:width="48dp"
+            android:height="48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_toggle_btn"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:text="S"
             android:textOff="S"
-            android:textOn="S"
-            tools:ignore="TouchTargetSizeCheck" />
-        <!--            android:background="@drawable/ic_nav_camera"-->
+            android:textOn="S" />
 
         <ToggleButton
             android:id="@+id/toggleButton5"
+            android:width="48dp"
+            android:height="48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_toggle_btn"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:text="M"
             android:textOff="M"
-            android:textOn="M"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textOn="M" />
 
         <ToggleButton
             android:id="@+id/toggleButton6"
+            android:width="48dp"
+            android:height="48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_toggle_btn"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:text="T"
             android:textOff="T"
-            android:textOn="T"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textOn="T" />
 
         <ToggleButton
+            android:width="48dp"
+            android:height="48dp"
             android:id="@+id/toggleButton7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_toggle_btn"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:text="W"
             android:textOff="W"
-            android:textOn="W"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textOn="W" />
 
         <ToggleButton
             android:id="@+id/toggleButton8"
+            android:width="48dp"
+            android:height="48dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_toggle_btn"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:text="T"
             android:textOff="T"
-            android:textOn="T"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textOn="T" />
 
         <ToggleButton
+            android:width="48dp"
+            android:height="48dp"
             android:id="@+id/toggleButton9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_toggle_btn"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:text="F"
             android:textOff="F"
-            android:textOn="F"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textOn="F" />
 
         <ToggleButton
+            android:width="48dp"
+            android:height="48dp"
             android:id="@+id/toggleButton10"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_toggle_btn"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
             android:text="S"
             android:textOff="S"
-            android:textOn="S"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textOn="S" />
     </LinearLayout>
 
     <Button
