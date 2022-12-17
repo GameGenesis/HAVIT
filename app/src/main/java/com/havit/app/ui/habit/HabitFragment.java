@@ -21,12 +21,6 @@ public class HabitFragment extends Fragment {
 
     private FragmentHabitBinding binding;
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         HabitViewModel habitViewModel =
@@ -39,7 +33,7 @@ public class HabitFragment extends Fragment {
         OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
             @Override
             public void handleOnBackPressed() {
-                // NOTE: Only works for the back key on the phone, not the back button on the top bar
+                // Called when the phone's back key is pressed
                 Navigation.findNavController(root).navigate(R.id.action_habit_to_timeline);
             }
         };
@@ -48,6 +42,14 @@ public class HabitFragment extends Fragment {
         return root;
     }
 
+    // Handles top bar back button
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    // Handles top bar back button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {

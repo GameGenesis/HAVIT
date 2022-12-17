@@ -32,7 +32,7 @@ public class TimelineFragment extends Fragment {
         binding = FragmentTimelineBinding.inflate(inflater, container, false);
 
         View root = binding.getRoot();
-        ImageButton button = binding.imageButton;
+        ImageButton button = binding.floatingActionButton;
 
         button.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
         return root;
