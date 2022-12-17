@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.new_habit.NewHabitFragment">
+    tools:context=".ui.habit.HabitFragment">
 
     <TextView
         android:id="@+id/textView"
