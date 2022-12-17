@@ -7,19 +7,25 @@ import android.view.ViewGroup;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentHabitBinding;
 
-import java.util.Objects;
+import android.view.MenuItem;
 
 public class HabitFragment extends Fragment {
 
     private FragmentHabitBinding binding;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,8 +45,16 @@ public class HabitFragment extends Fragment {
         };
 
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
-
         return root;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_habit_to_timeline);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
