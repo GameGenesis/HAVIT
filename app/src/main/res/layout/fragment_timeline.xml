@@ -7,18 +7,27 @@
     android:layout_height="match_parent"
     tools:context=".ui.timeline.TimelineFragment">
 
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/transparent"
-        android:contentDescription="@string/add_habit_btn"
-        android:minWidth="48dp"
-        android:minHeight="48dp"
-        android:onClick="createNewHabit"
-        android:src="@drawable/ic_add_habit"
-        android:visibility="visible" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="74dp"
+            android:background="@color/transparent"
+            android:contentDescription="@string/add_habit_btn"
+            android:minWidth="76dp"
+            android:minHeight="76dp"
+            android:scaleX="0.9"
+            android:scaleY="0.9"
+            android:src="@drawable/ic_add_button"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/purple_500" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
