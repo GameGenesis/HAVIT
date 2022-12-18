@@ -199,7 +199,7 @@
         android:id="@+id/createButton"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        android:layout_marginTop="530dp"
+        android:layout_marginTop="525dp"
         android:paddingLeft="20dp"
         android:paddingTop="6dp"
         android:paddingRight="20dp"
