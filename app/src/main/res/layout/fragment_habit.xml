@@ -7,30 +7,32 @@
     tools:context=".ui.habit.HabitFragment">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="128dp"
-        android:layout_marginTop="64dp"
         android:layout_marginEnd="128dp"
+        android:layout_marginBottom="500dp"
         android:text="New Habit"
         android:textAlignment="center"
         android:textSize="34sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
+        android:id="@+id/nameField"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="150dp"
         android:layout_marginEnd="38dp"
+        android:layout_marginBottom="350dp"
         android:hint="Name"
         app:endIconMode="clear_text"
         app:endIconTint="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -43,18 +45,19 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/descriptionField"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="215dp"
         android:layout_marginEnd="38dp"
+        android:layout_marginBottom="175dp"
         android:gravity="top"
         android:hint="Description"
         android:inputType="text|textMultiLine"
         app:endIconMode="clear_text"
         app:endIconTint="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -68,25 +71,25 @@
 
 
     <LinearLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/dayPickerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="38dp"
-        android:layout_marginTop="330dp"
         android:layout_marginEnd="38dp"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ToggleButton
-            android:id="@+id/toggleButton4"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -95,12 +98,12 @@
             android:textOn="S" />
 
         <ToggleButton
-            android:id="@+id/toggleButton5"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -109,12 +112,12 @@
             android:textOn="M" />
 
         <ToggleButton
-            android:id="@+id/toggleButton6"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -123,12 +126,12 @@
             android:textOn="T" />
 
         <ToggleButton
-            android:width="48dp"
-            android:height="48dp"
-            android:id="@+id/toggleButton7"
+            android:id="@+id/toggleButton3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -137,12 +140,12 @@
             android:textOn="W" />
 
         <ToggleButton
-            android:id="@+id/toggleButton8"
-            android:width="48dp"
-            android:height="48dp"
+            android:id="@+id/toggleButton4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -151,12 +154,12 @@
             android:textOn="T" />
 
         <ToggleButton
-            android:width="48dp"
-            android:height="48dp"
-            android:id="@+id/toggleButton9"
+            android:id="@+id/toggleButton5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -165,12 +168,12 @@
             android:textOn="F" />
 
         <ToggleButton
-            android:width="48dp"
-            android:height="48dp"
-            android:id="@+id/toggleButton10"
+            android:id="@+id/toggleButton6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:width="48dp"
+            android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
             android:scaleX="0.9"
             android:scaleY="0.9"
@@ -179,17 +182,31 @@
             android:textOn="S" />
     </LinearLayout>
 
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="260dp"
+        android:layout_marginEnd="38dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/createButton"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        android:layout_marginTop="385dp"
+        android:layout_marginTop="530dp"
         android:paddingLeft="20dp"
         android:paddingTop="6dp"
         android:paddingRight="20dp"
         android:paddingBottom="6dp"
         android:text="Create"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
