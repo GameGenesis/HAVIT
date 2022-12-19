@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.havit.app.databinding.ActivityLoginBinding;
 
 public class LoginActivity extends AppCompatActivity {
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

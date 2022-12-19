@@ -41,23 +41,17 @@ public class CameraFragment extends Fragment {
             previewView = binding.previewView;
 
         // Check if the camera permission is granted...
-        if (ContextCompat.checkSelfPermission(requireActivity(),
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
+        cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
-            cameraProviderFuture.addListener(() -> {
-                try {
-                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                    bindPreview(cameraProvider, root);
-                } catch (ExecutionException | InterruptedException e) {
-                    // No errors need to be handled for this Future.
-                    // This should never be reached.
-                }
-            }, ContextCompat.getMainExecutor(requireContext()));
-
-        } else {
-            requireActivity().requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.MY_CAMERA_REQUEST_CODE);
-        }
+        cameraProviderFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                bindPreview(cameraProvider, root);
+            } catch (ExecutionException | InterruptedException e) {
+                // No errors need to be handled for this Future.
+                // This should never be reached.
+            }
+        }, ContextCompat.getMainExecutor(requireContext()));
 
         return root;
     }
