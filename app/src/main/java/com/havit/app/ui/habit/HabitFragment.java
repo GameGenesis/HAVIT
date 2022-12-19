@@ -2,13 +2,16 @@ package com.havit.app.ui.habit;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -29,34 +32,33 @@ public class HabitFragment extends Fragment {
         binding = FragmentHabitBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // This callback will only be called when MyFragment is at least Started.
-        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+        // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
+        // The usage of an interface lets you inject your own implementation
+        MenuHost menuHost = (MenuHost) requireActivity();
+
+        // Add menu items without using the Fragment Menu APIs
+        // Note how we can tie the MenuProvider to the viewLifecycleOwner
+        // and an optional Lifecycle.State (here, RESUMED) to indicate when
+        // the menu should be visible
+        menuHost.addMenuProvider(new MenuProvider() {
             @Override
-            public void handleOnBackPressed() {
-                // Called when the phone's back key is pressed
-                Navigation.findNavController(root).navigate(R.id.action_habit_to_timeline);
+            public void onCreateMenu(Menu menu, MenuInflater menuInflater) {
+                // Add menu items here
+                // e.g. menuInflater.inflate(R.menu.bottom_nav_menu, menu);
             }
-        };
 
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                // Handle the menu selection
+                if (menuItem.getItemId() == android.R.id.home) {
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_habit_to_timeline);
+                    return true;
+                }
+                return false;
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+
         return root;
-    }
-
-    // Handles top bar back button
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    // Handles top bar back button
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Navigation.findNavController(binding.getRoot()).navigate(R.id.action_habit_to_timeline);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
