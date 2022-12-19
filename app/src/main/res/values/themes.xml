@@ -16,5 +16,6 @@
         <item name="windowActionBarOverlay">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="windowNoTitle">false</item>
+        <item name="fontFamily">@font/jetbrains_mono</item>
     </style>
 </resources>
