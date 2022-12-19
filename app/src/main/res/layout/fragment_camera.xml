@@ -23,15 +23,16 @@
             android:layout_height="88dp"
             android:layout_marginBottom="36dp"
             android:backgroundTint="@color/transparent"
-            android:clickable="true"
             android:contentDescription="Take a Picture"
             android:outlineSpotShadowColor="@color/transparent"
+            android:animation="@anim/button_scale"
             app:backgroundTint="@color/white"
             app:borderWidth="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/white" />
+            <!--Animation doesn't work & shadow doesn't work in dark mode-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
