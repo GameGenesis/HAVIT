@@ -22,4 +22,6 @@
     <string name="login_failed">"Login failed"</string>
     <string name="text_input_name">Name</string>
     <string name="title_new_habit">New Habit</string>
+    <string name="placeholder_description">Description</string>
+    <string name="default_word_count">0</string>
 </resources>
