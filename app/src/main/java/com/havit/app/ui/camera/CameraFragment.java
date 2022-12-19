@@ -19,6 +19,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
@@ -54,6 +55,9 @@ public class CameraFragment extends Fragment {
                     // This should never be reached.
                 }
             }, ContextCompat.getMainExecutor(requireContext()));
+
+        } else {
+            requireActivity().requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.MY_CAMERA_REQUEST_CODE);
         }
 
         return root;

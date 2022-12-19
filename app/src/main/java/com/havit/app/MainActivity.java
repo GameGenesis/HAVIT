@@ -22,21 +22,21 @@ import com.havit.app.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int MY_CAMERA_REQUEST_CODE = 100;
+    public static final int MY_CAMERA_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
+        }
 
         // Locks the orientation to vertical...
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, MY_CAMERA_REQUEST_CODE);
-        }
 
         BottomNavigationView navView = binding.navView;
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, "Camera permission granted!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Camera permission granted!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Camera permission denied!", Toast.LENGTH_LONG).show();
             }
