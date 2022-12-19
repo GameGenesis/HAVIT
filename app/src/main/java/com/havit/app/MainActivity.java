@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Locks the orientation to vertical...
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LOCKED);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
