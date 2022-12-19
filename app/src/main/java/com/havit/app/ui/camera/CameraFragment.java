@@ -19,6 +19,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
+import com.havit.app.MainActivity;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.util.concurrent.ExecutionException;
