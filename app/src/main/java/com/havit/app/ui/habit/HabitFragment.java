@@ -1,6 +1,7 @@
 package com.havit.app.ui.habit;
 
 import android.os.Bundle;
+import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +16,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentHabitBinding;
 
@@ -30,6 +32,7 @@ public class HabitFragment extends Fragment {
                 new ViewModelProvider(this).get(HabitViewModel.class);
 
         binding = FragmentHabitBinding.inflate(inflater, container, false);
+
         View root = binding.getRoot();
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
@@ -58,7 +61,22 @@ public class HabitFragment extends Fragment {
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
+        // Binding the lifecycle of the edit text to the view model...
+        final TextInputEditText textInputEditText = binding.descriptionFieldEdit;
+
+        habitViewModel.getText().observe(getViewLifecycleOwner(), textInputEditText::setText);
+
         return root;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        TransitionInflater inflater = TransitionInflater.from(requireContext());
+
+        setEnterTransition(inflater.inflateTransition(R.transition.fade));
+        setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
 
     @Override

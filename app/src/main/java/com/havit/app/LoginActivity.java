@@ -21,6 +21,7 @@ public class LoginActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
             Intent i = new Intent(getApplicationContext(),MainActivity.class);
             startActivity(i);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         });
     }
 }
