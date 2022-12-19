@@ -53,6 +53,9 @@ public class CameraFragment extends Fragment {
                     // This should never be reached.
                 }
             }, ContextCompat.getMainExecutor(requireContext()));
+
+        } else {
+            requireActivity().requestPermissions(new String[]{Manifest.permission.CAMERA}, MainActivity.MY_CAMERA_REQUEST_CODE);
         }
 
         return root;
