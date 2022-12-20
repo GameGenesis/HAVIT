@@ -130,23 +130,41 @@
         app:layout_constraintVertical_bias="0.499"
         tools:ignore="TextFields" />
 
-    <EditText
-        android:id="@+id/password_text_field"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:autofillHints=""
-        android:drawableStart="@drawable/ic_baseline_lock_24"
-        android:drawablePadding="20dp"
-        android:hint="@string/login_password_text_field"
-        android:maxLines="1"
-        android:inputType="textPassword"
-        android:padding="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.617"
-        tools:ignore="TextFields" />
+        app:layout_constraintVertical_bias="0.617">
+
+        <EditText
+            android:id="@+id/password_text_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:drawableStart="@drawable/ic_baseline_lock_24"
+            android:drawablePadding="20dp"
+            android:hint="@string/login_password_text_field"
+            android:maxLines="1"
+            android:inputType="textPassword"
+            android:padding="20dp"
+            tools:ignore="TextFields" />
+
+        <ImageView
+            android:id="@+id/password_show_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:contentDescription="@string/login_password_toggle"
+            android:onClick="ShowHidePass"
+            android:padding="5dp"
+            android:src="@drawable/ic_baseline_remove_red_eye_24" />
+
+    </RelativeLayout>
 
     <Button
         android:id="@+id/submit_button"
