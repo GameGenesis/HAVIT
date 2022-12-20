@@ -1,7 +1,5 @@
 package com.havit.app.ui.camera;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +17,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 
 import com.google.common.util.concurrent.ListenableFuture;
 
-import com.havit.app.MainActivity;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.util.concurrent.ExecutionException;
