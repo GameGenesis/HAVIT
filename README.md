@@ -14,4 +14,6 @@
 
 ## Tips & Tricks
 
-To pull all the recent updates from the ```main``` branch, you have to execute ```git pull origin main``` in your repository folder!
+- This is a project written in one and only **Java**, without using Jetpack Compose or any other fancy features. To run it, open it on Android Studio.
+
+- To pull all the recent updates from the ```main``` branch, you have to execute ```git pull origin main``` in your repository folder!
