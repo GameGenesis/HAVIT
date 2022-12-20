@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -35,6 +36,10 @@ public class TimelineFragment extends Fragment {
         ImageButton button = binding.newHabitActionButton;
 
         button.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
+
+        final TextView textView = binding.textNotifications;
+        timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
         return root;
     }
 

@@ -6,5 +6,15 @@ import androidx.lifecycle.ViewModel;
 
 public class TimelineViewModel extends ViewModel {
 
-    public TimelineViewModel() {}
+    private final MutableLiveData<String> mText;
+
+    public TimelineViewModel() {
+        mText = new MutableLiveData<>();
+
+        mText.setValue("There's nothing here");
+    }
+
+    public LiveData<String> getText() {
+        return mText;
+    }
 }
