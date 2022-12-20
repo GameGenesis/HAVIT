@@ -4,15 +4,9 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import java.util.Objects;
+
 public class HabitViewModel extends ViewModel {
 
-    private final MutableLiveData<String> description;
-
-    public HabitViewModel() {
-        description = new MutableLiveData<>();
-    }
-
-    public LiveData<String> getText() {
-        return description;
-    }
+    public HabitViewModel() {}
 }

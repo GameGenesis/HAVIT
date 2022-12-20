@@ -9,26 +9,14 @@
     tools:context=".ui.habit.HabitFragment">
 
     <TextView
-        android:id="@+id/word_counter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="@string/default_word_count"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.88"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.425" />
-
-    <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="128dp"
         android:layout_marginEnd="128dp"
-        android:text="@string/title_new_habit"
         android:layout_marginBottom="500dp"
+        android:fontFamily="@font/jetbrains_mono"
+        android:text="@string/title_new_habit"
         android:textAlignment="center"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,13 +25,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/nameField"
+        android:id="@+id/name_field"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="350dp"
+        android:hint="Name"
         app:endIconMode="clear_text"
         app:endIconTint="?attr/colorOnSurface"
+        app:counterEnabled="true"
+        app:counterMaxLength="15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -52,6 +43,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:maxLength="15"
+            android:fontFamily="@font/jetbrains_mono"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -65,6 +58,8 @@
         android:gravity="top"
         android:hint="@string/placeholder_description"
         android:inputType="text|textMultiLine"
+        app:counterEnabled="true"
+        app:counterMaxLength="30"
         app:endIconMode="clear_text"
         app:endIconTint="?attr/colorOnSurface"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -76,13 +71,15 @@
             android:id="@+id/description_field_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:maxLength="30"
+            android:fontFamily="@font/jetbrains_mono"
             android:gravity="top" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
 
     <LinearLayout
-        android:id="@+id/dayPickerLayout"
+        android:id="@+id/day_picker_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -100,6 +97,7 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
+            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="S"
@@ -114,6 +112,7 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
+            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="M"
@@ -128,6 +127,7 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
+            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="T"
@@ -142,6 +142,7 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
+            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="W"
@@ -156,6 +157,7 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
+            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="T"
@@ -170,6 +172,7 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
+            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="F"
@@ -188,7 +191,8 @@
             android:scaleY="0.9"
             android:text="S"
             android:textOff="S"
-            android:textOn="S" />
+            android:textOn="S"
+            android:fontFamily="@font/jetbrains_mono" />
     </LinearLayout>
 
     <TimePicker
