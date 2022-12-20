@@ -32,29 +32,9 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Editable name = binding.nameTextField.getText();
-        Editable username = binding.usernameTextField.getText();
-        Editable password = binding.passwordTextField.getText();
-
         Button button = binding.submitButton;
 
-        button.setOnClickListener(v -> {
-
-            String nameString = String.valueOf(name);
-            String userNameString = String.valueOf(username);
-            String passwordString = String.valueOf(password);
-
-            // Check credentials
-            boolean isAuthenticated = authenticate(nameString, userNameString, passwordString);
-
-            if (isAuthenticated) {
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(i);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            } else {
-                Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-            }
-        });
+        
     }
 
     @Override
@@ -71,21 +51,5 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean authenticate(String name, String username, String password) {
         return name.equals("testing");
-    }
-
-    public void ShowHidePass(View view) {
-
-        if(binding.passwordTextField.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
-//            ((ImageView(view)).setImageResource(R.drawable.hide_password);
-
-            //Show Password
-            binding.passwordTextField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-        }
-        else{
-//            ((ImageView)(view)).setImageResource(R.drawable.show_password);
-            //Hide Password
-            binding.passwordTextField.setTransformationMethod(PasswordTransformationMethod.getInstance());
-
-        }
     }
 }
