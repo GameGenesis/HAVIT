@@ -166,7 +166,6 @@
             android:contentDescription="@string/login_password_toggle"
             android:onClick="ShowHidePass"
             android:padding="5dp"
-            android:drawableTint="?attr/colorOnSurface"
             android:src="@drawable/ic_baseline_remove_red_eye_24" />
 
     </RelativeLayout>
