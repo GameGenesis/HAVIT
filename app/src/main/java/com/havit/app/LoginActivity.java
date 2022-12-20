@@ -3,10 +3,13 @@ package com.havit.app;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,11 +22,14 @@ import com.havit.app.databinding.ActivityLoginBinding;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
+
+    private ActivityLoginBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Editable name = binding.nameTextField.getText();
@@ -68,5 +74,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void ShowHidePass(View view) {
+
+        if(binding.passwordTextField.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+//            ((ImageView(view)).setImageResource(R.drawable.hide_password);
+
+            //Show Password
+            binding.passwordTextField.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+        else{
+//            ((ImageView)(view)).setImageResource(R.drawable.show_password);
+            //Hide Password
+            binding.passwordTextField.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
+        }
     }
 }
