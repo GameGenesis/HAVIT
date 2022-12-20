@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
@@ -39,6 +40,12 @@ public class CameraFragment extends Fragment {
 
             previewView = binding.previewView;
 
+        requestCameraPermission(root);
+
+        return root;
+    }
+
+    private void requestCameraPermission(View root) {
         // Check if the camera permission is granted...
         if (ContextCompat.checkSelfPermission(requireActivity(),
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -49,22 +56,18 @@ public class CameraFragment extends Fragment {
                     ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
                     bindPreview(cameraProvider, root);
                 } catch (ExecutionException | InterruptedException e) {
-                    // No errors need to be handled for this Future.
-                    // This should never be reached.
+                    Toast.makeText(getActivity(), "Error Starting the Camera", Toast.LENGTH_LONG).show();
                 }
             }, ContextCompat.getMainExecutor(requireContext()));
         }
-
-        return root;
     }
 
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider, View root) {
-        Preview preview = new Preview.Builder()
-                .build();
+        Preview preview = new Preview.Builder().build();
 
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
