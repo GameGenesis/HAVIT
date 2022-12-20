@@ -19,8 +19,6 @@ import com.havit.app.databinding.ActivityLoginBinding;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
-    private String[] userName;
-    private EditText test;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         button.setOnClickListener(v -> {
 
             String nameString = String.valueOf(name);
-            String userNameString = String.valueOf(userName);
+            String userNameString = String.valueOf(username);
             String passwordString = String.valueOf(password);
 
             // Check credentials
