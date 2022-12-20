@@ -22,37 +22,40 @@ public class LoginActivity extends AppCompatActivity {
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        TextInputEditText nameTextField = binding.nameTextField;
-        TextInputEditText usernameTextField = binding.usernameTextField;
-        TextInputEditText passwordTextField = binding.passwordTextField;
+//        TextInputEditText nameTextField = binding.nameTextField;
+//        TextInputEditText usernameTextField = binding.usernameTextField;
+//        TextInputEditText passwordTextField = binding.passwordTextField;
 
-        test = (EditText) usernameTextField.getText();
-        String username = String.valueOf(usernameTextField.getText());
-        String password = String.valueOf(usernameTextField.getText());
+//        test = (EditText) usernameTextField.getText();
+//        String username = String.valueOf(usernameTextField.getText());
+//        String password = String.valueOf(usernameTextField.getText());
 
 
         Button button = binding.submitButton;
 
         button.setOnClickListener(v -> {
+            Intent i = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(i);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
-            // Get entered email/username and password
-            String testString = test.getText().toString();
-
-            // Check credentials
-            boolean isAuthenticated = authenticate(testString);
-
-            if (isAuthenticated) {
-                // Credentials are valid, proceed to next activity
-//                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                startActivity(intent);
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
-                startActivity(i);
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            } else {
-                // Credentials are invalid, show error message
-                Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-            }
-
+//            // Get entered email/username and password
+//            String testString = test.getText().toString();
+//
+//            // Check credentials
+//            boolean isAuthenticated = authenticate(testString);
+//
+//            if (isAuthenticated) {
+//                // Credentials are valid, proceed to next activity
+////                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+////                startActivity(intent);
+//                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+//                startActivity(i);
+//                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//            } else {
+//                // Credentials are invalid, show error message
+//                Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+//            }
+//
 
 
         });
