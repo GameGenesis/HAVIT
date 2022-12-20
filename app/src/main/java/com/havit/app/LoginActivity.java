@@ -12,6 +12,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.havit.app.databinding.ActivityLoginBinding;
 
+import java.util.Objects;
+
 public class LoginActivity extends AppCompatActivity {
     private String[] userName;
     private EditText test;
@@ -59,6 +61,18 @@ public class LoginActivity extends AppCompatActivity {
 
 
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Objects.requireNonNull(getSupportActionBar()).hide();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Objects.requireNonNull(getSupportActionBar()).show();
     }
 
     // Method to authenticate email and password
