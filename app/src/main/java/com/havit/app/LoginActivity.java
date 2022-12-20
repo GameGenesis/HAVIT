@@ -34,7 +34,34 @@ public class LoginActivity extends AppCompatActivity {
 
         Button button = binding.submitButton;
 
-        
+        button.setOnClickListener(v -> {
+            TextInputLayout nameTextLayout = binding.nameTextLayout;
+            TextInputLayout userNameTextLayout = binding.usernameTextLayout;
+            TextInputLayout passwordTextLayout = binding.passwordTextLayout;
+
+            EditText nameEditText = nameTextLayout.getEditText();
+            EditText userNameEditText = userNameTextLayout.getEditText();
+            EditText passwordEditText = passwordTextLayout.getEditText();
+
+            assert nameEditText != null;
+            String nameStr = nameEditText.getText().toString();
+
+            assert userNameEditText != null;
+            String usernameStr = userNameEditText.getText().toString();
+
+            assert passwordEditText != null;
+            String passwordStr = userNameEditText.getText().toString();
+
+            boolean isAuthenticated = authenticate(nameStr, usernameStr, passwordStr);
+
+            if (isAuthenticated) {
+                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(i);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            } else {
+                Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
