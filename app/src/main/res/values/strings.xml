@@ -24,4 +24,5 @@
     <string name="title_new_habit">New Habit</string>
     <string name="placeholder_description">Description</string>
     <string name="default_word_count">0</string>
+    <string name="login_password_toggle">toggle</string>
 </resources>
