@@ -19,3 +19,7 @@
 - To pull all the recent updates from the ```main``` branch, you have to execute ```git pull origin main``` in your repository folder!
 
 - Minimum SDK level was set to version 33. Camera feature uses the latest CameraX API by Google.
+
+---
+
+![UML class](https://user-images.githubusercontent.com/35755386/208787080-85a6a410-15bb-47c8-8af6-9ebfef9e678a.jpeg)
