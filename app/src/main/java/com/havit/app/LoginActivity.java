@@ -22,13 +22,17 @@ public class LoginActivity extends AppCompatActivity {
         Button button = binding.submitButton;
 
         button.setOnClickListener(v -> {
-            TextInputLayout textInputLayout = findViewById(R.id.nameField);
+            TextInputLayout textInputLayout = binding.textInputLayout;
             EditText editText = textInputLayout.getEditText();
             String text = editText.getText().toString();
-            Log.d("Name field", text);
-            Intent i = new Intent(getApplicationContext(),MainActivity.class);
-            startActivity(i);
-            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
+            if (text.equals("test")){
+                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                startActivity(i);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            } else {
+                Log.d("Name field", text);
+            }
         });
     }
 }
