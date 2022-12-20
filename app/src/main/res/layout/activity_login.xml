@@ -11,19 +11,6 @@
     android:padding="72dp"
     tools:context=".LoginActivity">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="250dp"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textSize="32sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <!--    <com.google.android.material.textfield.TextInputLayout-->
 <!--        android:id="@+id/name_text_layout"-->
 <!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
@@ -91,6 +78,20 @@
 
 <!--    </com.google.android.material.textfield.TextInputLayout>-->
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="250dp"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.415" />
+
     <EditText
         android:id="@+id/name_text_field"
         android:layout_width="match_parent"
@@ -101,6 +102,7 @@
         android:hint="@string/login_name"
         android:inputType=""
         android:padding="20dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -112,6 +114,7 @@
         android:id="@+id/username_text_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:autofillHints=""
         android:drawableStart="@drawable/ic_baseline_person_24"
         android:drawablePadding="20dp"
@@ -146,12 +149,15 @@
         android:id="@+id/submit_button"
         android:layout_width="104dp"
         android:layout_height="54dp"
+        android:layout_margin="20dp"
         android:layout_marginTop="250dp"
         android:text="@string/login_submit_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.824" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
