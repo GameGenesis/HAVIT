@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
@@ -37,6 +38,12 @@ public class CameraFragment extends Fragment {
 
             previewView = binding.previewView;
 
+        requestCameraPermission(root);
+
+        return root;
+    }
+
+    private void requestCameraPermission(View root) {
         // Check if the camera permission is granted...
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
@@ -54,12 +61,11 @@ public class CameraFragment extends Fragment {
     }
 
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider, View root) {
-        Preview preview = new Preview.Builder()
-                .build();
+        Preview preview = new Preview.Builder().build();
 
-                CameraSelector cameraSelector = new CameraSelector.Builder()
-                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                        .build();
+        CameraSelector cameraSelector = new CameraSelector.Builder()
+                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                .build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
