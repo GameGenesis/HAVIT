@@ -39,6 +39,14 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(i);
+            return;
+        }
+
         com.havit.app.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -46,8 +54,6 @@ public class LoginActivity extends AppCompatActivity {
 
         textView = binding.textView;
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-        configureWelcomeText();
 
         button.setOnClickListener(v -> {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -190,7 +196,6 @@ public class LoginActivity extends AppCompatActivity {
             // Successfully signed in
             user = FirebaseAuth.getInstance().getCurrentUser();
             configureWelcomeText();
-            // ...
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
