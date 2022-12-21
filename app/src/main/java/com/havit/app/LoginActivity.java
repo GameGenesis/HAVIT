@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
         button.setOnClickListener(v -> {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                createSignInIntent();
+                themeAndLogo();
             } else {
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
