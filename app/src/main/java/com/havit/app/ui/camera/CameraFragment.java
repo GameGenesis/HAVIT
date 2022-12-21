@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -37,6 +38,8 @@ public class CameraFragment extends Fragment {
             View root = binding.getRoot();
 
             previewView = binding.previewView;
+
+
 
         requestCameraPermission(root);
 
@@ -68,6 +71,14 @@ public class CameraFragment extends Fragment {
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
         Camera camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview);
+
+        ImageCapture imageCapture =
+                new ImageCapture.Builder()
+                        .setTargetRotation(root.getDisplay().getRotation())
+                        .build();
+
+        // Image Provider variable has to be fixed...
+        cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, imageCapture, imageAnalysis, preview);
     }
 
     @Override
