@@ -26,4 +26,5 @@
     <string name="default_word_count">0</string>
     <string name="login_password_toggle">toggle</string>
     <string name="get_started_text">HAVIT</string>
+    <string name="sign_out_text">Sign Out</string>
 </resources>
