@@ -56,8 +56,6 @@ public class CameraFragment extends Fragment {
                 // This should never be reached.
             }
         }, ContextCompat.getMainExecutor(requireContext()));
-
-        return root;
     }
 
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider, View root) {
