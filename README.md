@@ -20,7 +20,7 @@
 
 - Minimum SDK level was set to version 33. Camera feature uses the latest CameraX API by Google.
 
-- On production build, remove ```app/google-servicesjson```
+- On production build, remove ```app/google-services.json```
 
 ---
 
