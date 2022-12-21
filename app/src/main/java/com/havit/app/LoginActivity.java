@@ -2,7 +2,6 @@ package com.havit.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -34,18 +33,29 @@ import java.util.Objects;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseUser user;
+
     private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+
+        boolean isSignOut = intent.getBooleanExtra("isSignOut", false);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(i);
-            return;
+            if (isSignOut) {
+                signOut();
+                intent.putExtra("isSignOut", false);
+
+            } else {
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+                return;
+            }
         }
 
         com.havit.app.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
@@ -54,11 +64,10 @@ public class LoginActivity extends AppCompatActivity {
         Button button = binding.submitButton;
 
         textView = binding.textView;
-        user = FirebaseAuth.getInstance().getCurrentUser();
 
         button.setOnClickListener(v -> {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-                themeAndLogo();
+                createSignInIntent();
             } else {
                 Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
@@ -99,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
+                .setLogo(R.drawable.ic_add_button)
                 .build();
         signInLauncher.launch(signInIntent);
         // [END auth_fui_create_intent]
@@ -150,6 +160,7 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_email_link_catch]
     }
 
+    // Default context would be the "this" keyword...
     public void signOut() {
         // [START auth_fui_signout]
         AuthUI.getInstance()
@@ -168,20 +179,6 @@ public class LoginActivity extends AppCompatActivity {
                     // ...
                 });
         // [END auth_fui_delete]
-    }
-
-    public void themeAndLogo() {
-        List<AuthUI.IdpConfig> providers = Collections.emptyList();
-
-        // [START auth_fui_theme_logo]
-        Intent signInIntent = AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .setLogo(R.drawable.ic_add_button)      // Set logo drawable
-                .setTheme(R.style.Theme_HAVIT)      // Set theme
-                .build();
-        signInLauncher.launch(signInIntent);
-        // [END auth_fui_theme_logo]
     }
 
     // See: https://developer.android.com/training/basics/intents/result
