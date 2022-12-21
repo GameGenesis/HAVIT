@@ -37,7 +37,7 @@ public class HabitFragment extends Fragment {
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
-        MenuHost menuHost = (MenuHost) requireActivity();
+        MenuHost menuHost = requireActivity();
 
         // Add menu items without using the Fragment Menu APIs
         // Note how we can tie the MenuProvider to the viewLifecycleOwner
@@ -60,11 +60,6 @@ public class HabitFragment extends Fragment {
                 return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-
-        // Binding the lifecycle of the edit text to the view model...
-        final TextInputEditText textInputEditText = binding.descriptionFieldEdit;
-
-        habitViewModel.getText().observe(getViewLifecycleOwner(), textInputEditText::setText);
 
         return root;
     }

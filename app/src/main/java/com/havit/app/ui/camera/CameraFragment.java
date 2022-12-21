@@ -1,7 +1,5 @@
 package com.havit.app.ui.camera;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,19 +45,19 @@ public class CameraFragment extends Fragment {
 
     private void requestCameraPermission(View root) {
         // Check if the camera permission is granted...
-        if (ContextCompat.checkSelfPermission(requireActivity(),
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
+        cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
-            cameraProviderFuture.addListener(() -> {
-                try {
-                    ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                    bindPreview(cameraProvider, root);
-                } catch (ExecutionException | InterruptedException e) {
-                    Toast.makeText(getActivity(), "Error Starting the Camera", Toast.LENGTH_LONG).show();
-                }
-            }, ContextCompat.getMainExecutor(requireContext()));
-        }
+        cameraProviderFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                bindPreview(cameraProvider, root);
+            } catch (ExecutionException | InterruptedException e) {
+                // No errors need to be handled for this Future.
+                // This should never be reached.
+            }
+        }, ContextCompat.getMainExecutor(requireContext()));
+
+        return root;
     }
 
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider, View root) {
