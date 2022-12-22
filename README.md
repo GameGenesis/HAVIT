@@ -18,7 +18,7 @@
 
 - To pull all the recent updates from the ```main``` branch, you have to execute ```git pull origin main``` in your repository folder!
 
-- Minimum SDK level was set to version 33. Camera feature uses the latest CameraX API by Google.
+- Minimum SDK level is set to version 23, while the Target SDK level is 33. Camera feature uses the latest CameraX API by Google.
 
 - On public repo, conceal ```app/google-services.json``` as it contains the API key for Firebase.
 
