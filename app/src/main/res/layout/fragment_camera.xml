@@ -37,7 +37,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/white" />
 
-        <!--Animation doesn't work & shadow doesn't work in dark mode-->
+        <!--Shadow doesn't work in dark mode-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
