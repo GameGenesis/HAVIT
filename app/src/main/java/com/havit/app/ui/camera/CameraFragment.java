@@ -16,12 +16,15 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
+import androidx.camera.core.impl.ImageCaptureConfig;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -156,10 +159,7 @@ public class CameraFragment extends Fragment {
         if (display != null) {
             rotation = display.getRotation();
 
-            imageCapture =
-                    new ImageCapture.Builder()
-                            .setTargetRotation(rotation)
-                            .build();
+            imageCapture = new ImageCapture.Builder().setTargetAspectRatio(AspectRatio.RATIO_16_9).setTargetRotation(rotation).build();
 
             ImageAnalysis imageAnalysis =
                     new ImageAnalysis.Builder()
