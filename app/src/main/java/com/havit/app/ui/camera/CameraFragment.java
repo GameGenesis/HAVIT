@@ -2,6 +2,7 @@ package com.havit.app.ui.camera;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,7 @@ import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -35,6 +37,7 @@ import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
@@ -74,6 +77,31 @@ public class CameraFragment extends Fragment {
     }
 
     private void takePhoto() {
+        imageCapture.takePicture(ContextCompat.getMainExecutor(getActivity()), new ImageCapture.OnImageCapturedCallback() {
+            @Override
+            public void onCaptureSuccess(@NonNull ImageProxy image) {
+                // Get the image data as a Bitmap
+                ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+                byte[] bytes = new byte[buffer.capacity()];
+                buffer.get(bytes);
+                Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
+
+                // Display the image on the ImageView
+                imageView.setRotation(90);
+                imageView.setImageBitmap(bitmapImage);
+
+                // Close the image
+                image.close();
+            }
+
+            @Override
+            public void onError(@NonNull ImageCaptureException exception) {
+                // Image capture failed
+            }
+        });
+    }
+
+    /*private void savePhoto() {
         File photoFile = null;
 
         try {
@@ -119,15 +147,15 @@ public class CameraFragment extends Fragment {
 
         File storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,  *//* prefix *//*
+                ".jpg",         *//* suffix *//*
+                storageDir      *//* directory *//*
         );
 
         // Save a file: path for use with ACTION_VIEW intents
         String currentPhotoPath = image.getAbsolutePath();
         return image;
-    }
+    }*/
 
     private void addCameraProvider(View root) {
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
