@@ -2,6 +2,7 @@ package com.havit.app.ui.camera;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -90,16 +91,16 @@ public class CameraFragment extends Fragment {
                 buffer.get(bytes);
                 Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
 
+                // Rotate the bitmap image 90 degrees (landscape -> portrait)
+                Matrix matrix = new Matrix();
+                matrix.postRotate(90);
+                bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
+
                 // Display the image on the ImageView
                 imageView.setImageBitmap(bitmapImage);
 
-                // Compressing the bitmap
-                // ByteArrayOutputStream out = new ByteArrayOutputStream();
-                // bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, out);
-                // Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
-
                 // To save the image
-                // saveImage(bitmapImage);
+                saveImage(bitmapImage);
 
                 // Close the image
                 image.close();
@@ -113,7 +114,9 @@ public class CameraFragment extends Fragment {
     }
 
     private void saveImage(Bitmap finalBitmap) {
-        String root = Environment.getExternalStorageDirectory().toString();
+        // Gallery/Pictures: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        // Private app data: Environment.getExternalStorageDirectory()
+        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
         File myDir = new File(root);
         myDir.mkdirs();
         String fName = "Image-" + System.currentTimeMillis() + ".jpg";
