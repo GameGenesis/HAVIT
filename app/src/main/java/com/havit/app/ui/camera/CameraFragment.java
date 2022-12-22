@@ -1,7 +1,5 @@
 package com.havit.app.ui.camera;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
