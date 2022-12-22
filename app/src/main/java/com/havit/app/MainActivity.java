@@ -20,6 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.havit.app.databinding.ActivityMainBinding;
 
+import java.util.Locale;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        LoginActivity.sDefSystemLanguage = Locale.getDefault().getLanguage();
 
         Objects.requireNonNull(getSupportActionBar()).show();
 
