@@ -1,6 +1,8 @@
 package com.havit.app.ui.camera;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Size;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
@@ -27,6 +30,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -52,39 +58,64 @@ public class CameraFragment extends Fragment {
         previewView = binding.previewView;
         FloatingActionButton button = binding.cameraShutterButton;
 
-        requestCameraPermission(root);
+        addCameraProvider(root);
 
         button.setOnClickListener(v -> {
-            ImageCapture.OutputFileOptions outputFileOptions =
-                    new ImageCapture.OutputFileOptions.Builder(new File("")).build();
-            imageCapture.takePicture(outputFileOptions, executor,
-                    new ImageCapture.OnImageSavedCallback() {
-                        @Override
-                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                            requireActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(requireActivity(), "SAVED!", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
+            File photoFile = null;
 
-                        @Override
-                        public void onError(@NonNull ImageCaptureException exception) {
-                            requireActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(requireActivity(), "ERROR!", Toast.LENGTH_LONG).show();
+            try {
+                photoFile = createImageFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(requireContext(),
+                        "com.havit.app.FileProvider",
+                        photoFile);
+
+                String path = photoFile.getPath();
+
+                ImageCapture.OutputFileOptions outputFileOptions =
+                        new ImageCapture.OutputFileOptions.Builder(photoFile).build();
+                imageCapture.takePicture(outputFileOptions, executor,
+                        new ImageCapture.OnImageSavedCallback() {
+                            @Override
+                                public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                                    requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), path, Toast.LENGTH_LONG).show());
                                 }
-                            });
+
+                                @Override
+                                public void onError(@NonNull ImageCaptureException exception) {
+                                    requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "ERROR!", Toast.LENGTH_LONG).show());
+                            }
                         }
-                    }
-            );
+                );
+            }
         });
 
         return root;
     }
 
-    private void requestCameraPermission(View root) {
-        // Check if the camera permission is granted...
+    // Code snippet from: https://github.com/1010code/android-take-photo-sand-save-gallery
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = DateFormat.getDateTimeInstance().format(new Date());
+        String imageFileName = "IMG_" + timeStamp + "_";
+
+        File storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        String currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void addCameraProvider(View root) {
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
         cameraProviderFuture.addListener(() -> {
