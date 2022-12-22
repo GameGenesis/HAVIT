@@ -32,7 +32,13 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/white" />
-            <!--Animation doesn't work & shadow doesn't work in dark mode-->
+
+        <!--Animation doesn't work & shadow doesn't work in dark mode-->
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>

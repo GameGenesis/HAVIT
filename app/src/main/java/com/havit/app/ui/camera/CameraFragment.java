@@ -1,5 +1,7 @@
 package com.havit.app.ui.camera;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -9,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
@@ -42,6 +46,7 @@ public class CameraFragment extends Fragment {
     private FragmentCameraBinding binding;
 
     private PreviewView previewView;
+    private ImageView imageView;
 
     private Executor executor;
 
@@ -56,45 +61,54 @@ public class CameraFragment extends Fragment {
         View root = binding.getRoot();
 
         previewView = binding.previewView;
+        imageView = binding.imageView;
         FloatingActionButton button = binding.cameraShutterButton;
 
         addCameraProvider(root);
 
         button.setOnClickListener(v -> {
-            File photoFile = null;
-
-            try {
-                photoFile = createImageFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(requireContext(),
-                        "com.havit.app.FileProvider",
-                        photoFile);
-
-                String path = photoFile.getPath();
-
-                ImageCapture.OutputFileOptions outputFileOptions =
-                        new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-                imageCapture.takePicture(outputFileOptions, executor,
-                        new ImageCapture.OnImageSavedCallback() {
-                            @Override
-                                public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                                    requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), path, Toast.LENGTH_LONG).show());
-                                }
-
-                                @Override
-                                public void onError(@NonNull ImageCaptureException exception) {
-                                    requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "ERROR!", Toast.LENGTH_LONG).show());
-                            }
-                        }
-                );
-            }
+            takePhoto();
         });
 
         return root;
+    }
+
+    private void takePhoto() {
+        File photoFile = null;
+
+        try {
+            photoFile = createImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if (photoFile != null) {
+            Uri photoURI = FileProvider.getUriForFile(requireContext(),
+                    "com.havit.app.FileProvider",
+                    photoFile);
+
+            String path = photoFile.getPath();
+
+            ImageCapture.OutputFileOptions outputFileOptions =
+                    new ImageCapture.OutputFileOptions.Builder(photoFile).build();
+            imageCapture.takePicture(outputFileOptions, executor,
+                    new ImageCapture.OnImageSavedCallback() {
+                        @Override
+                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
+                            requireActivity().runOnUiThread(() -> {
+                                Toast.makeText(requireActivity(), path, Toast.LENGTH_LONG).show();
+                                Bitmap bitmap = BitmapFactory.decodeFile(path);
+                                imageView.setImageBitmap(bitmap);
+                            });
+                        }
+
+                        @Override
+                        public void onError(@NonNull ImageCaptureException exception) {
+                            requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "ERROR!", Toast.LENGTH_LONG).show());
+                        }
+                    }
+            );
+        }
     }
 
     // Code snippet from: https://github.com/1010code/android-take-photo-sand-save-gallery
