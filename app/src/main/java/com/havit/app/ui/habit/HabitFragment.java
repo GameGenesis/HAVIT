@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -22,12 +23,17 @@ import com.havit.app.databinding.FragmentHabitBinding;
 
 import android.view.MenuItem;
 
+import java.util.Objects;
+
 public class HabitFragment extends Fragment {
 
     private FragmentHabitBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        // Hide the action bar...
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
+
         HabitViewModel habitViewModel =
                 new ViewModelProvider(this).get(HabitViewModel.class);
 
@@ -67,7 +73,6 @@ public class HabitFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         TransitionInflater inflater = TransitionInflater.from(requireContext());
 
         setEnterTransition(inflater.inflateTransition(R.transition.fade));

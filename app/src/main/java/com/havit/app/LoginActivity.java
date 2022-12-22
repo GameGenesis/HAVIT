@@ -40,6 +40,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Objects.requireNonNull(getSupportActionBar()).hide();
+
         Intent intent = getIntent();
 
         boolean isSignOut = intent.getBooleanExtra("isSignOut", false);

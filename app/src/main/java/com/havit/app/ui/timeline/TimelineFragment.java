@@ -8,12 +8,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentTimelineBinding;
+
+import java.util.Objects;
 
 /*
 TUTORIAL ON USING NAVIGATION IN ANDROID FRAGMENTS:
@@ -27,6 +30,9 @@ public class TimelineFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        // Hide the action bar...
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+
         TimelineViewModel timelineViewModel =
                 new ViewModelProvider(this).get(TimelineViewModel.class);
 
