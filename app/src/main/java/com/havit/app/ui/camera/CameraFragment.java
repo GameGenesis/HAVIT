@@ -35,10 +35,14 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import com.havit.app.databinding.FragmentCameraBinding;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -87,8 +91,15 @@ public class CameraFragment extends Fragment {
                 Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
 
                 // Display the image on the ImageView
-                imageView.setRotation(90);
                 imageView.setImageBitmap(bitmapImage);
+
+                // Compressing the bitmap
+                // ByteArrayOutputStream out = new ByteArrayOutputStream();
+                // bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, out);
+                // Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(out.toByteArray()));
+
+                // To save the image
+                // saveImage(bitmapImage);
 
                 // Close the image
                 image.close();
@@ -101,61 +112,23 @@ public class CameraFragment extends Fragment {
         });
     }
 
-    /*private void savePhoto() {
-        File photoFile = null;
-
+    private void saveImage(Bitmap finalBitmap) {
+        String root = Environment.getExternalStorageDirectory().toString();
+        File myDir = new File(root);
+        myDir.mkdirs();
+        String fName = "Image-" + System.currentTimeMillis() + ".jpg";
+        File file = new File(myDir, fName);
+        Toast.makeText(requireActivity(), file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        if (file.exists()) file.delete();
         try {
-            photoFile = createImageFile();
-        } catch (IOException e) {
+            FileOutputStream out = new FileOutputStream(file);
+            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (photoFile != null) {
-            Uri photoURI = FileProvider.getUriForFile(requireContext(),
-                    "com.havit.app.FileProvider",
-                    photoFile);
-
-            String path = photoFile.getPath();
-
-            ImageCapture.OutputFileOptions outputFileOptions =
-                    new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-            imageCapture.takePicture(outputFileOptions, executor,
-                    new ImageCapture.OnImageSavedCallback() {
-                        @Override
-                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                            requireActivity().runOnUiThread(() -> {
-                                Toast.makeText(requireActivity(), path, Toast.LENGTH_LONG).show();
-                                Bitmap bitmap = BitmapFactory.decodeFile(path);
-                                imageView.setImageBitmap(bitmap);
-                            });
-                        }
-
-                        @Override
-                        public void onError(@NonNull ImageCaptureException exception) {
-                            requireActivity().runOnUiThread(() -> Toast.makeText(requireActivity(), "ERROR!", Toast.LENGTH_LONG).show());
-                        }
-                    }
-            );
-        }
     }
-
-    // Code snippet from: https://github.com/1010code/android-take-photo-sand-save-gallery
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = DateFormat.getDateTimeInstance().format(new Date());
-        String imageFileName = "IMG_" + timeStamp + "_";
-
-        File storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  *//* prefix *//*
-                ".jpg",         *//* suffix *//*
-                storageDir      *//* directory *//*
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        String currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }*/
 
     private void addCameraProvider(View root) {
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
