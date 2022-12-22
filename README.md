@@ -20,7 +20,7 @@
 
 - Minimum SDK level was set to version 33. Camera feature uses the latest CameraX API by Google.
 
-- On public repo, conceal ```app/google-services.json``` as it contains the API key.
+- On public repo, conceal ```app/google-services.json``` as it contains the API key for Firebase.
 
 ---
 
