@@ -1,13 +1,12 @@
 package com.havit.app.ui.camera;
 
+import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.Image;
-import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Size;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -15,10 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
@@ -27,7 +24,6 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
@@ -37,15 +33,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import com.havit.app.databinding.FragmentCameraBinding;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
+
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -57,8 +48,7 @@ public class CameraFragment extends Fragment {
     private PreviewView previewView;
     private ImageView imageView;
 
-    private Executor executor;
-
+    private Bitmap bitmapImage;
     private ImageCapture imageCapture;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -83,14 +73,15 @@ public class CameraFragment extends Fragment {
     }
 
     private void takePhoto() {
-        imageCapture.takePicture(ContextCompat.getMainExecutor(getActivity()), new ImageCapture.OnImageCapturedCallback() {
+        imageCapture.takePicture(ContextCompat.getMainExecutor(requireActivity()), new ImageCapture.OnImageCapturedCallback() {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 // Get the image data as a Bitmap
                 ByteBuffer buffer = image.getPlanes()[0].getBuffer();
                 byte[] bytes = new byte[buffer.capacity()];
                 buffer.get(bytes);
-                Bitmap bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
+
+                bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
 
                 // Rotate the bitmap image 90 degrees (landscape -> portrait)
                 Matrix matrix = new Matrix();
@@ -101,7 +92,11 @@ public class CameraFragment extends Fragment {
                 imageView.setImageBitmap(bitmapImage);
 
                 // To save the image
-                saveImage(bitmapImage);
+                try {
+                    saveImageToGallery(bitmapImage);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 // Close the image
                 image.close();
@@ -114,32 +109,20 @@ public class CameraFragment extends Fragment {
         });
     }
 
-    private void saveImage(Bitmap finalBitmap) {
-        // Gallery/Pictures: Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        // Private app data: Environment.getExternalStorageDirectory()
-        String root = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
-        File myDir = new File(root);
-        myDir.mkdirs();
-        String fName = "Image-" + System.currentTimeMillis() + ".jpg";
-        File file = new File(myDir, fName);
+    private void saveImageToGallery(Bitmap bitmap) throws IOException {
+        // Save the image to the MediaStore
+        ContentValues values = new ContentValues();
 
-        if (file.exists()) file.delete();
-        try {
-            // Make file show up in the gallery app
-            MediaScannerConnection.scanFile(getActivity(), new String[]  {file.getPath()} , new String[]{"image/*"}, null);
+        values.put(MediaStore.Images.Media.DISPLAY_NAME, "Image-" + System.currentTimeMillis());
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
 
-            FileOutputStream out = new FileOutputStream(file);
+        Uri imageUri = requireActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-            // Compress the original bitmap
-            finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
-
-            out.flush();
-            out.close();
-
-            Toast.makeText(requireActivity(), file.getAbsolutePath(), Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        OutputStream out = requireActivity().getContentResolver().openOutputStream(imageUri);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        out.close();
     }
 
     private void addCameraProvider(View root) {
@@ -186,7 +169,7 @@ public class CameraFragment extends Fragment {
                             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                             .build();
 
-            executor = Executors.newSingleThreadExecutor();
+            Executor executor = Executors.newSingleThreadExecutor();
 
             imageAnalysis.setAnalyzer(executor, image -> {
                 // Perform image analysis here
