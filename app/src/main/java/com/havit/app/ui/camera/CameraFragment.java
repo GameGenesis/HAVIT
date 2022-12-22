@@ -1,21 +1,31 @@
 package com.havit.app.ui.camera;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.media.AudioManager;
+import android.media.MediaActionSound;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Size;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
@@ -31,12 +41,14 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import com.havit.app.MainActivity;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -46,26 +58,34 @@ public class CameraFragment extends Fragment {
     private FragmentCameraBinding binding;
 
     private PreviewView previewView;
-    private ImageView imageView;
+    private FloatingActionButton shutterButton;
 
     private Bitmap bitmapImage;
     private ImageCapture imageCapture;
 
+    private AudioManager am;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
+        // Hide the action bar...
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+
         CameraViewModel cameraViewModel =
                 new ViewModelProvider(this).get(CameraViewModel.class);
 
         binding = FragmentCameraBinding.inflate(inflater, container, false);
+        am = (AudioManager)requireActivity().getSystemService(Context.AUDIO_SERVICE);
+
         View root = binding.getRoot();
 
         previewView = binding.previewView;
-        imageView = binding.imageView;
-        FloatingActionButton button = binding.cameraShutterButton;
+
+        shutterButton = binding.shutterButton;
 
         addCameraProvider(root);
 
-        button.setOnClickListener(v -> {
+        shutterButton.setOnClickListener(v -> {
+            handleShutter();
             takePhoto();
         });
 
@@ -87,9 +107,6 @@ public class CameraFragment extends Fragment {
                 Matrix matrix = new Matrix();
                 matrix.postRotate(90);
                 bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
-
-                // Display the image on the ImageView
-                imageView.setImageBitmap(bitmapImage);
 
                 // To save the image
                 try {
@@ -139,6 +156,7 @@ public class CameraFragment extends Fragment {
         }, ContextCompat.getMainExecutor(requireContext()));
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider, View root) {
         Preview preview = new Preview.Builder().build();
 
@@ -159,6 +177,7 @@ public class CameraFragment extends Fragment {
             imageCapture =
                     new ImageCapture.Builder()
                             .setTargetRotation(rotation)
+                            .setCaptureMode(ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG)
                             .build();
 
             ImageAnalysis imageAnalysis =
@@ -177,6 +196,29 @@ public class CameraFragment extends Fragment {
 
             // Image Provider variable has to be fixed...
             cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, imageCapture, imageAnalysis, preview);
+        }
+    }
+
+    private void handleShutter() {
+        shutterButton.setScaleX(1.25f);
+        shutterButton.setScaleY(1.25f);
+
+        shutterButton.setAlpha(0.5f);
+
+        // Asynchronous shutter button animation...
+        Handler handler = new Handler();
+
+        handler.postDelayed(() -> {
+            shutterButton.setScaleX(1);
+            shutterButton.setScaleY(1);
+
+            shutterButton.setAlpha(1f);
+        }, 250);
+
+        // Play the snap sound...
+        if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+            MediaActionSound sound = new MediaActionSound();
+            sound.play(MediaActionSound.SHUTTER_CLICK);
         }
     }
 
