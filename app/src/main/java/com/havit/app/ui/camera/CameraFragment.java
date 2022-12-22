@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.Image;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -121,13 +122,21 @@ public class CameraFragment extends Fragment {
         myDir.mkdirs();
         String fName = "Image-" + System.currentTimeMillis() + ".jpg";
         File file = new File(myDir, fName);
-        Toast.makeText(requireActivity(), file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
         if (file.exists()) file.delete();
         try {
+            // Make file show up in the gallery app
+            MediaScannerConnection.scanFile(getActivity(), new String[]  {file.getPath()} , new String[]{"image/*"}, null);
+
             FileOutputStream out = new FileOutputStream(file);
+
+            // Compress the original bitmap
             finalBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+
             out.flush();
             out.close();
+
+            Toast.makeText(requireActivity(), file.getAbsolutePath(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
             e.printStackTrace();
         }
