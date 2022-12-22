@@ -6,28 +6,32 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".ui.camera.CameraFragment">
 
     <androidx.camera.view.PreviewView
-        android:id="@+id/previewView"
+        android:id="@+id/preview_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#000000" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ui_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/cameraShutterButton"
+            android:id="@+id/shutter_button"
             android:layout_width="88dp"
             android:layout_height="88dp"
             android:layout_marginBottom="36dp"
             android:backgroundTint="@color/transparent"
-            android:contentDescription="Take a Picture"
+            android:contentDescription="@string/title_camera"
+            android:hapticFeedbackEnabled="true"
             android:outlineSpotShadowColor="@color/transparent"
-            android:animation="@anim/button_scale"
             app:backgroundTint="@color/white"
             app:borderWidth="4dp"
+            app:guidelineUseRtl="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -9,11 +9,14 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.havit.app.LoginActivity;
 import com.havit.app.databinding.FragmentProfileBinding;
+
+import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
@@ -21,6 +24,9 @@ public class ProfileFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
+            // Hide the action bar...
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+
             ProfileViewModel profileViewModel =
                     new ViewModelProvider(this).get(ProfileViewModel.class);
 
