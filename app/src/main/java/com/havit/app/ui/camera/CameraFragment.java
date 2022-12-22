@@ -15,14 +15,10 @@ import android.provider.MediaStore;
 import android.util.Size;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
@@ -44,7 +40,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import com.havit.app.MainActivity;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
@@ -67,6 +62,13 @@ public class CameraFragment extends Fragment {
     private ImageCapture imageCapture;
 
     private AudioManager am;
+
+    private enum CameraOrientation {
+        VERTICAL,
+        HORIZONTAL
+    }
+
+    private CameraOrientation curOrientation = CameraOrientation.VERTICAL;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -108,7 +110,11 @@ public class CameraFragment extends Fragment {
 
                 // Rotate the bitmap image 90 degrees (landscape -> portrait)
                 Matrix matrix = new Matrix();
-                matrix.postRotate(90);
+
+                if (curOrientation == CameraOrientation.VERTICAL) {
+                    matrix.postRotate(90);
+                }
+
                 bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
 
                 // To save the image
@@ -200,6 +206,8 @@ public class CameraFragment extends Fragment {
 
             // Image Provider variable has to be fixed...
             cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, imageCapture, imageAnalysis, preview);
+
+            listenToOrientation();
         }
     }
 
@@ -223,6 +231,27 @@ public class CameraFragment extends Fragment {
         if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             MediaActionSound sound = new MediaActionSound();
             sound.play(MediaActionSound.SHUTTER_CLICK);
+        }
+    }
+
+    private void listenToOrientation() {
+        OrientationEventListener mOrientationListener = new OrientationEventListener(
+                requireContext()) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                if (orientation == 0 || orientation == 180) {
+                    // Portrait...
+                    curOrientation = CameraOrientation.VERTICAL;
+
+                } else if (orientation == 90 || orientation == 270) {
+                    // Landscape...
+                    curOrientation = CameraOrientation.HORIZONTAL;
+                }
+            }
+        };
+
+        if (mOrientationListener.canDetectOrientation()) {
+            mOrientationListener.enable();
         }
     }
 
