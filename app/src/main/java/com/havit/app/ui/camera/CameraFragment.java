@@ -15,26 +15,20 @@ import android.provider.MediaStore;
 import android.util.Size;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
-import androidx.camera.core.impl.ImageCaptureConfig;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -44,7 +38,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import com.havit.app.MainActivity;
+import com.havit.app.LoginActivity;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
@@ -57,6 +51,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CameraFragment extends Fragment {
+    // Below code determines whether device language is set to Korean or Japanese. If so, the camera shutter sound has to be on due to the local laws...
+    public static boolean forceCameraSound = Objects.equals(LoginActivity.sDefSystemLanguage, "ko") || Objects.equals(LoginActivity.sDefSystemLanguage, "ja");
+
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private FragmentCameraBinding binding;
 
@@ -67,6 +64,13 @@ public class CameraFragment extends Fragment {
     private ImageCapture imageCapture;
 
     private AudioManager am;
+
+    private enum CameraOrientation {
+        VERTICAL,
+        HORIZONTAL
+    }
+
+    private CameraOrientation curOrientation = CameraOrientation.VERTICAL;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -108,7 +112,11 @@ public class CameraFragment extends Fragment {
 
                 // Rotate the bitmap image 90 degrees (landscape -> portrait)
                 Matrix matrix = new Matrix();
-                matrix.postRotate(90);
+
+                if (curOrientation == CameraOrientation.VERTICAL) {
+                    matrix.postRotate(90);
+                }
+
                 bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
 
                 // To save the image
@@ -200,6 +208,8 @@ public class CameraFragment extends Fragment {
 
             // Image Provider variable has to be fixed...
             cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, imageCapture, imageAnalysis, preview);
+
+            listenToOrientation();
         }
     }
 
@@ -220,9 +230,30 @@ public class CameraFragment extends Fragment {
         }, 250);
 
         // Play the snap sound...
-        if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+        if (forceCameraSound || am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             MediaActionSound sound = new MediaActionSound();
             sound.play(MediaActionSound.SHUTTER_CLICK);
+        }
+    }
+
+    private void listenToOrientation() {
+        OrientationEventListener mOrientationListener = new OrientationEventListener(
+                requireContext()) {
+            @Override
+            public void onOrientationChanged(int orientation) {
+                if (orientation == 0 || orientation == 180) {
+                    // Portrait...
+                    curOrientation = CameraOrientation.VERTICAL;
+
+                } else if (orientation == 90 || orientation == 270) {
+                    // Landscape...
+                    curOrientation = CameraOrientation.HORIZONTAL;
+                }
+            }
+        };
+
+        if (mOrientationListener.canDetectOrientation()) {
+            mOrientationListener.enable();
         }
     }
 
