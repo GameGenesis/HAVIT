@@ -24,13 +24,11 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
-import androidx.camera.core.impl.ImageCaptureConfig;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -40,6 +38,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import com.havit.app.LoginActivity;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
@@ -52,6 +51,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CameraFragment extends Fragment {
+    // Below code determines whether device language is set to Korean or Japanese. If so, the camera shutter sound has to be on due to the local laws...
+    public static boolean forceCameraSound = Objects.equals(LoginActivity.sDefSystemLanguage, "ko") || Objects.equals(LoginActivity.sDefSystemLanguage, "ja");
+
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private FragmentCameraBinding binding;
 
@@ -228,7 +230,7 @@ public class CameraFragment extends Fragment {
         }, 250);
 
         // Play the snap sound...
-        if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+        if (forceCameraSound || am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             MediaActionSound sound = new MediaActionSound();
             sound.play(MediaActionSound.SHUTTER_CLICK);
         }

@@ -36,9 +36,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextView textView;
 
+    public static String sDefSystemLanguage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Get system locale...
+        sDefSystemLanguage = Locale.getDefault().getLanguage();
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
