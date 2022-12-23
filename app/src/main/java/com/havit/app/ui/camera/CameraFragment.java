@@ -15,13 +15,17 @@ import android.provider.MediaStore;
 import android.util.Size;
 import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
+import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +45,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import com.havit.app.LoginActivity;
+import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
@@ -61,6 +66,7 @@ public class CameraFragment extends Fragment {
 
     private PreviewView previewView;
     private ImageView imageView;
+
     private FloatingActionButton shutterButton;
     private ImageButton cancelButton;
 
@@ -94,6 +100,8 @@ public class CameraFragment extends Fragment {
 
         shutterButton = binding.shutterButton;
         cancelButton = binding.cancelButton;
+        Button timelineButton = binding.timelineButton;
+
         cancelButton.setVisibility(View.GONE);
 
         addCameraProvider(root);
@@ -109,7 +117,26 @@ public class CameraFragment extends Fragment {
             cancelButton.setVisibility(View.GONE);
         });
 
+        timelineButton.setOnClickListener(v -> {
+            showMenu(v, R.menu.popup_menu);
+        });
+
         return root;
+    }
+
+    private void showMenu(View v, @MenuRes int menuRes) {
+        PopupMenu popup = new PopupMenu(getContext(), v);
+        popup.getMenuInflater().inflate(menuRes, popup.getMenu());
+
+        popup.setOnMenuItemClickListener(menuItem -> {
+            // Respond to menu item click.
+            return true;
+        });
+        popup.setOnDismissListener(menu -> {
+            // Respond to popup being dismissed.
+        });
+        // Show the popup menu.
+        popup.show();
     }
 
     private void takePhoto() {
