@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -67,6 +68,7 @@ public class CameraFragment extends Fragment {
 
     private FloatingActionButton shutterButton;
     private ImageButton cancelButton;
+    private Button addButton;
 
     private Spinner habitSpinner;
 
@@ -111,8 +113,12 @@ public class CameraFragment extends Fragment {
             imageView.setImageBitmap(null);
             shutterButton.show();
             cancelButton.setVisibility(View.GONE);
+            addButton.setVisibility(View.GONE);
             habitSpinner.setVisibility(View.GONE);
         });
+
+        addButton = binding.addButton;
+        addButton.setVisibility(View.GONE);
 
         habitSpinner = binding.habitSpinner;
         habitSpinner.setVisibility(View.GONE);
@@ -288,10 +294,13 @@ public class CameraFragment extends Fragment {
 
             shutterButton.setAlpha(1f);
             shutterButton.hide();
+        }, 250);
 
+        handler.postDelayed(() -> {
             habitSpinner.setVisibility(View.VISIBLE);
             cancelButton.setVisibility(View.VISIBLE);
-        }, 250);
+            addButton.setVisibility(View.VISIBLE);
+        }, 300);
 
         // Play the snap sound...
         if (forceCameraSound || am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
