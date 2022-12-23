@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="38dp"
-    tools:context=".ui.habit.HabitFragment">
+    tools:context=".ui.habit.HabitFragment"
+    android:paddingTop="?attr/actionBarSize">
 
     <TextView
         android:id="@+id/title"
@@ -15,7 +16,6 @@
         android:layout_marginStart="128dp"
         android:layout_marginEnd="128dp"
         android:layout_marginBottom="500dp"
-        android:fontFamily="@font/jetbrains_mono"
         android:text="@string/title_new_habit"
         android:textAlignment="center"
         android:textSize="34sp"
@@ -44,7 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLength="15"
-            android:fontFamily="@font/jetbrains_mono"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -72,7 +71,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLength="30"
-            android:fontFamily="@font/jetbrains_mono"
             android:gravity="top" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -97,7 +95,6 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
-            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="S"
@@ -112,7 +109,6 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
-            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="M"
@@ -127,7 +123,6 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
-            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="T"
@@ -142,7 +137,6 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
-            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="W"
@@ -157,7 +151,6 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
-            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="T"
@@ -172,7 +165,6 @@
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
-            android:fontFamily="@font/jetbrains_mono"
             android:scaleX="0.9"
             android:scaleY="0.9"
             android:text="F"
@@ -191,8 +183,7 @@
             android:scaleY="0.9"
             android:text="S"
             android:textOff="S"
-            android:textOn="S"
-            android:fontFamily="@font/jetbrains_mono" />
+            android:textOn="S" />
     </LinearLayout>
 
     <TimePicker
