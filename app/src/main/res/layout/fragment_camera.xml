@@ -29,8 +29,9 @@
             android:layout_marginTop="5dp"
             android:contentDescription="Select Habit"
             android:elevation="20dp"
-            android:backgroundTint="@color/colorAccent"
+            android:textColor="?attr/colorOnSecondary"
             android:background="@drawable/roundstyle"
+            app:backgroundTint="?attr/colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -79,9 +80,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="55dp"
             android:text="Add Photo"
+            android:textColor="@color/black"
             android:background="@drawable/roundstyle"
             app:backgroundTint="@color/white"
-            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

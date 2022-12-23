@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Size;
+import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
@@ -25,6 +27,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
@@ -45,6 +49,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import com.havit.app.LoginActivity;
+import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
@@ -99,7 +104,9 @@ public class CameraFragment extends Fragment {
         addCameraProvider(root);
 
         previewView = binding.previewView;
+
         imageView = binding.imageView;
+        imageView.setVisibility(View.GONE);
 
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
@@ -110,15 +117,14 @@ public class CameraFragment extends Fragment {
         cancelButton = binding.cancelButton;
         cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
-            imageView.setImageBitmap(null);
-            shutterButton.show();
-            cancelButton.setVisibility(View.GONE);
-            addButton.setVisibility(View.GONE);
-            habitSpinner.setVisibility(View.GONE);
+            closeImageView();
         });
 
         addButton = binding.addButton;
         addButton.setVisibility(View.GONE);
+        addButton.setOnClickListener(v -> {
+            addPhoto();
+        });
 
         habitSpinner = binding.habitSpinner;
         habitSpinner.setVisibility(View.GONE);
@@ -129,8 +135,30 @@ public class CameraFragment extends Fragment {
 
     private void setUpSpinner() {
         String[] items = {"First Timeline", "Second Timeline", "Third Timeline"};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, items);
+        // Create a new ArrayAdapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_item, items) {
+            // Override the getView() and getDropDownView() methods to set the textAllCaps attribute
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                if (view instanceof TextView) {
+                    ((TextView) view).setAllCaps(true);
+                    ((TextView) view).setGravity(Gravity.CENTER);
+                    ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                }
+                return view;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                if (view instanceof TextView) {
+                    ((TextView) view).setAllCaps(true);
+                    ((TextView) view).setGravity(Gravity.CENTER);
+                    ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                }
+                return view;
+            }
+        };
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
@@ -163,6 +191,7 @@ public class CameraFragment extends Fragment {
     }
 
     private void takePhoto() {
+        imageView.setVisibility(View.VISIBLE);
         imageCapture.takePicture(ContextCompat.getMainExecutor(requireActivity()), new ImageCapture.OnImageCapturedCallback() {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
@@ -184,13 +213,6 @@ public class CameraFragment extends Fragment {
 
                 // Display the image on the ImageView
                 imageView.setImageBitmap(bitmapImage);
-
-                // To save the image
-                try {
-                    saveImageToGallery(bitmapImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
                 // Close the image
                 image.close();
@@ -217,6 +239,27 @@ public class CameraFragment extends Fragment {
         OutputStream out = requireActivity().getContentResolver().openOutputStream(imageUri);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         out.close();
+    }
+
+    private void closeImageView() {
+        imageView.setImageBitmap(null);
+        imageView.setVisibility(View.GONE);
+        shutterButton.show();
+        cancelButton.setVisibility(View.GONE);
+        addButton.setVisibility(View.GONE);
+        habitSpinner.setVisibility(View.GONE);
+    }
+
+    private void addPhoto() {
+        // To save the image
+        try {
+            saveImageToGallery(bitmapImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(requireActivity(), "Saved To Gallery", Toast.LENGTH_LONG).show();
+        closeImageView();
     }
 
     private void addCameraProvider(View root) {
