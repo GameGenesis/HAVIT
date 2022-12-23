@@ -126,8 +126,7 @@ public class HabitFragment extends Fragment {
         // Checks whether all of the required fields have been filled
         if (!name.isEmpty() && !description.isEmpty() && anyDaysPicked) {
             // Navigated to the timeline fragment
-            Navigation.findNavController(view).navigate(R.id.action_habit_to_timeline);
-            Toast.makeText(requireActivity(), "Successfully Created Timeline", Toast.LENGTH_LONG).show();
+            Navigation.findNavController(view).navigate(R.id.action_habit_to_store);
         } else {
             Toast.makeText(requireActivity(), "Required Fields are Empty", Toast.LENGTH_LONG).show();
         }
