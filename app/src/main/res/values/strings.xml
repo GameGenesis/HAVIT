@@ -8,9 +8,9 @@
     <string name="login_username_text_field">Username</string>
     <string name="login_password_text_field">Password</string>
     <string name="login_submit_button">Get Started</string>
-    <string name="title_habit">Havit</string>
+    <string name="title_habit">New Habit</string>
     <string name="button_capture">Capture</string>
-    <string name="add_habit_btn">Add New Havit</string>
+    <string name="add_habit_btn">Add New Habit</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
