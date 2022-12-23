@@ -23,7 +23,9 @@ import com.havit.app.databinding.FragmentHabitBinding;
 
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -48,17 +50,21 @@ public class HabitFragment extends Fragment {
             String name = binding.nameFieldEdit.getText().toString();
             String description = binding.descriptionFieldEdit.getText().toString();
 
-            // Convert to for loop and list
-            Map<String, Boolean> days = new HashMap<>();
-            days.put("Sunday", binding.toggleButton0.isChecked());
-            days.put("Monday", binding.toggleButton1.isChecked());
-            days.put("Tuesday", binding.toggleButton2.isChecked());
-            days.put("Wednesday", binding.toggleButton3.isChecked());
-            days.put("Thursday", binding.toggleButton4.isChecked());
-            days.put("Friday", binding.toggleButton5.isChecked());
-            days.put("Saturday", binding.toggleButton6.isChecked());
+            boolean[] daysPicked = new boolean[7];
+            LinearLayout dayPickerLayout = binding.dayPickerLayout;
 
-            if (!name.isEmpty() && !description.isEmpty()) {
+            boolean anyDaysPicked = false;
+
+            for (int i = 0; i < dayPickerLayout.getChildCount(); i++) {
+                ToggleButton toggle = (ToggleButton) dayPickerLayout.getChildAt(i);
+                daysPicked[i] = toggle.isChecked();
+
+                if (toggle.isChecked()) {
+                    anyDaysPicked = true;
+                }
+            }
+
+            if (!name.isEmpty() && !description.isEmpty() && anyDaysPicked) {
                 Navigation.findNavController(v).navigate(R.id.action_habit_to_timeline);
                 Toast.makeText(requireActivity(), "Successfully Created Timeline", Toast.LENGTH_LONG).show();
             } else {
