@@ -8,9 +8,9 @@
     <string name="login_username_text_field">Username</string>
     <string name="login_password_text_field">Password</string>
     <string name="login_submit_button">Get Started</string>
-    <string name="title_habit">Habit</string>
+    <string name="title_habit">Havit</string>
     <string name="button_capture">Capture</string>
-    <string name="add_habit_btn">Add New Habit</string>
+    <string name="add_habit_btn">Add New Havit</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -21,7 +21,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="text_input_name">Name</string>
-    <string name="title_new_habit">New Habit</string>
+    <string name="title_new_habit">New Havit</string>
     <string name="placeholder_description">Description</string>
     <string name="default_word_count">0</string>
     <string name="login_password_toggle">toggle</string>
