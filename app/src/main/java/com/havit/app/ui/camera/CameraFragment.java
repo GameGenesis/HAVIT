@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
@@ -110,15 +111,14 @@ public class CameraFragment extends Fragment {
         cancelButton = binding.cancelButton;
         cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
-            imageView.setImageBitmap(null);
-            shutterButton.show();
-            cancelButton.setVisibility(View.GONE);
-            addButton.setVisibility(View.GONE);
-            habitSpinner.setVisibility(View.GONE);
+            closeImageView();
         });
 
         addButton = binding.addButton;
         addButton.setVisibility(View.GONE);
+        addButton.setOnClickListener(v -> {
+            addPhoto();
+        });
 
         habitSpinner = binding.habitSpinner;
         habitSpinner.setVisibility(View.GONE);
@@ -184,13 +184,6 @@ public class CameraFragment extends Fragment {
                 // Display the image on the ImageView
                 imageView.setImageBitmap(bitmapImage);
 
-                // To save the image
-                try {
-                    saveImageToGallery(bitmapImage);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
                 // Close the image
                 image.close();
             }
@@ -216,6 +209,26 @@ public class CameraFragment extends Fragment {
         OutputStream out = requireActivity().getContentResolver().openOutputStream(imageUri);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         out.close();
+    }
+
+    private void closeImageView() {
+        imageView.setImageBitmap(null);
+        shutterButton.show();
+        cancelButton.setVisibility(View.GONE);
+        addButton.setVisibility(View.GONE);
+        habitSpinner.setVisibility(View.GONE);
+    }
+
+    private void addPhoto() {
+        // To save the image
+        try {
+            saveImageToGallery(bitmapImage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(requireActivity(), "Saved To Gallery", Toast.LENGTH_LONG).show();
+        closeImageView();
     }
 
     private void addCameraProvider(View root) {
