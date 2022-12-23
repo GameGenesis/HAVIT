@@ -25,10 +25,11 @@
             android:layout_width="200dp"
             android:layout_height="54dp"
             android:layout_margin="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:contentDescription="Select Habit"
             android:elevation="20dp"
-            app:layout_constraintEnd_toEndOf="@+id/cancel_button"
+            android:background="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
