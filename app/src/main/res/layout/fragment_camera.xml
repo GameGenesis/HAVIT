@@ -29,7 +29,7 @@
             android:layout_marginTop="5dp"
             android:contentDescription="Select Habit"
             android:elevation="20dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/colorAccent"
             android:background="@drawable/roundstyle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

@@ -129,6 +129,7 @@ public class CameraFragment extends Fragment {
 
     private void setUpSpinner() {
         String[] items = {"First Timeline", "Second Timeline", "Third Timeline"};
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, items);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
