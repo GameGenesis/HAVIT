@@ -86,8 +86,10 @@ public class LoginActivity extends AppCompatActivity {
     private void configureWelcomeText() {
         if (user == null) {
             textView.setText(R.string.get_started_text);
+            textView.setTextSize(48);
         } else {
-            textView.setText(String.format("WELCOME BACK,\n%s", Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT)));
+            textView.setText(String.format("YOU'RE BACK,\n%s", Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT)));
+            textView.setTextSize(24);
         }
     }
 
