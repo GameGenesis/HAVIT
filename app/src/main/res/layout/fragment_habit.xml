@@ -25,6 +25,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/name_field"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
@@ -33,14 +34,15 @@
         android:layout_marginBottom="350dp"
         android:hint="Name"
         android:inputType="text|textShortMessage"
-        app:endIconMode="clear_text"
-        app:endIconTint="?attr/colorOnSurface"
         app:counterEnabled="true"
         app:counterMaxLength="15"
+        app:endIconMode="clear_text"
+        app:endIconTint="?attr/colorOnSurface"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.589">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/name_field_edit"
@@ -52,33 +54,17 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/description_field"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="175dp"
-        android:gravity="top"
-        android:hint="@string/placeholder_description"
-        android:inputType="text|textMultiLine"
-        app:counterMaxLength="60"
-        app:endIconMode="clear_text"
-        app:endIconTint="?attr/colorOnSurface"
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="260dp"
+        android:timePickerMode="spinner"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/description_field_edit"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/questrial"
-            android:gravity="top"
-            android:maxLength="30" />
-
-    </com.google.android.material.textfield.TextInputLayout>
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.189" />
 
     <LinearLayout
         android:id="@+id/day_picker_layout"
@@ -89,7 +75,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.382">
 
         <ToggleButton
             android:id="@+id/toggleButton0"
@@ -197,19 +184,8 @@
             android:textOn="S" />
     </LinearLayout>
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="260dp"
-        android:timePickerMode="spinner"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
-        android:id="@+id/createButton"
+        android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
         android:layout_marginTop="525dp"
@@ -218,7 +194,7 @@
         android:paddingTop="6dp"
         android:paddingRight="20dp"
         android:paddingBottom="6dp"
-        android:text="Create"
+        android:text="Next"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

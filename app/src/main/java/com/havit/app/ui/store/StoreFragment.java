@@ -1,12 +1,14 @@
-package com.havit.app.ui.habit;
+package com.havit.app.ui.store;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,31 +19,27 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.havit.app.R;
-import com.havit.app.databinding.FragmentHabitBinding;
-
-import android.view.MenuItem;
-import android.widget.Button;
+import com.havit.app.databinding.FragmentStoreBinding;
 
 import java.util.Objects;
 
-public class HabitFragment extends Fragment {
+public class StoreFragment extends Fragment {
 
-    private FragmentHabitBinding binding;
+    private FragmentStoreBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
-        HabitViewModel habitViewModel =
-                new ViewModelProvider(this).get(HabitViewModel.class);
+        StoreViewModel storeViewModel =
+                new ViewModelProvider(this).get(StoreViewModel.class);
 
-        binding = FragmentHabitBinding.inflate(inflater, container, false);
+        binding = FragmentStoreBinding.inflate(inflater, container, false);
 
-        Button nextButton = binding.nextButton;
-        nextButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_habit_to_store));
+        Button doneButton = binding.doneButton;
+        doneButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_store_to_timeline));
 
         View root = binding.getRoot();
 
@@ -64,7 +62,7 @@ public class HabitFragment extends Fragment {
             public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
                 // Handle the menu selection
                 if (menuItem.getItemId() == android.R.id.home) {
-                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_habit_to_timeline);
+                    Navigation.findNavController(binding.getRoot()).navigate(R.id.action_store_to_habit);
                     return true;
                 }
                 return false;
