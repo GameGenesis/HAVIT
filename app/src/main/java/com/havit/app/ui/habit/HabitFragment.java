@@ -96,13 +96,17 @@ public class HabitFragment extends Fragment {
         binding = null;
     }
 
+    // Called when the Create Button is pressed
     private void createNewHabit(View view) {
+        // Name and Description fields
         String name = binding.nameFieldEdit.getText().toString();
         String description = binding.descriptionFieldEdit.getText().toString();
 
+        // Array of what days were picked. Starts at Sunday (index 0)
         boolean[] daysPicked = new boolean[7];
         LinearLayout dayPickerLayout = binding.dayPickerLayout;
 
+        // Whether at least one day was chosen
         boolean anyDaysPicked = false;
 
         for (int i = 0; i < dayPickerLayout.getChildCount(); i++) {
@@ -114,11 +118,14 @@ public class HabitFragment extends Fragment {
             }
         }
 
+        // Gets the hour and minute values from the time picker
         TimePicker timePicker = binding.timePicker;
         int hour = timePicker.getHour();
         int minute = timePicker.getMinute();
 
+        // Checks whether all of the required fields have been filled
         if (!name.isEmpty() && !description.isEmpty() && anyDaysPicked) {
+            // Navigated to the timeline fragment
             Navigation.findNavController(view).navigate(R.id.action_habit_to_timeline);
             Toast.makeText(requireActivity(), "Successfully Created Timeline", Toast.LENGTH_LONG).show();
         } else {
