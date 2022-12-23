@@ -23,7 +23,10 @@ import com.havit.app.databinding.FragmentHabitBinding;
 
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class HabitFragment extends Fragment {
@@ -41,7 +44,27 @@ public class HabitFragment extends Fragment {
         binding = FragmentHabitBinding.inflate(inflater, container, false);
 
         Button createButton = binding.createButton;
-        createButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_habit_to_store));
+        createButton.setOnClickListener(v -> {
+            String name = binding.nameFieldEdit.getText().toString();
+            String description = binding.descriptionFieldEdit.getText().toString();
+
+            // Convert to for loop and list
+            Map<String, Boolean> days = new HashMap<>();
+            days.put("Sunday", binding.toggleButton0.isChecked());
+            days.put("Monday", binding.toggleButton1.isChecked());
+            days.put("Tuesday", binding.toggleButton2.isChecked());
+            days.put("Wednesday", binding.toggleButton3.isChecked());
+            days.put("Thursday", binding.toggleButton4.isChecked());
+            days.put("Friday", binding.toggleButton5.isChecked());
+            days.put("Saturday", binding.toggleButton6.isChecked());
+
+            if (!name.isEmpty() && !description.isEmpty()) {
+                Navigation.findNavController(v).navigate(R.id.action_habit_to_timeline);
+                Toast.makeText(requireActivity(), "Successfully Created Timeline", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(requireActivity(), "Required Fields are Empty", Toast.LENGTH_LONG).show();
+            }
+        });
 
         View root = binding.getRoot();
 
