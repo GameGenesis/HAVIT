@@ -24,6 +24,7 @@ import com.havit.app.databinding.FragmentHabitBinding;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -46,31 +47,8 @@ public class HabitFragment extends Fragment {
         binding = FragmentHabitBinding.inflate(inflater, container, false);
 
         Button createButton = binding.createButton;
-        createButton.setOnClickListener(v -> {
-            String name = binding.nameFieldEdit.getText().toString();
-            String description = binding.descriptionFieldEdit.getText().toString();
 
-            boolean[] daysPicked = new boolean[7];
-            LinearLayout dayPickerLayout = binding.dayPickerLayout;
-
-            boolean anyDaysPicked = false;
-
-            for (int i = 0; i < dayPickerLayout.getChildCount(); i++) {
-                ToggleButton toggle = (ToggleButton) dayPickerLayout.getChildAt(i);
-                daysPicked[i] = toggle.isChecked();
-
-                if (toggle.isChecked()) {
-                    anyDaysPicked = true;
-                }
-            }
-
-            if (!name.isEmpty() && !description.isEmpty() && anyDaysPicked) {
-                Navigation.findNavController(v).navigate(R.id.action_habit_to_timeline);
-                Toast.makeText(requireActivity(), "Successfully Created Timeline", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(requireActivity(), "Required Fields are Empty", Toast.LENGTH_LONG).show();
-            }
-        });
+        createButton.setOnClickListener(v -> createNewHabit(v));
 
         View root = binding.getRoot();
 
@@ -116,5 +94,42 @@ public class HabitFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    // Called when the Create Button is pressed
+    private void createNewHabit(View view) {
+        // Name and Description fields
+        String name = binding.nameFieldEdit.getText().toString();
+        String description = binding.descriptionFieldEdit.getText().toString();
+
+        // Array of what days were picked. Starts at Sunday (index 0)
+        boolean[] daysPicked = new boolean[7];
+        LinearLayout dayPickerLayout = binding.dayPickerLayout;
+
+        // Whether at least one day was chosen
+        boolean anyDaysPicked = false;
+
+        for (int i = 0; i < dayPickerLayout.getChildCount(); i++) {
+            ToggleButton toggle = (ToggleButton) dayPickerLayout.getChildAt(i);
+            daysPicked[i] = toggle.isChecked();
+
+            if (toggle.isChecked()) {
+                anyDaysPicked = true;
+            }
+        }
+
+        // Gets the hour and minute values from the time picker
+        TimePicker timePicker = binding.timePicker;
+        int hour = timePicker.getHour();
+        int minute = timePicker.getMinute();
+
+        // Checks whether all of the required fields have been filled
+        if (!name.isEmpty() && !description.isEmpty() && anyDaysPicked) {
+            // Navigated to the timeline fragment
+            Navigation.findNavController(view).navigate(R.id.action_habit_to_timeline);
+            Toast.makeText(requireActivity(), "Successfully Created Timeline", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(requireActivity(), "Required Fields are Empty", Toast.LENGTH_LONG).show();
+        }
     }
 }
