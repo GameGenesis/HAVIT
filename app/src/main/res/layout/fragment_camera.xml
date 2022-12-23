@@ -13,9 +13,7 @@
         android:id="@+id/preview_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000" >
-
-    </androidx.camera.view.PreviewView>
+        android:background="#000000" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ui_wrapper"
