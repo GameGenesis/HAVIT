@@ -103,7 +103,9 @@ public class CameraFragment extends Fragment {
         addCameraProvider(root);
 
         previewView = binding.previewView;
+
         imageView = binding.imageView;
+        imageView.setVisibility(View.GONE);
 
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
@@ -188,6 +190,7 @@ public class CameraFragment extends Fragment {
     }
 
     private void takePhoto() {
+        imageView.setVisibility(View.VISIBLE);
         imageCapture.takePicture(ContextCompat.getMainExecutor(requireActivity()), new ImageCapture.OnImageCapturedCallback() {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
@@ -239,6 +242,7 @@ public class CameraFragment extends Fragment {
 
     private void closeImageView() {
         imageView.setImageBitmap(null);
+        imageView.setVisibility(View.GONE);
         shutterButton.show();
         cancelButton.setVisibility(View.GONE);
         addButton.setVisibility(View.GONE);
