@@ -13,7 +13,9 @@
         android:id="@+id/preview_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000" />
+        android:background="#000000" >
+
+    </androidx.camera.view.PreviewView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ui_wrapper"
@@ -37,13 +39,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:tint="@color/white" />
 
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/cancel_button"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="0dp"
+            android:src="@android:drawable/ic_delete"
+            android:backgroundTint="@color/transparent"
+            android:contentDescription="Close Image View"
+            app:tint="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!--Shadow doesn't work in dark mode-->
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
 
 </FrameLayout>
