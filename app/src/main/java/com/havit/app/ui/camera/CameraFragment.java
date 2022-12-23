@@ -13,7 +13,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Size;
+import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
@@ -25,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -129,7 +132,30 @@ public class CameraFragment extends Fragment {
 
     private void setUpSpinner() {
         String[] items = {"First Timeline", "Second Timeline", "Third Timeline"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, items);
+        // Create a new ArrayAdapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_item, items) {
+            // Override the getView() and getDropDownView() methods to set the textAllCaps attribute
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                if (view instanceof TextView) {
+                    ((TextView) view).setAllCaps(true);
+                    ((TextView) view).setGravity(Gravity.CENTER);
+                    ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                }
+                return view;
+            }
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                if (view instanceof TextView) {
+                    ((TextView) view).setAllCaps(true);
+                    ((TextView) view).setGravity(Gravity.CENTER);
+                    ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                }
+                return view;
+            }
+        };
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
