@@ -7,7 +7,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -65,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Camera permission granted!", Toast.LENGTH_LONG).show();
+                // Toast.makeText(this, "Camera permission granted!", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, "Camera permission denied!", Toast.LENGTH_LONG).show();
+                // Toast.makeText(this, "Camera permission denied!", Toast.LENGTH_LONG).show();
             }
         }
     }
