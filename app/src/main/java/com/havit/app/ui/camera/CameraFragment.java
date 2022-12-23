@@ -100,6 +100,7 @@ public class CameraFragment extends Fragment {
 
         shutterButton = binding.shutterButton;
         cancelButton = binding.cancelButton;
+
         Button timelineButton = binding.timelineButton;
 
         cancelButton.setVisibility(View.GONE);
@@ -232,6 +233,7 @@ public class CameraFragment extends Fragment {
                 new ImageCapture.Builder()
                     .setTargetAspectRatio(AspectRatio.RATIO_16_9)
                     .setTargetRotation(rotation)
+                        // Below code minimizes the shutter lag...
                     .setCaptureMode(ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG)
                     .build();
 
