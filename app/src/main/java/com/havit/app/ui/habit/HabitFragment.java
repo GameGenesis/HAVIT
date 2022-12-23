@@ -40,8 +40,8 @@ public class HabitFragment extends Fragment {
 
         binding = FragmentHabitBinding.inflate(inflater, container, false);
 
-        Button nextButton = binding.nextButton;
-        nextButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_habit_to_store));
+        Button createButton = binding.createButton;
+        createButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_habit_to_store));
 
         View root = binding.getRoot();
 
