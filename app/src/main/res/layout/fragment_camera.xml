@@ -20,15 +20,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/timeline_button"
+        <Spinner
+            android:id="@+id/habit_spinner"
             android:layout_width="200dp"
             android:layout_height="54dp"
             android:layout_margin="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:contentDescription="Select Habit"
             android:elevation="20dp"
-            android:fontFamily="@font/rubik_mono_one"
-            android:text="Select Havit"
-            app:layout_constraintEnd_toEndOf="@+id/cancel_button"
+            android:background="@color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

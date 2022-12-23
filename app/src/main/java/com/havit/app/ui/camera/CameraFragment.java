@@ -15,17 +15,16 @@ import android.provider.MediaStore;
 import android.util.Size;
 import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
+import android.widget.Spinner;
 
-import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,7 +44,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import com.havit.app.LoginActivity;
-import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
@@ -69,6 +67,8 @@ public class CameraFragment extends Fragment {
 
     private FloatingActionButton shutterButton;
     private ImageButton cancelButton;
+
+    private Spinner habitSpinner;
 
     private Bitmap bitmapImage;
     private ImageCapture imageCapture;
@@ -94,50 +94,65 @@ public class CameraFragment extends Fragment {
         am = (AudioManager)requireActivity().getSystemService(Context.AUDIO_SERVICE);
 
         View root = binding.getRoot();
+        addCameraProvider(root);
 
         previewView = binding.previewView;
         imageView = binding.imageView;
 
         shutterButton = binding.shutterButton;
-        cancelButton = binding.cancelButton;
-
-        Button timelineButton = binding.timelineButton;
-
-        cancelButton.setVisibility(View.GONE);
-
-        addCameraProvider(root);
-
         shutterButton.setOnClickListener(v -> {
             handleShutter();
             takePhoto();
         });
 
+        cancelButton = binding.cancelButton;
+        cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
             imageView.setImageBitmap(null);
             shutterButton.show();
             cancelButton.setVisibility(View.GONE);
+            habitSpinner.setVisibility(View.GONE);
         });
 
-        timelineButton.setOnClickListener(v -> {
-            showMenu(v, R.menu.popup_menu);
-        });
+        habitSpinner = binding.habitSpinner;
+        habitSpinner.setVisibility(View.GONE);
+        setUpSpinner();
 
         return root;
     }
 
-    private void showMenu(View v, @MenuRes int menuRes) {
-        PopupMenu popup = new PopupMenu(getContext(), v);
-        popup.getMenuInflater().inflate(menuRes, popup.getMenu());
+    private void setUpSpinner() {
+        String[] items = {"First Timeline", "Second Timeline", "Third Timeline"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, items);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        habitSpinner.setAdapter(adapter);
 
-        popup.setOnMenuItemClickListener(menuItem -> {
-            // Respond to menu item click.
-            return true;
+        // Called when an item is selected
+        habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // Do something here when an item in the Spinner is selected
+                switch (position) {
+                    case 0:
+                        // Whatever you want to happen when the first item gets selected
+                        break;
+                    case 1:
+                        // Whatever you want to happen when the second item gets selected
+                        break;
+                    case 2:
+                        // Whatever you want to happen when the third item gets selected
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do something here when nothing is selected in the Spinner
+            }
         });
-        popup.setOnDismissListener(menu -> {
-            // Respond to popup being dismissed.
-        });
-        // Show the popup menu.
-        popup.show();
     }
 
     private void takePhoto() {
@@ -273,7 +288,8 @@ public class CameraFragment extends Fragment {
 
             shutterButton.setAlpha(1f);
             shutterButton.hide();
-            
+
+            habitSpinner.setVisibility(View.VISIBLE);
             cancelButton.setVisibility(View.VISIBLE);
         }, 250);
 
