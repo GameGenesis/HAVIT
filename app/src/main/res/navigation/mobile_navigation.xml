@@ -61,5 +61,27 @@
         <action
             android:id="@+id/action_habit_to_timeline"
             app:destination="@id/navigation_timeline" />
+        <action
+            android:id="@+id/action_habit_to_store"
+            app:destination="@id/navigation_store" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_store"
+        android:name="com.havit.app.ui.store.StoreFragment"
+        android:label="@string/title_store"
+        tools:layout="@layout/fragment_store" >
+        <action
+            android:id="@+id/action_store_to_camera"
+            app:destination="@id/navigation_camera" />
+        <action
+            android:id="@+id/action_store_to_profile"
+            app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/action_store_to_timeline"
+            app:destination="@id/navigation_timeline" />
+        <action
+            android:id="@+id/action_store_to_habit"
+            app:destination="@id/navigation_habit" />
     </fragment>
 </navigation>
