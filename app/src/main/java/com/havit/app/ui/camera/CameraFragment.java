@@ -21,13 +21,10 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
 
-import androidx.annotation.MenuRes;
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,7 +44,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import com.havit.app.LoginActivity;
-import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;
@@ -115,9 +111,11 @@ public class CameraFragment extends Fragment {
             imageView.setImageBitmap(null);
             shutterButton.show();
             cancelButton.setVisibility(View.GONE);
+            habitSpinner.setVisibility(View.GONE);
         });
 
         habitSpinner = binding.habitSpinner;
+        habitSpinner.setVisibility(View.GONE);
         setUpSpinner();
 
         return root;
@@ -290,7 +288,8 @@ public class CameraFragment extends Fragment {
 
             shutterButton.setAlpha(1f);
             shutterButton.hide();
-            
+
+            habitSpinner.setVisibility(View.VISIBLE);
             cancelButton.setVisibility(View.VISIBLE);
         }, 250);
 
