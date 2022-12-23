@@ -19,6 +19,8 @@ import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
@@ -58,7 +60,9 @@ public class CameraFragment extends Fragment {
     private FragmentCameraBinding binding;
 
     private PreviewView previewView;
+    private ImageView imageView;
     private FloatingActionButton shutterButton;
+    private ImageButton cancelButton;
 
     private Bitmap bitmapImage;
     private ImageCapture imageCapture;
@@ -86,14 +90,23 @@ public class CameraFragment extends Fragment {
         View root = binding.getRoot();
 
         previewView = binding.previewView;
+        imageView = binding.imageView;
 
         shutterButton = binding.shutterButton;
+        cancelButton = binding.cancelButton;
+        cancelButton.setVisibility(View.GONE);
 
         addCameraProvider(root);
 
         shutterButton.setOnClickListener(v -> {
             handleShutter();
             takePhoto();
+        });
+
+        cancelButton.setOnClickListener(v -> {
+            imageView.setImageBitmap(null);
+            shutterButton.show();
+            cancelButton.setVisibility(View.GONE);
         });
 
         return root;
@@ -118,6 +131,9 @@ public class CameraFragment extends Fragment {
                 }
 
                 bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
+
+                // Display the image on the ImageView
+                imageView.setImageBitmap(bitmapImage);
 
                 // To save the image
                 try {
@@ -227,6 +243,9 @@ public class CameraFragment extends Fragment {
             shutterButton.setScaleY(1);
 
             shutterButton.setAlpha(1f);
+            shutterButton.hide();
+            
+            cancelButton.setVisibility(View.VISIBLE);
         }, 250);
 
         // Play the snap sound...
