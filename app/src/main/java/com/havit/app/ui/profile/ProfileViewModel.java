@@ -16,7 +16,7 @@ public class ProfileViewModel extends ViewModel {
         mText = new MutableLiveData<>();
 
         assert user != null;
-        mText.setValue("Howdy, " + user.getDisplayName());
+        mText.setValue("Howdy,\n" + user.getDisplayName());
     }
 
     public LiveData<String> getText() {

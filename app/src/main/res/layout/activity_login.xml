@@ -13,12 +13,13 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="316dp"
-        android:layout_height="106dp"
+        android:layout_width="366dp"
+        android:layout_height="108dp"
         android:layout_marginBottom="250dp"
+        android:fontFamily="@font/rubik_mono_one"
         android:gravity="center"
         android:text="@string/app_name"
-        android:textSize="32sp"
+        android:textSize="48sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,10 +28,11 @@
 
     <Button
         android:id="@+id/submit_button"
-        android:layout_width="189dp"
-        android:layout_height="60dp"
+        android:layout_width="190dp"
+        android:layout_height="74dp"
         android:layout_margin="20dp"
         android:layout_marginTop="250dp"
+        android:fontFamily="@font/rubik_mono_one"
         android:text="@string/login_submit_button"
         android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
