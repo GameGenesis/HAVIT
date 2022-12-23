@@ -72,6 +72,8 @@ public class CameraFragment extends Fragment {
     private FloatingActionButton shutterButton;
     private ImageButton cancelButton;
 
+    private Spinner habitSpinner;
+
     private Bitmap bitmapImage;
     private ImageCapture imageCapture;
 
@@ -96,44 +98,41 @@ public class CameraFragment extends Fragment {
         am = (AudioManager)requireActivity().getSystemService(Context.AUDIO_SERVICE);
 
         View root = binding.getRoot();
+        addCameraProvider(root);
 
         previewView = binding.previewView;
         imageView = binding.imageView;
 
         shutterButton = binding.shutterButton;
-        cancelButton = binding.cancelButton;
-
-        cancelButton.setVisibility(View.GONE);
-
-        addCameraProvider(root);
-
         shutterButton.setOnClickListener(v -> {
             handleShutter();
             takePhoto();
         });
 
+        cancelButton = binding.cancelButton;
+        cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
             imageView.setImageBitmap(null);
             shutterButton.show();
             cancelButton.setVisibility(View.GONE);
         });
 
+        habitSpinner = binding.habitSpinner;
         setUpSpinner();
 
         return root;
     }
 
     private void setUpSpinner() {
-        Spinner spinner = binding.habitSpinner;
         String[] items = {"First Timeline", "Second Timeline", "Third Timeline"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, items);
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
+        habitSpinner.setAdapter(adapter);
 
         // Called when an item is selected
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Do something here when an item in the Spinner is selected
