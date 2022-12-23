@@ -55,7 +55,7 @@
         android:id="@+id/description_field"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="124dp"
         android:layout_marginBottom="178dp"
         android:gravity="top"
         android:hint="@string/placeholder_description"
@@ -72,7 +72,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/description_field_edit"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:gravity="top"
             android:inputType="textMultiLine"
             android:maxLength="100" />
