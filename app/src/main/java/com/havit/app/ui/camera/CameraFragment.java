@@ -49,6 +49,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import com.havit.app.LoginActivity;
+import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.io.IOException;

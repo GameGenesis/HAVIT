@@ -29,9 +29,9 @@
             android:layout_marginTop="5dp"
             android:contentDescription="Select Habit"
             android:elevation="20dp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorOnSecondary"
             android:background="@drawable/roundstyle"
-            app:backgroundTint="@color/white"
+            app:backgroundTint="?attr/colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
