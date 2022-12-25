@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.MediaActionSound;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Size;
@@ -45,13 +46,22 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.havit.app.LoginActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -219,15 +229,34 @@ public class CameraFragment extends Fragment {
         habitSpinner.setVisibility(View.GONE);
     }
 
+    // TODO: save the image to the db
     private void addPhoto() {
+//        FirebaseApp.initializeApp();
+
         // To save the image
         try {
-            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
-        } catch (IOException e) {
+
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+            StorageReference photoRef = storageRef.child("photos/photo.jpg");
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            viewModel.getCapturedBitmap().compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            photoRef.putBytes(data)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Photo was successfully uploaded
+                        Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        // An error occurred while uploading the photo
+                        Toast.makeText(requireActivity(), "An error occurred while uploading the photo", Toast.LENGTH_LONG).show();
+                    });
+//            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Toast.makeText(requireActivity(), "Saved To Gallery", Toast.LENGTH_LONG).show();
+//        Toast.makeText(requireActivity(), "Saved To Gallery", Toast.LENGTH_LONG).show();
         closeImageView();
     }
 
