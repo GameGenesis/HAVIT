@@ -65,6 +65,8 @@ public class CameraFragment extends Fragment {
     // Below code determines whether device language is set to Korean or Japanese. If so, the camera shutter sound has to be on due to the local laws...
     public static boolean forceCameraSound = Objects.equals(LoginActivity.sDefSystemLanguage, "ko") || Objects.equals(LoginActivity.sDefSystemLanguage, "ja");
 
+    private CameraViewModel viewModel;
+
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private FragmentCameraBinding binding;
 
@@ -77,7 +79,6 @@ public class CameraFragment extends Fragment {
 
     private Spinner habitSpinner;
 
-    private Bitmap bitmapImage;
     private ImageCapture imageCapture;
 
     private AudioManager am;
@@ -91,11 +92,11 @@ public class CameraFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
+
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
-        CameraViewModel cameraViewModel =
-                new ViewModelProvider(this).get(CameraViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CameraViewModel.class);
 
         binding = FragmentCameraBinding.inflate(inflater, container, false);
         am = (AudioManager)requireActivity().getSystemService(Context.AUDIO_SERVICE);
@@ -148,6 +149,7 @@ public class CameraFragment extends Fragment {
                 }
                 return view;
             }
+
             @Override
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
@@ -195,27 +197,10 @@ public class CameraFragment extends Fragment {
         imageCapture.takePicture(ContextCompat.getMainExecutor(requireActivity()), new ImageCapture.OnImageCapturedCallback() {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
-                // Get the image data as a Bitmap
-                ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-                byte[] bytes = new byte[buffer.capacity()];
-                buffer.get(bytes);
-
-                bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
-
-                // Rotate the bitmap image 90 degrees (landscape -> portrait)
-                Matrix matrix = new Matrix();
-
-                if (curOrientation == CameraOrientation.VERTICAL) {
-                    matrix.postRotate(90);
-                }
-
-                bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
+                Bitmap bitmapImage = viewModel.captureBitmap(image);
 
                 // Display the image on the ImageView
                 imageView.setImageBitmap(bitmapImage);
-
-                // Close the image
-                image.close();
             }
 
             @Override
@@ -223,22 +208,6 @@ public class CameraFragment extends Fragment {
                 // Image capture failed
             }
         });
-    }
-
-    private void saveImageToGallery(Bitmap bitmap) throws IOException {
-        // Save the image to the MediaStore
-        ContentValues values = new ContentValues();
-
-        values.put(MediaStore.Images.Media.DISPLAY_NAME, "Image-" + System.currentTimeMillis());
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
-        values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis());
-
-        Uri imageUri = requireActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-
-        OutputStream out = requireActivity().getContentResolver().openOutputStream(imageUri);
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        out.close();
     }
 
     private void closeImageView() {
@@ -253,7 +222,7 @@ public class CameraFragment extends Fragment {
     private void addPhoto() {
         // To save the image
         try {
-            saveImageToGallery(bitmapImage);
+            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
         } catch (IOException e) {
             e.printStackTrace();
         }
