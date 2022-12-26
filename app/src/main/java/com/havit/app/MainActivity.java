@@ -17,6 +17,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.databinding.ActivityMainBinding;
 
 import java.util.Locale;
@@ -25,10 +27,14 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     public static final int MY_CAMERA_REQUEST_CODE = 100;
+//    public FirebaseDatabase firebaseDatabase;
+    public static StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         LoginActivity.sDefSystemLanguage = Locale.getDefault().getLanguage();
 
