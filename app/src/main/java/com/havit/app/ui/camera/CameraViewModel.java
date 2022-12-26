@@ -7,11 +7,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageProxy;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModel;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.StorageReference;
+import com.havit.app.MainActivity;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -19,9 +26,6 @@ import java.nio.ByteBuffer;
 public class CameraViewModel extends ViewModel {
 
     private Bitmap bitmapImage;
-
-    public CameraViewModel() {}
-
     public Bitmap getCapturedBitmap() {
         return bitmapImage;
     }
@@ -60,5 +64,23 @@ public class CameraViewModel extends ViewModel {
         OutputStream out = context.getContentResolver().openOutputStream(imageUri);
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         out.close();
+    }
+
+    // TODO: save the image to the storage and link it to the json in db
+    public void addImageToDatabase(FirebaseUser user, Bitmap bitmap, FragmentActivity activity) {
+
+        // To save the image...
+        try {
+            // Convert the bitmap to a byte array
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+            StorageReference image = MainActivity.storageReference.child("users/" + user.getEmail() + "/img-" + System.currentTimeMillis());
+            image.putBytes(byteArray).addOnSuccessListener(taskSnapshot -> Toast.makeText(activity, "Photo was successfully uploaded", Toast.LENGTH_LONG).show()).addOnFailureListener(e -> Toast.makeText(activity, "An error occurred while uploading the photo", Toast.LENGTH_LONG).show());
+            //// viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
