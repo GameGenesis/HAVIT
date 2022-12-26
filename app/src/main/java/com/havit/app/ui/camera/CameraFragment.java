@@ -231,40 +231,28 @@ public class CameraFragment extends Fragment {
         habitSpinner.setVisibility(View.GONE);
     }
 
-    // TODO: save the image to the db
+    // TODO: save the image to the storage and link it to the json in db
     private void addPhoto() {
 
         // To save the image
-        // https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
         try {
+            Bitmap bitmap = viewModel.getCapturedBitmap();
 
+            // Convert the bitmap to a byte array
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-
-            StorageReference storageRef = storage.getReference();
-            StorageReference photoRef = storageRef.child("photo.jpg");
-            StorageReference photoPathRef = storageRef.child("timelinePhotos/photo.jpg");
-
-//            imageView.setDrawingCacheEnabled(true);
-//            imageView.buildDrawingCache();
-            Bitmap bitmap =  viewModel.getCapturedBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] data = baos.toByteArray();
-
-            UploadTask uploadTask = photoRef.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            StorageReference image = MainActivity.storageReference.child("timelinePhotos/image");
+            image.putBytes(byteArray).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show();
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
-//                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(requireActivity(), "An error occurred while uploading the photo", Toast.LENGTH_LONG).show();
                 }
             });
 
