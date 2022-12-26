@@ -11,7 +11,7 @@ public class TimelineViewModel extends ViewModel {
     public TimelineViewModel() {
         mText = new MutableLiveData<>();
 
-        mText.setValue("There's nothing here");
+        mText.setValue("There's\nnothing\nhere");
     }
 
     public LiveData<String> getText() {

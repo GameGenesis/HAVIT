@@ -151,6 +151,7 @@ public class CameraFragment extends Fragment {
             if (bitmapImage != null) {
                 // Gets the string of the selected template...
                 String selectedItem = habitSpinner.getSelectedItem().toString();
+
                 viewModel.addImageToDatabase(user, bitmapImage, requireActivity(), selectedItem);
                 closeImageView();
             }

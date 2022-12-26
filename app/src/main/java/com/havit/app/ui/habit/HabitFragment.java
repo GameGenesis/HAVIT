@@ -2,6 +2,7 @@ package com.havit.app.ui.habit;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -17,7 +19,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentHabitBinding;
 
@@ -28,8 +29,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class HabitFragment extends Fragment {
@@ -56,6 +55,7 @@ public class HabitFragment extends Fragment {
 
         binding = FragmentHabitBinding.inflate(inflater, container, false);
 
+        ConstraintLayout constraintLayout = binding.container;
         Button createButton = binding.createButton;
 
         createButton.setOnClickListener(this::createNewHabit);
