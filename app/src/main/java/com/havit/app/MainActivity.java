@@ -2,7 +2,9 @@ package com.havit.app;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -27,12 +29,21 @@ import java.util.Objects;
 public class MainActivity extends AppCompatActivity {
 
     public static final int MY_CAMERA_REQUEST_CODE = 100;
-//    public FirebaseDatabase firebaseDatabase;
+
     public static StorageReference storageReference;
+
+    public static int screenWidth, screenHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE); // the results will be higher than using the activity context object or the getWindowManager() shortcut
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
 
         storageReference = FirebaseStorage.getInstance().getReference();
 
@@ -84,5 +95,9 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    public static String applyFileNamingScheme(String selectedItem) {
+        return selectedItem.replace(" ","-").toLowerCase(Locale.ROOT);
     }
 }
