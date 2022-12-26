@@ -53,6 +53,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -95,6 +97,8 @@ public class CameraFragment extends Fragment {
 
     private AudioManager am;
 
+    private FirebaseUser user;
+
     private enum CameraOrientation {
         VERTICAL,
         HORIZONTAL
@@ -104,6 +108,8 @@ public class CameraFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
@@ -163,7 +169,7 @@ public class CameraFragment extends Fragment {
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 if (view instanceof TextView) {
                     ((TextView) view).setAllCaps(true);
@@ -243,13 +249,8 @@ public class CameraFragment extends Fragment {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-            StorageReference image = MainActivity.storageReference.child("timelinePhotos/image");
-            image.putBytes(byteArray).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
+            StorageReference image = MainActivity.storageReference.child("users/" + user.getEmail() + "/img-" + System.currentTimeMillis());
+            image.putBytes(byteArray).addOnSuccessListener(taskSnapshot -> Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show()).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(requireActivity(), "An error occurred while uploading the photo", Toast.LENGTH_LONG).show();
