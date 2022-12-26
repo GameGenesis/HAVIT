@@ -24,15 +24,15 @@ import java.util.ArrayList;
 
 public class CameraViewModel extends ViewModel {
 
-    // MutableLiveData support for Havit Spinner...
-    private MutableLiveData<ArrayList<String>> items = new MutableLiveData<>();
+    // MutableLiveData support for the spinner...
+    private final MutableLiveData<ArrayList<String>> timelineItems = new MutableLiveData<>();
 
-    public void setItems(ArrayList<String> items) {
-        this.items.setValue(items);
+    public void setTimelineItems(ArrayList<String> items) {
+        this.timelineItems.setValue(items);
     }
 
-    public LiveData<ArrayList<String>> getItems() {
-        return items;
+    public LiveData<ArrayList<String>> getTimelineItems() {
+        return timelineItems;
     }
 
     public void saveImageToGallery(Context context, Bitmap bitmap) throws IOException {
@@ -52,7 +52,7 @@ public class CameraViewModel extends ViewModel {
     }
 
     // TODO: save the image to the storage and link it to the json in db
-    public void addImageToDatabase(FirebaseUser user, Bitmap bitmap, FragmentActivity activity) {
+    public void addImageToDatabase(FirebaseUser user, Bitmap bitmap, FragmentActivity activity, String selectedItem) {
 
         // To save the image...
         try {
@@ -61,7 +61,7 @@ public class CameraViewModel extends ViewModel {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-            StorageReference image = MainActivity.storageReference.child("users/" + user.getEmail() + "/img-" + System.currentTimeMillis());
+            StorageReference image = MainActivity.storageReference.child("users/" + user.getEmail() + "/" + selectedItem + "/img-" + System.currentTimeMillis());
             image.putBytes(byteArray).addOnSuccessListener(taskSnapshot -> Toast.makeText(activity, "Photo was successfully uploaded", Toast.LENGTH_LONG).show()).addOnFailureListener(e -> Toast.makeText(activity, "An error occurred while uploading the photo", Toast.LENGTH_LONG).show());
             //// viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
         } catch (Exception e) {

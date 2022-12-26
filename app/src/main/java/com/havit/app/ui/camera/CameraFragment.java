@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -49,6 +51,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.havit.app.LoginActivity;
+import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.nio.ByteBuffer;
@@ -78,6 +81,7 @@ public class CameraFragment extends Fragment {
     private Spinner habitSpinner;
     private ImageCapture imageCapture;
     private Bitmap bitmapImage;
+    private Typeface rubikMonoOne;
 
     private AudioManager am;
 
@@ -90,12 +94,24 @@ public class CameraFragment extends Fragment {
 
     private CameraOrientation curOrientation = CameraOrientation.VERTICAL;
 
-    private final ArrayList<String> items = new ArrayList<>();
+    private final ArrayList<String> timelineItems = new ArrayList<>();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Don't add the lines below under onCreateView as it will create multiple instances...
+        timelineItems.add("First Timeline");
+        timelineItems.add("Second Timeline");
+        timelineItems.add("Third Timeline");
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+
+        rubikMonoOne = ResourcesCompat.getFont(requireContext(), R.font.rubik_mono_one);
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
@@ -125,29 +141,27 @@ public class CameraFragment extends Fragment {
             closeImageView();
         });
 
+        habitSpinner = binding.habitSpinner;
+        habitSpinner.setVisibility(View.GONE);
+        setUpSpinner();
+
         addButton = binding.addButton;
         addButton.setVisibility(View.GONE);
         addButton.setOnClickListener(v -> {
             if (bitmapImage != null) {
-                viewModel.addImageToDatabase(user, bitmapImage, requireActivity());
+                // Gets the string of the selected template...
+                String selectedItem = habitSpinner.getSelectedItem().toString();
+                viewModel.addImageToDatabase(user, bitmapImage, requireActivity(), selectedItem);
                 closeImageView();
             }
         });
-
-        habitSpinner = binding.habitSpinner;
-        habitSpinner.setVisibility(View.GONE);
-        setUpSpinner();
 
         return root;
     }
 
     private void setUpSpinner() {
-        items.add("First Timeline");
-        items.add("Second Timeline");
-        items.add("Third Timeline");
-
         // Create a new ArrayAdapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_item, items) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_item, timelineItems) {
             // Override the getView() and getDropDownView() methods to set the textAllCaps attribute
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
@@ -174,12 +188,13 @@ public class CameraFragment extends Fragment {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Apply the adapter to the spinner
+        // Apply the adapter to the spinner...
         habitSpinner.setAdapter(adapter);
 
-        viewModel.getItems().observe(getViewLifecycleOwner(), (Observer<ArrayList<String>>) items -> {
+        // ViewModel observes the changes made in the spinner...
+        viewModel.getTimelineItems().observe(getViewLifecycleOwner(), (Observer<ArrayList<String>>) timelineItems -> {
             adapter.clear();
-            adapter.addAll(items);
+            adapter.addAll(timelineItems);
             adapter.notifyDataSetChanged();
         });
 
@@ -242,7 +257,7 @@ public class CameraFragment extends Fragment {
         cameraProviderFuture.addListener(() -> {
             try {
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-                bindPreview(cameraProvider, root);
+                bindPreview(cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 // No errors need to be handled for this Future.
                 // This should never be reached.
@@ -271,7 +286,7 @@ public class CameraFragment extends Fragment {
     }
 
     @SuppressLint("UnsafeOptInUsageError")
-    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider, View root) {
+    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         Preview preview = new Preview.Builder().build();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
