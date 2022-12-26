@@ -3,15 +3,14 @@ package com.havit.app.ui.camera;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
+
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.camera.core.ImageProxy;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
@@ -21,33 +20,19 @@ import com.havit.app.MainActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 public class CameraViewModel extends ViewModel {
 
-    private Bitmap bitmapImage;
-    public Bitmap getCapturedBitmap() {
-        return bitmapImage;
+    // MutableLiveData support for Havit Spinner...
+    private MutableLiveData<ArrayList<String>> items = new MutableLiveData<>();
+
+    public void setItems(ArrayList<String> items) {
+        this.items.setValue(items);
     }
 
-    public Bitmap captureBitmap(@NonNull ImageProxy image) {
-        // Get the image data as a Bitmap
-        ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-        byte[] bytes = new byte[buffer.capacity()];
-        buffer.get(bytes);
-
-        // Close the image
-        image.close();
-
-        bitmapImage = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, null);
-
-        // Rotate the bitmap image 90 degrees (landscape -> portrait)
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
-
-        bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
-
-        return bitmapImage;
+    public LiveData<ArrayList<String>> getItems() {
+        return items;
     }
 
     public void saveImageToGallery(Context context, Bitmap bitmap) throws IOException {
