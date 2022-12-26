@@ -62,7 +62,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class CameraFragment extends Fragment {
-    // Below code determines whether device language is set to Korean or Japanese. If so, the camera shutter sound has to be on due to the local laws...
+    // Below code determines whether device language is set to Korean or Japanese. If so, the camera shutter sound has to be on due to the local legislation...
     public static boolean forceCameraSound = Objects.equals(LoginActivity.sDefSystemLanguage, "ko") || Objects.equals(LoginActivity.sDefSystemLanguage, "ja");
 
     private CameraViewModel viewModel;
