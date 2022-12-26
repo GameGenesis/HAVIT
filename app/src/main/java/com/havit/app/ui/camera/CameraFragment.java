@@ -1,6 +1,7 @@
 package com.havit.app.ui.camera;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -56,6 +57,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.havit.app.LoginActivity;
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
@@ -231,27 +233,43 @@ public class CameraFragment extends Fragment {
 
     // TODO: save the image to the db
     private void addPhoto() {
-//        FirebaseApp.initializeApp();
 
         // To save the image
+        // https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
         try {
 
+
+
             FirebaseStorage storage = FirebaseStorage.getInstance();
+
             StorageReference storageRef = storage.getReference();
-            StorageReference photoRef = storageRef.child("photos/photo.jpg");
+            StorageReference photoRef = storageRef.child("photo.jpg");
+            StorageReference photoPathRef = storageRef.child("timelinePhotos/photo.jpg");
+
+//            imageView.setDrawingCacheEnabled(true);
+//            imageView.buildDrawingCache();
+            Bitmap bitmap =  viewModel.getCapturedBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            viewModel.getCapturedBitmap().compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] data = baos.toByteArray();
-            photoRef.putBytes(data)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        // Photo was successfully uploaded
-                        Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // An error occurred while uploading the photo
-                        Toast.makeText(requireActivity(), "An error occurred while uploading the photo", Toast.LENGTH_LONG).show();
-                    });
-//            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
+
+            UploadTask uploadTask = photoRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show();
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, and download URL.
+//                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                }
+            });
+
+
+////            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
         } catch (Exception e) {
             e.printStackTrace();
         }
