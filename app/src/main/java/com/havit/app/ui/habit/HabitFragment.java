@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -55,7 +54,6 @@ public class HabitFragment extends Fragment {
 
         binding = FragmentHabitBinding.inflate(inflater, container, false);
 
-        ConstraintLayout constraintLayout = binding.container;
         Button createButton = binding.createButton;
 
         createButton.setOnClickListener(this::createNewHabit);
