@@ -1,6 +1,7 @@
 package com.havit.app.ui.camera;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.media.AudioManager;
 import android.media.MediaActionSound;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Size;
@@ -45,13 +47,23 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.havit.app.LoginActivity;
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -219,15 +231,38 @@ public class CameraFragment extends Fragment {
         habitSpinner.setVisibility(View.GONE);
     }
 
+    // TODO: save the image to the storage and link it to the json in db
     private void addPhoto() {
+
         // To save the image
         try {
-            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
-        } catch (IOException e) {
+            Bitmap bitmap = viewModel.getCapturedBitmap();
+
+            // Convert the bitmap to a byte array
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+            StorageReference image = MainActivity.storageReference.child("timelinePhotos/image");
+            image.putBytes(byteArray).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(requireActivity(), "An error occurred while uploading the photo", Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+////            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Toast.makeText(requireActivity(), "Saved To Gallery", Toast.LENGTH_LONG).show();
+//        Toast.makeText(requireActivity(), "Saved To Gallery", Toast.LENGTH_LONG).show();
         closeImageView();
     }
 
