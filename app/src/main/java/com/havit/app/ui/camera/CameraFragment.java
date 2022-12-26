@@ -1,19 +1,12 @@
 package com.havit.app.ui.camera;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
-import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.Display;
@@ -30,7 +23,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
@@ -47,26 +39,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-import com.havit.app.LoginActivity;
-import com.havit.app.MainActivity;
-import com.havit.app.R;
-import com.havit.app.databinding.FragmentCameraBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
+import com.havit.app.LoginActivity;
+import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -95,6 +75,8 @@ public class CameraFragment extends Fragment {
 
     private AudioManager am;
 
+    private FirebaseUser user;
+
     private enum CameraOrientation {
         VERTICAL,
         HORIZONTAL
@@ -104,6 +86,8 @@ public class CameraFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
+
+        user = FirebaseAuth.getInstance().getCurrentUser();
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
@@ -136,7 +120,8 @@ public class CameraFragment extends Fragment {
         addButton = binding.addButton;
         addButton.setVisibility(View.GONE);
         addButton.setOnClickListener(v -> {
-            addPhoto();
+            viewModel.addImageToDatabase(user, viewModel.getCapturedBitmap(), requireActivity());
+            closeImageView();
         });
 
         habitSpinner = binding.habitSpinner;
@@ -163,7 +148,7 @@ public class CameraFragment extends Fragment {
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 if (view instanceof TextView) {
                     ((TextView) view).setAllCaps(true);
@@ -229,41 +214,6 @@ public class CameraFragment extends Fragment {
         cancelButton.setVisibility(View.GONE);
         addButton.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.GONE);
-    }
-
-    // TODO: save the image to the storage and link it to the json in db
-    private void addPhoto() {
-
-        // To save the image
-        try {
-            Bitmap bitmap = viewModel.getCapturedBitmap();
-
-            // Convert the bitmap to a byte array
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream.toByteArray();
-
-            StorageReference image = MainActivity.storageReference.child("timelinePhotos/image");
-            image.putBytes(byteArray).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(requireActivity(), "Photo was successfully uploaded", Toast.LENGTH_LONG).show();
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(requireActivity(), "An error occurred while uploading the photo", Toast.LENGTH_LONG).show();
-                }
-            });
-
-
-////            viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-//        Toast.makeText(requireActivity(), "Saved To Gallery", Toast.LENGTH_LONG).show();
-        closeImageView();
     }
 
     private void addCameraProvider(View root) {
