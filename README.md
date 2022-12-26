@@ -22,7 +22,7 @@
 
 - On public repo, conceal ```app/google-services.json``` as it contains the API key for Firebase.
 
-- To refresh & install new dependencies written on the ```build.gradle```, simply go to *File* settings on the top navigation bar on your desktop, then hit *Sync Project with Gradle** button!
+- To refresh & install new dependencies written on the ```build.gradle```, simply go to *File* settings on the top navigation bar on your desktop, then hit *Sync Project with Gradle* button!
 
 ---
 
