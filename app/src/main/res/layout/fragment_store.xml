@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="38dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="20dp"
     tools:context=".ui.store.StoreFragment"
     android:paddingTop="?attr/actionBarSize">
 
@@ -13,35 +14,24 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginEnd="128dp"
-        android:layout_marginBottom="500dp"
         android:fontFamily="@font/rubik_mono_one"
         android:text="Templates"
+        android:layout_margin="5dp"
         android:textAlignment="center"
-        android:textSize="34sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="28sp" />
 
 
     <Button
         android:id="@+id/done_button"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        android:layout_marginTop="525dp"
         android:fontFamily="@font/rubik_mono_one"
         android:paddingLeft="20dp"
         android:paddingTop="6dp"
         android:paddingRight="20dp"
         android:paddingBottom="6dp"
+        android:layout_margin="5dp"
         android:text="Done"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:textSize="16sp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
