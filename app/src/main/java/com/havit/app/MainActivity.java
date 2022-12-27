@@ -2,7 +2,9 @@ package com.havit.app;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -17,6 +19,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.databinding.ActivityMainBinding;
 
 import java.util.Locale;
@@ -26,9 +30,22 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int MY_CAMERA_REQUEST_CODE = 100;
 
+    public static StorageReference storageReference;
+
+    public static int screenWidth, screenHeight;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE); // the results will be higher than using the activity context object or the getWindowManager() shortcut
+        wm.getDefaultDisplay().getMetrics(displayMetrics);
+
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
+
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         LoginActivity.sDefSystemLanguage = Locale.getDefault().getLanguage();
 
@@ -78,5 +95,27 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    public static String applyFileNamingScheme(String selectedItem) {
+        return selectedItem.replace(" ","-").toLowerCase(Locale.ROOT);
+    }
+
+    public static String decodeFileNamingScheme(String fileName) {
+        return toTitleCase(fileName.replace("-", " "));
+    }
+
+    public static String toTitleCase(String phrase) {
+        // convert the string to an array
+        char[] phraseChars = phrase.toCharArray();
+
+        for (int i = 0; i < phraseChars.length - 1; i++) {
+            if(phraseChars[i] == ' ') {
+                phraseChars[i+1] = Character.toUpperCase(phraseChars[i+1]);
+            }
+        }
+
+        // convert the array to string
+        return String.valueOf(phraseChars);
     }
 }
