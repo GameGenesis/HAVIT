@@ -117,7 +117,8 @@ public class LoginActivity extends AppCompatActivity {
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .setLogo(R.drawable.ic_add_button)
+                .setTheme(R.style.LoginTheme)
+                .setLogo(R.drawable.ic_big_logo)
                 .build();
         signInLauncher.launch(signInIntent);
         // [END auth_fui_create_intent]
