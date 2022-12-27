@@ -71,10 +71,6 @@ public class StoreFragment extends Fragment {
         StoreViewModel storeViewModel =
                 new ViewModelProvider(this).get(StoreViewModel.class);
 
-        storeViewModel.getTemplates().observe(getViewLifecycleOwner(), templates -> {
-            // Update the UI with the templates data
-        });
-
         binding = FragmentStoreBinding.inflate(inflater, container, false);
 
         Button doneButton = binding.doneButton;
