@@ -2,6 +2,7 @@ package com.havit.app.ui.store;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,22 +21,59 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentStoreBinding;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class StoreFragment extends Fragment {
 
     private FragmentStoreBinding binding;
 
+    public static ArrayList<String> templateNames;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        templateNames = new ArrayList<>();
+
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
+        // Initialize the Firebase Storage service
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        // Define the path to the parent folder
+        String folderPath = "templates";
+
+        // Retrieve a reference to the parent folder
+        StorageReference folderRef = storage.getReference(folderPath);
+
+        // Use the list() method to retrieve a list of all the subfolders in the parent folder
+        folderRef.list(1000)
+            .addOnSuccessListener(listResult -> {
+                // The list of subfolders is stored in the prefixes field
+                List<StorageReference> subfolders = listResult.getPrefixes();
+                // Iterate through the list of subfolders and print their names
+                for (StorageReference subfolder : subfolders) {
+                    templateNames.add(subfolder.getName());
+                }
+                Log.d("TemplateNames", templateNames.toString());
+            })
+            .addOnFailureListener(exception -> {
+                // An error occurred while retrieving the list of subfolders
+                Log.e("Error Retrieving the List of Templates...", exception.getMessage());
+            });
+
         StoreViewModel storeViewModel =
                 new ViewModelProvider(this).get(StoreViewModel.class);
+
+        storeViewModel.getTemplates().observe(getViewLifecycleOwner(), templates -> {
+            // Update the UI with the templates data
+        });
 
         binding = FragmentStoreBinding.inflate(inflater, container, false);
 
@@ -42,6 +81,12 @@ public class StoreFragment extends Fragment {
         doneButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_store_to_timeline));
 
         View root = binding.getRoot();
+
+        storeViewModel.getTemplates().observe(getViewLifecycleOwner(), templates -> {
+            // Update the UI with the templates data
+            ListView templateListView = binding.templateListView;
+            templateListView.setAdapter(new TemplateArrayAdapter(requireContext(), templates));
+        });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
