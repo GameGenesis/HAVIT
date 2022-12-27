@@ -42,7 +42,7 @@ public class StoreFragment extends Fragment {
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
-        
+
         StoreViewModel storeViewModel =
                 new ViewModelProvider(this).get(StoreViewModel.class);
 

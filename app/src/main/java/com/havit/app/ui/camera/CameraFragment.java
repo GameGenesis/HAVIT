@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.MediaActionSound;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.Display;
@@ -50,12 +51,18 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
+import com.havit.app.ui.store.StoreViewModel;
+import com.havit.app.ui.store.Template;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -96,14 +103,38 @@ public class CameraFragment extends Fragment {
 
     private final ArrayList<String> timelineItems = new ArrayList<>();
 
+    private void loadTemplates() {
+        // Initialize the Firebase Storage service
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        // Define the path to the parent folder1
+        String folderPath = "templates";
+
+        // Retrieve a reference to the parent folder
+        StorageReference folderRef = storage.getReference(folderPath);
+
+        // Use the list() method to retrieve a list of all the subfolders in the parent folder
+        folderRef.list(1000)
+                .addOnSuccessListener(listResult -> {
+                    // The list of subfolders is stored in the prefixes field
+                    List<StorageReference> subfolders = listResult.getPrefixes();
+                    // Create a list of templates from the subfolders
+                    for (StorageReference subfolder : subfolders) {
+                        timelineItems.add(MainActivity.decodeFileNamingScheme(new Template(subfolder.getName()).name));
+                    }
+                })
+                .addOnFailureListener(exception -> {
+                    // An error occurred while retrieving the list of subfolders
+                    Log.e("Error Retrieving the List of Templates...", exception.getMessage());
+                });
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Don't add the lines below under onCreateView as it will create multiple instances...
-        timelineItems.add("First Timeline");
-        timelineItems.add("Second Timeline");
-        timelineItems.add("Third Timeline");
+        loadTemplates();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -143,6 +174,7 @@ public class CameraFragment extends Fragment {
 
         habitSpinner = binding.habitSpinner;
         habitSpinner.setVisibility(View.GONE);
+        habitSpinner.setSelection(0);
         setUpSpinner();
 
         addButton = binding.addButton;
