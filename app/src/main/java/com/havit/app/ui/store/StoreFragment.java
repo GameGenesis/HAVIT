@@ -2,6 +2,7 @@ package com.havit.app.ui.store;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,20 +21,28 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentStoreBinding;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class StoreFragment extends Fragment {
 
     private FragmentStoreBinding binding;
 
+    public static ArrayList<String> templateNames;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        templateNames = new ArrayList<>();
+
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
-
+        
         StoreViewModel storeViewModel =
                 new ViewModelProvider(this).get(StoreViewModel.class);
 
@@ -42,6 +52,12 @@ public class StoreFragment extends Fragment {
         doneButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_store_to_timeline));
 
         View root = binding.getRoot();
+
+        storeViewModel.getTemplates().observe(getViewLifecycleOwner(), templates -> {
+            // Update the UI with the templates data
+            ListView templateListView = binding.templateListView;
+            templateListView.setAdapter(new TemplateArrayAdapter(requireContext(), templates));
+        });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
