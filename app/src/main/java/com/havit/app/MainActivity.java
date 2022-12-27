@@ -100,4 +100,22 @@ public class MainActivity extends AppCompatActivity {
     public static String applyFileNamingScheme(String selectedItem) {
         return selectedItem.replace(" ","-").toLowerCase(Locale.ROOT);
     }
+
+    public static String decodeFileNamingScheme(String fileName) {
+        return toTitleCase(fileName.replace("-", " "));
+    }
+
+    public static String toTitleCase(String phrase) {
+        // convert the string to an array
+        char[] phraseChars = phrase.toCharArray();
+
+        for (int i = 0; i < phraseChars.length - 1; i++) {
+            if(phraseChars[i] == ' ') {
+                phraseChars[i+1] = Character.toUpperCase(phraseChars[i+1]);
+            }
+        }
+
+        // convert the array to string
+        return String.valueOf(phraseChars);
+    }
 }
