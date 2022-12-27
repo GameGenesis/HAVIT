@@ -17,7 +17,7 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rubik_mono_one"
+        android:fontFamily="@font/major_mono_display"
         android:text="@string/title_new_habit"
         android:textAlignment="center"
         android:textSize="34sp" />
@@ -159,7 +159,7 @@
         android:id="@+id/create_button"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        android:fontFamily="@font/rubik_mono_one"
+        android:fontFamily="@font/questrial"
         android:paddingLeft="20dp"
         android:paddingTop="6dp"
         android:paddingRight="20dp"

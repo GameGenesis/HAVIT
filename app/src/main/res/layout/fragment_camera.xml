@@ -13,27 +13,24 @@
         android:id="@+id/preview_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ui_wrapper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:background="#000000">
 
         <Spinner
             android:id="@+id/habit_spinner"
             android:layout_width="160dp"
             android:layout_height="54dp"
             android:layout_margin="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
+            android:background="@drawable/roundstyle"
             android:contentDescription="Select Habit"
             android:elevation="20dp"
             android:textColor="?attr/colorOnSecondary"
-            android:background="@drawable/roundstyle"
-            app:backgroundTint="?attr/colorOnPrimary"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:backgroundTint="?attr/colorOnPrimary" />
+    </androidx.camera.view.PreviewView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/ui_wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/shutter_button"
@@ -62,17 +59,19 @@
             android:id="@+id/cancel_button"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="5dp"
-            android:src="@android:drawable/ic_delete"
             android:layout_margin="10dp"
             android:backgroundTint="@color/transparent"
             android:contentDescription="Close Image View"
             android:scaleX="1.3"
             android:scaleY="1.3"
-            app:tint="@color/white"
+            android:src="@android:drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="@+id/image_view"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="0.98"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.01"
+            app:tint="@color/white" />
 
         <Button
             android:id="@+id/add_button"
@@ -80,7 +79,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="55dp"
             android:background="@drawable/roundstyle"
-            android:fontFamily="@font/rubik_mono_one"
+            android:fontFamily="@font/questrial"
             android:text="Add Photo"
             android:textColor="@color/black"
             app:backgroundTint="@color/white"

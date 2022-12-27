@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="preloaded_fonts" translatable="false">
+        <item>@font/heebo_extrabold</item>
+        <item>@font/heebo_medium</item>
         <item>@font/jetbrains_mono</item>
+        <item>@font/major_mono_display</item>
+        <item>@font/prosto_one</item>
         <item>@font/questrial</item>
         <item>@font/rubik_mono_one</item>
+        <item>@font/saira_semibold</item>
     </array>
 </resources>
