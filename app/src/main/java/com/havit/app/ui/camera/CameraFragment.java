@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
@@ -76,11 +77,14 @@ public class CameraFragment extends Fragment {
 
     private FragmentCameraBinding binding;
 
+    private CameraSelector lensFacing = CameraSelector.DEFAULT_BACK_CAMERA;
+
     private PreviewView previewView;
     private ImageView imageView;
 
     private FloatingActionButton shutterButton;
     private ImageButton cancelButton;
+    private ImageButton flipButton;
     private Button addButton;
 
     private Spinner habitSpinner;
@@ -158,6 +162,11 @@ public class CameraFragment extends Fragment {
         cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
             closeImageView();
+        });
+
+        flipButton = binding.flipButton;
+        flipButton.setOnClickListener(v -> {
+            flipCamera();
         });
 
         habitSpinner = binding.habitSpinner;
@@ -270,6 +279,7 @@ public class CameraFragment extends Fragment {
         cancelButton.setVisibility(View.GONE);
         addButton.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.GONE);
+        flipButton.setVisibility(View.VISIBLE);
     }
 
     private void addCameraProvider(View root) {
@@ -310,10 +320,6 @@ public class CameraFragment extends Fragment {
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         Preview preview = new Preview.Builder().build();
 
-        CameraSelector cameraSelector = new CameraSelector.Builder()
-                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
-                .build();
-
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
         WindowManager windowManager = requireActivity().getWindowManager();
@@ -347,9 +353,26 @@ public class CameraFragment extends Fragment {
             });
 
             // Image Provider variable has to be fixed...
-            cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, imageCapture, imageAnalysis, preview);
+            cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
         }
     }
+
+    private void flipCamera() {
+        if (lensFacing == CameraSelector.DEFAULT_FRONT_CAMERA) {
+            lensFacing = CameraSelector.DEFAULT_BACK_CAMERA;
+        }
+        else if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA) {
+            lensFacing = CameraSelector.DEFAULT_FRONT_CAMERA;
+        }
+
+        try {
+            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+            bindPreview(cameraProvider);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void handleShutter() {
         shutterButton.setScaleX(1.25f);
@@ -366,6 +389,7 @@ public class CameraFragment extends Fragment {
 
             shutterButton.setAlpha(1f);
             shutterButton.hide();
+            flipButton.setVisibility(View.GONE);
         }, 250);
 
         handler.postDelayed(() -> {
