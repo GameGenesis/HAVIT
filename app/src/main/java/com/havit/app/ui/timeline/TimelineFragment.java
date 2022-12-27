@@ -28,23 +28,23 @@ public class TimelineFragment extends Fragment {
 
     private FragmentTimelineBinding binding;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        // Hide the action bar...
-        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+        public View onCreateView(@NonNull LayoutInflater inflater,
+                ViewGroup container, Bundle savedInstanceState) {
+            // Hide the action bar...
+            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
-        TimelineViewModel timelineViewModel =
-                new ViewModelProvider(this).get(TimelineViewModel.class);
+            TimelineViewModel timelineViewModel =
+                    new ViewModelProvider(this).get(TimelineViewModel.class);
 
-        binding = FragmentTimelineBinding.inflate(inflater, container, false);
+            binding = FragmentTimelineBinding.inflate(inflater, container, false);
 
-        View root = binding.getRoot();
-        ImageButton button = binding.newHabitActionButton;
+            View root = binding.getRoot();
+            ImageButton button = binding.newHabitActionButton;
 
-        button.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
+            button.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
 
-        final TextView textView = binding.textNotifications;
-        timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+            final TextView textView = binding.textNotifications;
+            timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
         return root;
     }
