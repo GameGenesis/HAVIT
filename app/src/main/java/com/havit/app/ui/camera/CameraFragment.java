@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -38,7 +36,6 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -51,7 +48,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.havit.app.LoginActivity;
-import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 
 import java.nio.ByteBuffer;
@@ -81,18 +77,10 @@ public class CameraFragment extends Fragment {
     private Spinner habitSpinner;
     private ImageCapture imageCapture;
     private Bitmap bitmapImage;
-    private Typeface rubikMonoOne;
 
     private AudioManager am;
 
     private FirebaseUser user;
-
-    private enum CameraOrientation {
-        VERTICAL,
-        HORIZONTAL
-    }
-
-    private CameraOrientation curOrientation = CameraOrientation.VERTICAL;
 
     private final ArrayList<String> timelineItems = new ArrayList<>();
 
@@ -110,8 +98,6 @@ public class CameraFragment extends Fragment {
             ViewGroup container, Bundle savedInstanceState) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-        rubikMonoOne = ResourcesCompat.getFont(requireContext(), R.font.rubik_mono_one);
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
@@ -328,8 +314,6 @@ public class CameraFragment extends Fragment {
 
             // Image Provider variable has to be fixed...
             cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, imageCapture, imageAnalysis, preview);
-
-            listenToOrientation();
         }
     }
 
@@ -360,27 +344,6 @@ public class CameraFragment extends Fragment {
         if (forceCameraSound || am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             MediaActionSound sound = new MediaActionSound();
             sound.play(MediaActionSound.SHUTTER_CLICK);
-        }
-    }
-
-    private void listenToOrientation() {
-        OrientationEventListener mOrientationListener = new OrientationEventListener(
-                requireContext()) {
-            @Override
-            public void onOrientationChanged(int orientation) {
-                if (orientation == 0 || orientation == 180) {
-                    // Portrait...
-                    curOrientation = CameraOrientation.VERTICAL;
-
-                } else if (orientation == 90 || orientation == 270) {
-                    // Landscape...
-                    curOrientation = CameraOrientation.HORIZONTAL;
-                }
-            }
-        };
-
-        if (mOrientationListener.canDetectOrientation()) {
-            mOrientationListener.enable();
         }
     }
 
