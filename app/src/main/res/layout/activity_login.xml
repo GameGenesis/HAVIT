@@ -20,6 +20,7 @@
         android:fontFamily="@font/major_mono_display"
         android:gravity="center"
         android:text="@string/app_name"
+        android:textAlignment="center"
         android:textSize="48sp" />
 
     <Button

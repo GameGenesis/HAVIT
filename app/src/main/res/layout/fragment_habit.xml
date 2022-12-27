@@ -26,7 +26,8 @@
         android:id="@+id/time_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:timePickerMode="spinner" />
+        android:timePickerMode="spinner"
+        android:fontFamily="@font/questrial"/>
 
     <LinearLayout
         android:id="@+id/day_picker_layout"
@@ -40,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/questrial"
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
@@ -54,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/questrial"
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
@@ -68,6 +71,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/questrial"
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
@@ -82,6 +86,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/questrial"
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
@@ -96,6 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/questrial"
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
@@ -110,6 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/questrial"
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
@@ -124,6 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="@font/questrial"
             android:width="48dp"
             android:height="48dp"
             android:background="@drawable/rounded_toggle_btn"
@@ -141,6 +149,7 @@
         android:layout_height="wrap_content"
         android:hint="Name"
         android:inputType="text|textShortMessage"
+        android:fontFamily="@font/questrial"
         app:counterEnabled="true"
         app:counterMaxLength="15"
         app:endIconMode="clear_text"
@@ -150,6 +159,7 @@
             android:id="@+id/name_field_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fontFamily="@font/questrial"
             android:maxLength="15"
             android:singleLine="true" />
 
