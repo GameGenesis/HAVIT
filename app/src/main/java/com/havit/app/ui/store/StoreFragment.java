@@ -42,32 +42,7 @@ public class StoreFragment extends Fragment {
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
-
-        // Initialize the Firebase Storage service
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-
-        // Define the path to the parent folder
-        String folderPath = "templates";
-
-        // Retrieve a reference to the parent folder
-        StorageReference folderRef = storage.getReference(folderPath);
-
-        // Use the list() method to retrieve a list of all the subfolders in the parent folder
-        folderRef.list(1000)
-            .addOnSuccessListener(listResult -> {
-                // The list of subfolders is stored in the prefixes field
-                List<StorageReference> subfolders = listResult.getPrefixes();
-                // Iterate through the list of subfolders and print their names
-                for (StorageReference subfolder : subfolders) {
-                    templateNames.add(subfolder.getName());
-                }
-                Log.d("TemplateNames", templateNames.toString());
-            })
-            .addOnFailureListener(exception -> {
-                // An error occurred while retrieving the list of subfolders
-                Log.e("Error Retrieving the List of Templates...", exception.getMessage());
-            });
-
+        
         StoreViewModel storeViewModel =
                 new ViewModelProvider(this).get(StoreViewModel.class);
 
