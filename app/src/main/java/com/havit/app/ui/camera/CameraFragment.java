@@ -73,11 +73,8 @@ public class CameraFragment extends Fragment {
     public static boolean forceCameraSound = Objects.equals(LoginActivity.sDefSystemLanguage, "ko") || Objects.equals(LoginActivity.sDefSystemLanguage, "ja");
 
     private CameraViewModel viewModel;
-
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
-
     private FragmentCameraBinding binding;
-
     private CameraSelector lensFacing = CameraSelector.DEFAULT_BACK_CAMERA;
 
     private PreviewView previewView;
@@ -97,32 +94,6 @@ public class CameraFragment extends Fragment {
     private FirebaseUser user;
 
     private final ArrayList<String> timelineItems = new ArrayList<>();
-
-    private void loadTemplates() {
-        // Initialize the Firebase Storage service
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-
-        // Define the path to the parent folder1
-        String folderPath = "templates";
-
-        // Retrieve a reference to the parent folder
-        StorageReference folderRef = storage.getReference(folderPath);
-
-        // Use the list() method to retrieve a list of all the subfolders in the parent folder
-        folderRef.list(1000)
-                .addOnSuccessListener(listResult -> {
-                    // The list of subfolders is stored in the prefixes field
-                    List<StorageReference> subfolders = listResult.getPrefixes();
-                    // Create a list of templates from the subfolders
-                    for (StorageReference subfolder : subfolders) {
-                        timelineItems.add(MainActivity.decodeFileNamingScheme(new Template(subfolder.getName()).name));
-                    }
-                })
-                .addOnFailureListener(exception -> {
-                    // An error occurred while retrieving the list of subfolders
-                    Log.e("Error Retrieving the List of Templates...", exception.getMessage());
-                });
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,8 +143,6 @@ public class CameraFragment extends Fragment {
 
         habitSpinner = binding.habitSpinner;
         habitSpinner.setVisibility(View.GONE);
-        habitSpinner.setSelection(0);
-        setUpSpinner();
 
         addButton = binding.addButton;
         addButton.setVisibility(View.GONE);
@@ -188,6 +157,35 @@ public class CameraFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void loadTemplates() {
+        // Initialize the Firebase Storage service
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        // Define the path to the parent folder1
+        String folderPath = "templates";
+
+        // Retrieve a reference to the parent folder
+        StorageReference folderRef = storage.getReference(folderPath);
+
+        // Use the list() method to retrieve a list of all the subfolders in the parent folder
+        folderRef.list(1000)
+                .addOnSuccessListener(listResult -> {
+                    // The list of subfolders is stored in the prefixes field
+                    List<StorageReference> subfolders = listResult.getPrefixes();
+                    // Create a list of templates from the subfolders
+                    for (StorageReference subfolder : subfolders) {
+                        timelineItems.add(MainActivity.decodeFileNamingScheme(new Template(subfolder.getName()).name));
+                        Log.d("timeline", timelineItems.toString());
+                    }
+
+                    setUpSpinner();
+                })
+                .addOnFailureListener(exception -> {
+                    // An error occurred while retrieving the list of subfolders
+                    Log.e("Error Retrieving the List of Templates...", exception.getMessage());
+                });
     }
 
     private void setUpSpinner() {
@@ -223,11 +221,11 @@ public class CameraFragment extends Fragment {
         habitSpinner.setAdapter(adapter);
 
         // ViewModel observes the changes made in the spinner...
-        viewModel.getTimelineItems().observe(getViewLifecycleOwner(), (Observer<ArrayList<String>>) timelineItems -> {
+        /*viewModel.getTimelineItems().observe(getViewLifecycleOwner(), (Observer<ArrayList<String>>) timelineItems -> {
             adapter.clear();
             adapter.addAll(timelineItems);
             adapter.notifyDataSetChanged();
-        });
+        });*/
 
         // Called when an item is selected
         habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
