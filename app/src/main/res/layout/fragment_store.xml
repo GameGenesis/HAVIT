@@ -14,9 +14,9 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rubik_mono_one"
-        android:text="Templates"
         android:layout_margin="5dp"
+        android:fontFamily="@font/major_mono_display"
+        android:text="Templates"
         android:textAlignment="center"
         android:textSize="28sp" />
 
@@ -31,12 +31,12 @@
         android:id="@+id/done_button"
         android:layout_width="wrap_content"
         android:layout_height="54dp"
-        android:fontFamily="@font/rubik_mono_one"
+        android:layout_margin="5dp"
+        android:fontFamily="@font/questrial"
         android:paddingLeft="20dp"
         android:paddingTop="6dp"
         android:paddingRight="20dp"
         android:paddingBottom="6dp"
-        android:layout_margin="5dp"
         android:text="Done"
         android:textSize="16sp" />
 

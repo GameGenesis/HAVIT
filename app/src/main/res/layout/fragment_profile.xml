@@ -13,17 +13,17 @@
         android:id="@+id/text_notifications"
         android:layout_width="358dp"
         android:layout_height="66dp"
+        android:layout_margin="5dp"
         android:layout_marginStart="8dp"
-        android:fontFamily="@font/rubik_mono_one"
+        android:fontFamily="@font/questrial"
         android:textAlignment="center"
-        android:textSize="24sp"
-        android:layout_margin="5dp"/>
+        android:textSize="24sp" />
 
     <Button
         android:id="@+id/sign_out_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rubik_mono_one"
-        android:text="@string/sign_out_text"
-        android:layout_margin="5dp" />
+        android:layout_margin="5dp"
+        android:fontFamily="@font/questrial"
+        android:text="@string/sign_out_text" />
 </LinearLayout>
