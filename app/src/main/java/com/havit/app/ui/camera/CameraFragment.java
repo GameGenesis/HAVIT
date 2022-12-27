@@ -100,7 +100,7 @@ public class CameraFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // Don't add the lines below under onCreateView as it will create multiple instances...
-        loadTemplates();
+        //loadTemplates();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -156,10 +156,14 @@ public class CameraFragment extends Fragment {
             }
         });
 
+        loadTemplates();
+
         return root;
     }
 
     private void loadTemplates() {
+        timelineItems.clear();
+
         // Initialize the Firebase Storage service
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
