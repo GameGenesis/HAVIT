@@ -75,6 +75,7 @@ public class CameraFragment extends Fragment {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private FragmentCameraBinding binding;
     private CameraSelector lensFacing = CameraSelector.DEFAULT_BACK_CAMERA;
+    private int flashMode = ImageCapture.FLASH_MODE_OFF;
 
     private PreviewView previewView;
     private ImageView imageView;
@@ -98,8 +99,6 @@ public class CameraFragment extends Fragment {
 
     private final ArrayList<String> timelineItems = new ArrayList<>();
 
-    private boolean isFlashEnabled;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
 
@@ -118,8 +117,6 @@ public class CameraFragment extends Fragment {
         addCameraProvider();
 
         previewView = binding.previewView;
-
-        isFlashEnabled = false;
 
         imageView = binding.imageView;
         imageView.setVisibility(View.GONE);
@@ -144,25 +141,7 @@ public class CameraFragment extends Fragment {
         flashButton = binding.flashButton;
 
         flashButton.setOnClickListener(view -> {
-            isFlashEnabled = !isFlashEnabled;
-
-            cameraControl = null;
-
-            if (camera != null) {
-                cameraControl = camera.getCameraControl();
-            }
-
-            if (isFlashEnabled) {
-                if (cameraControl != null) {
-                    cameraControl.enableTorch(true); // enable torch
-                }
-                flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
-            } else {
-                if (cameraControl != null) {
-                    cameraControl.enableTorch(false); // disable torch
-                }
-                flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
-            }
+            toggleFlash();
         });
 
         habitSpinner = binding.habitSpinner;
@@ -310,10 +289,7 @@ public class CameraFragment extends Fragment {
         habitSpinner.setVisibility(View.GONE);
         flipButton.setVisibility(View.VISIBLE);
 
-        if (lensFacing == CameraSelector.DEFAULT_FRONT_CAMERA) {
-            flashButton.setVisibility(View.GONE);
-
-        } else {
+        if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA) {
             flashButton.setVisibility(View.VISIBLE);
         }
     }
@@ -400,6 +376,7 @@ public class CameraFragment extends Fragment {
                 new ImageCapture.Builder()
                     .setTargetAspectRatio(AspectRatio.RATIO_16_9)
                     .setTargetRotation(rotation)
+                    .setFlashMode(flashMode)
                         // Below code minimizes the shutter lag...
                     .setCaptureMode(ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG)
                     .build();
@@ -432,6 +409,24 @@ public class CameraFragment extends Fragment {
             lensFacing = CameraSelector.DEFAULT_FRONT_CAMERA;
             flashButton.setVisibility(View.GONE);
         }
+
+        try {
+            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+            bindPreview(cameraProvider);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void toggleFlash() {
+        if (flashMode == ImageCapture.FLASH_MODE_OFF) {
+            flashMode = ImageCapture.FLASH_MODE_ON;
+            flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
+        } else {
+            flashMode = ImageCapture.FLASH_MODE_OFF;
+            flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
+        }
+        // There is also ImageCapture.FLASH_MODE_AUTO
 
         try {
             ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
