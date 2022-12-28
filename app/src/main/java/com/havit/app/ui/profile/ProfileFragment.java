@@ -7,12 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.havit.app.LoginActivity;
 import com.havit.app.databinding.FragmentProfileBinding;
 
@@ -36,20 +40,42 @@ public class ProfileFragment extends Fragment {
             final TextView textView = binding.textNotifications;
             profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-            Button button = binding.signOutButton;
+            Button signOutButton = binding.signOutButton;
+            signOutButton.setOnClickListener(v -> {
+                Intent i = new Intent(requireActivity(), LoginActivity.class);
+                i.putExtra("isSignOut", true);
+                startActivity(i);
+            });
 
-        button.setOnClickListener(v -> {
-            Intent i = new Intent(requireActivity(), LoginActivity.class);
-            i.putExtra("isSignOut", true);
-            startActivity(i);
-        });
+            Button resetPasswordButton = binding.resetPasswordButton;
+            resetPasswordButton.setOnClickListener(this::resetPassword);
 
-        return root;
+            return root;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void resetPassword(View view) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String emailAddress = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+
+        auth.useAppLanguage();
+        auth.sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // Password reset email sent
+                            Toast.makeText(requireActivity(), "Password reset email sent to " + emailAddress, Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Error occurred
+                            Toast.makeText(requireActivity(), "Error sending password reset email", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
