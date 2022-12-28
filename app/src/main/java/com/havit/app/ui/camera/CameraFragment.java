@@ -285,6 +285,7 @@ public class CameraFragment extends Fragment {
         addButton.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.GONE);
         flipButton.setVisibility(View.VISIBLE);
+        flashButton.setVisibility(View.VISIBLE);
     }
 
     private void addCameraProvider(View root) {
@@ -380,14 +381,17 @@ public class CameraFragment extends Fragment {
     }
 
     private void flashCamera() {
-        if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_OFF) {
-            imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
-            flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
+        if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA){
+            if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_OFF) {
+                imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
+                flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
 
-        } else if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_ON) {
-            imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
-            flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
+            } else if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_ON) {
+                imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
+                flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
+            }
         }
+
     }
 
 
@@ -407,6 +411,7 @@ public class CameraFragment extends Fragment {
             shutterButton.setAlpha(1f);
             shutterButton.hide();
             flipButton.setVisibility(View.GONE);
+            flashButton.setVisibility(View.GONE);
         }, 250);
 
         handler.postDelayed(() -> {
