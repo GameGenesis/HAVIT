@@ -25,17 +25,15 @@
             android:layout_width="160dp"
             android:layout_height="54dp"
             android:layout_margin="10dp"
-            android:background="@drawable/roundstyle"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
             android:contentDescription="Select Habit"
             android:elevation="20dp"
             android:textColor="?attr/colorOnSecondary"
+            android:background="@drawable/roundstyle"
             app:backgroundTint="?attr/colorOnPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.816" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/shutter_button"
@@ -64,18 +62,16 @@
             android:id="@+id/cancel_button"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
             android:backgroundTint="@color/transparent"
             android:contentDescription="Close Image View"
             android:scaleX="1.3"
             android:scaleY="1.3"
             android:src="@android:drawable/ic_delete"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.78"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.92"
             app:tint="@color/white" />
 
         <ImageButton
