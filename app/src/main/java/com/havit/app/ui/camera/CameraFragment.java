@@ -142,6 +142,7 @@ public class CameraFragment extends Fragment {
         });
 
         flashButton = binding.flashButton;
+
         flashButton.setOnClickListener(view -> {
             isFlashEnabled = !isFlashEnabled;
 
@@ -308,7 +309,13 @@ public class CameraFragment extends Fragment {
         addButton.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.GONE);
         flipButton.setVisibility(View.VISIBLE);
-        flashButton.setVisibility(View.VISIBLE);
+
+        if (lensFacing == CameraSelector.DEFAULT_FRONT_CAMERA) {
+            flashButton.setVisibility(View.GONE);
+
+        } else {
+            flashButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void addCameraProvider() {
