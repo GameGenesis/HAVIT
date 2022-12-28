@@ -90,9 +90,6 @@ public class CameraFragment extends Fragment {
     private ImageCapture imageCapture;
     private Bitmap bitmapImage;
 
-    private Camera camera;
-    private CameraControl cameraControl;
-
     private AudioManager am;
 
     private FirebaseUser user;
@@ -103,7 +100,6 @@ public class CameraFragment extends Fragment {
             ViewGroup container, Bundle savedInstanceState) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        camera = null;
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
@@ -261,8 +257,6 @@ public class CameraFragment extends Fragment {
     }
 
     private void takePhoto() {
-        CameraControl cameraControl = camera.getCameraControl();
-
         imageView.setVisibility(View.VISIBLE);
         imageCapture.takePicture(ContextCompat.getMainExecutor(requireActivity()), new ImageCapture.OnImageCapturedCallback() {
             @Override
@@ -396,7 +390,7 @@ public class CameraFragment extends Fragment {
             });
 
             // Image Provider variable has to be fixed...
-            camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
+            cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
         }
     }
 
@@ -419,21 +413,16 @@ public class CameraFragment extends Fragment {
     }
 
     private void toggleFlash() {
-        if (flashMode == ImageCapture.FLASH_MODE_OFF) {
+        if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_OFF) {
             flashMode = ImageCapture.FLASH_MODE_ON;
+            imageCapture.setFlashMode(flashMode);
             flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
-        } else {
+        } else if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_ON) {
             flashMode = ImageCapture.FLASH_MODE_OFF;
+            imageCapture.setFlashMode(flashMode);
             flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
         }
         // There is also ImageCapture.FLASH_MODE_AUTO
-
-        try {
-            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-            bindPreview(cameraProvider);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     private void handleShutter() {
