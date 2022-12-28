@@ -15,6 +15,7 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -29,6 +30,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraControl;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
@@ -86,24 +89,22 @@ public class CameraFragment extends Fragment {
     private ImageCapture imageCapture;
     private Bitmap bitmapImage;
 
+    private Camera camera;
+    private CameraControl cameraControl;
+
     private AudioManager am;
 
     private FirebaseUser user;
 
     private final ArrayList<String> timelineItems = new ArrayList<>();
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Don't add the lines below under onCreateView as it will create multiple instances...
-        //loadTemplates();
-    }
+    private boolean isFlashEnabled;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
+        camera = null;
 
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
@@ -114,9 +115,11 @@ public class CameraFragment extends Fragment {
         am = (AudioManager)requireActivity().getSystemService(Context.AUDIO_SERVICE);
 
         View root = binding.getRoot();
-        addCameraProvider(root);
+        addCameraProvider();
 
         previewView = binding.previewView;
+
+        isFlashEnabled = false;
 
         imageView = binding.imageView;
         imageView.setVisibility(View.GONE);
@@ -139,8 +142,26 @@ public class CameraFragment extends Fragment {
         });
 
         flashButton = binding.flashButton;
-        flashButton.setOnClickListener(v -> {
-            flashCamera();
+        flashButton.setOnClickListener(view -> {
+            isFlashEnabled = !isFlashEnabled;
+
+            cameraControl = null;
+
+            if (camera != null) {
+                cameraControl = camera.getCameraControl();
+            }
+
+            if (isFlashEnabled) {
+                if (cameraControl != null) {
+                    cameraControl.enableTorch(true); // enable torch
+                }
+                flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
+            } else {
+                if (cameraControl != null) {
+                    cameraControl.enableTorch(false); // disable torch
+                }
+                flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
+            }
         });
 
         habitSpinner = binding.habitSpinner;
@@ -260,6 +281,8 @@ public class CameraFragment extends Fragment {
     }
 
     private void takePhoto() {
+        CameraControl cameraControl = camera.getCameraControl();
+
         imageView.setVisibility(View.VISIBLE);
         imageCapture.takePicture(ContextCompat.getMainExecutor(requireActivity()), new ImageCapture.OnImageCapturedCallback() {
             @Override
@@ -288,7 +311,7 @@ public class CameraFragment extends Fragment {
         flashButton.setVisibility(View.VISIBLE);
     }
 
-    private void addCameraProvider(View root) {
+    private void addCameraProvider() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
         cameraProviderFuture.addListener(() -> {
@@ -316,6 +339,26 @@ public class CameraFragment extends Fragment {
         // Rotate the bitmap image 90 degrees (landscape -> portrait)
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
+
+        // Correct preview output to account for display rotation
+        float rotationDegrees = 0;
+
+        switch (imageView.getDisplay().getRotation()) {
+            case Surface.ROTATION_0:
+                rotationDegrees = 0;
+                break;
+            case Surface.ROTATION_90:
+                rotationDegrees = 90;
+                break;
+            case Surface.ROTATION_180:
+                rotationDegrees = 180;
+                break;
+            case Surface.ROTATION_270:
+                rotationDegrees = 270;
+                break;
+        }
+
+        matrix.postRotate(-rotationDegrees);
 
         bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
 
@@ -360,16 +403,18 @@ public class CameraFragment extends Fragment {
             });
 
             // Image Provider variable has to be fixed...
-            cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
+            camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
         }
     }
 
     private void flipCamera() {
         if (lensFacing == CameraSelector.DEFAULT_FRONT_CAMERA) {
             lensFacing = CameraSelector.DEFAULT_BACK_CAMERA;
+            flashButton.setVisibility(View.VISIBLE);
         }
         else if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA) {
             lensFacing = CameraSelector.DEFAULT_FRONT_CAMERA;
+            flashButton.setVisibility(View.GONE);
         }
 
         try {
@@ -379,21 +424,6 @@ public class CameraFragment extends Fragment {
             e.printStackTrace();
         }
     }
-
-    private void flashCamera() {
-        if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA){
-            if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_OFF) {
-                imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
-                flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
-
-            } else if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_ON) {
-                imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
-                flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
-            }
-        }
-
-    }
-
 
     private void handleShutter() {
         shutterButton.setScaleX(1.25f);
