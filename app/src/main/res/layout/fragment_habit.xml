@@ -147,7 +147,7 @@
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Name"
+        android:hint="@string/text_input_name"
         android:inputType="text|textShortMessage"
         android:fontFamily="@font/questrial"
         app:counterEnabled="true"

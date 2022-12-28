@@ -33,6 +33,7 @@
         <item name="android:windowBackground">@drawable/bg_login</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:fontFamily">@font/questrial</item>
         <item name="android:textColorHint">@android:color/white</item>
     </style>
 </resources>

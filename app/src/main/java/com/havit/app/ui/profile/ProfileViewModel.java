@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Locale;
+import java.util.Objects;
+
 public class ProfileViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
@@ -16,7 +19,7 @@ public class ProfileViewModel extends ViewModel {
         mText = new MutableLiveData<>();
 
         assert user != null;
-        mText.setValue("Howdy,\n" + user.getDisplayName());
+        mText.setValue("HOWDY,\n" + Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT));
     }
 
     public LiveData<String> getText() {
