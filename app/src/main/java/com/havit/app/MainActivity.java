@@ -1,8 +1,10 @@
 package com.havit.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
