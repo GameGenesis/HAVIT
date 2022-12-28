@@ -25,13 +25,11 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
@@ -40,7 +38,6 @@ import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 
@@ -54,10 +51,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
 import com.havit.app.MainActivity;
-import com.havit.app.R;
 
 import com.havit.app.databinding.FragmentCameraBinding;
-import com.havit.app.ui.store.StoreViewModel;
 import com.havit.app.ui.store.Template;
 
 import java.nio.ByteBuffer;
@@ -167,8 +162,8 @@ public class CameraFragment extends Fragment {
         // Initialize the Firebase Storage service
         FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        // Define the path to the parent folder1
-        String folderPath = "templates";
+        // Define the path to the parent folder
+        String folderPath = "users/" + user.getEmail();
 
         // Retrieve a reference to the parent folder
         StorageReference folderRef = storage.getReference(folderPath);

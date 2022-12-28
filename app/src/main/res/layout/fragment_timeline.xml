@@ -8,19 +8,41 @@
     android:layout_height="match_parent"
     tools:context=".ui.timeline.TimelineFragment">
 
-    <TextView
-        android:id="@+id/text_notifications"
-        android:layout_width="393dp"
-        android:layout_height="83dp"
-        android:layout_margin="10dp"
-        android:fontFamily="@font/questrial"
-        android:textAlignment="center"
-        android:textSize="18sp"
+    <LinearLayout
+        android:id="@+id/central_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.537" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/title_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:fontFamily="@font/major_mono_display"
+            android:text="@string/title_timeline"
+            android:textAlignment="center"
+            android:textSize="42sp" />
+
+        <TextView
+            android:id="@+id/text_notifications"
+            android:layout_width="393dp"
+            android:layout_height="83dp"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/questrial"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.537" />
+
+    </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/new_habit_action_button"
