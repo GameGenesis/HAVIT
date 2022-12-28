@@ -190,7 +190,6 @@ public class CameraFragment extends Fragment {
                     // Create a list of templates from the subfolders
                     for (StorageReference subfolder : subfolders) {
                         timelineItems.add(MainActivity.decodeFileNamingScheme(new Template(subfolder.getName()).name));
-                        Log.d("timeline", timelineItems.toString());
                     }
 
                     setUpSpinner();

@@ -37,4 +37,10 @@
         android:fontFamily="@font/questrial"
         android:text="@string/sign_out_text" />
 
+    <Button
+        android:id="@+id/reset_password_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reset Password" />
+
 </LinearLayout>
