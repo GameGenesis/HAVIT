@@ -338,7 +338,12 @@ public class CameraFragment extends Fragment {
 
         // Rotate the bitmap image 90 degrees (landscape -> portrait)
         Matrix matrix = new Matrix();
-        matrix.postRotate(90);
+
+        if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA) {
+            matrix.postRotate(90);
+        } else {
+            matrix.postRotate(270);
+        }
 
         // Correct preview output to account for display rotation
         float rotationDegrees = 0;
