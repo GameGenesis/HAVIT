@@ -2,7 +2,6 @@ package com.havit.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -54,6 +53,13 @@ public class LoginActivity extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (!MainActivity.isConnected(this)) {
+            Intent i = new Intent(getApplicationContext(), ErrorActivity.class);
+            startActivity(i);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            return;
+        }
+
         if (user != null) {
             if (isSignOut) {
                 signOut();
@@ -66,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        com.havit.app.databinding.ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         Button button = binding.submitButton;
