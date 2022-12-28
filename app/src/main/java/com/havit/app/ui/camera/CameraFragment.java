@@ -52,6 +52,7 @@ import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
 import com.havit.app.MainActivity;
 
+import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
 import com.havit.app.ui.store.Template;
 
@@ -78,6 +79,7 @@ public class CameraFragment extends Fragment {
     private FloatingActionButton shutterButton;
     private ImageButton cancelButton;
     private ImageButton flipButton;
+    private ImageButton flashButton;
     private Button addButton;
 
     private Spinner habitSpinner;
@@ -134,6 +136,11 @@ public class CameraFragment extends Fragment {
         flipButton = binding.flipButton;
         flipButton.setOnClickListener(v -> {
             flipCamera();
+        });
+
+        flashButton = binding.flashButton;
+        flashButton.setOnClickListener(v -> {
+            flashCamera();
         });
 
         habitSpinner = binding.habitSpinner;
@@ -369,6 +376,17 @@ public class CameraFragment extends Fragment {
             bindPreview(cameraProvider);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void flashCamera() {
+        if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_OFF) {
+            imageCapture.setFlashMode(ImageCapture.FLASH_MODE_ON);
+            flashButton.setImageResource(R.drawable.ic_baseline_flash_on);
+
+        } else if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_ON) {
+            imageCapture.setFlashMode(ImageCapture.FLASH_MODE_OFF);
+            flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
         }
     }
 
