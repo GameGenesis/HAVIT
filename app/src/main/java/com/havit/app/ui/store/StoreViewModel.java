@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModel;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +19,14 @@ public class StoreViewModel extends ViewModel {
 
     private final MutableLiveData<List<Template>> templates;
 
+    // Create a list of templates from the subfolders
+    private final List<Template> templateList;
+
     public StoreViewModel() {
         super();
         // Initialize the templates LiveData
         templates = new MutableLiveData<>();
+        templateList = new ArrayList<>();
         // Load the templates data
         loadTemplates();
     }
@@ -43,8 +50,7 @@ public class StoreViewModel extends ViewModel {
                 .addOnSuccessListener(listResult -> {
                     // The list of subfolders is stored in the prefixes field
                     List<StorageReference> subfolders = listResult.getPrefixes();
-                    // Create a list of templates from the subfolders
-                    List<Template> templateList = new ArrayList<>();
+
                     for (StorageReference subfolder : subfolders) {
                         templateList.add(new Template(subfolder.getName()));
                     }
@@ -55,5 +61,36 @@ public class StoreViewModel extends ViewModel {
                     // An error occurred while retrieving the list of subfolders
                     Log.e("Error Retrieving the List of Templates...", exception.getMessage());
                 });
+
+        for (Template template : templateList) {
+            String filePath = "templates/" + template.name + ".json";
+            StorageReference nestedStorageRef = storage.getReference(filePath);
+
+            nestedStorageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                // Convert the byte array to a string
+                String jsonString = new String(bytes);
+
+                // Parse the JSON string (see next step)
+                parseJsonString(jsonString);
+            });
+        }
+    }
+
+    private void parseJsonString(String jsonString) {
+        try {
+            // Create a JSON object from the JSON string
+            JSONObject jsonObject = new JSONObject(jsonString);
+
+            // Extract the values from the JSON object
+            String name = jsonObject.getString("name");
+            String description = jsonObject.getString("description");
+
+            // Print the values to the log
+            Log.d("JSON Parsing", "Name: " + name);
+            Log.d("JSON Parsing", "Description: " + description);
+        } catch (JSONException e) {
+            // If an error occurs, print the error to the log
+            Log.e("JSON Parsing", "Error parsing JSON string: " + jsonString, e);
+        }
     }
 }
