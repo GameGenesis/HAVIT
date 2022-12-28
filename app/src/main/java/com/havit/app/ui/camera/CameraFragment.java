@@ -341,8 +341,12 @@ public class CameraFragment extends Fragment {
 
         if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA) {
             matrix.postRotate(90);
+
         } else {
-            matrix.postRotate(270);
+            // Flip the image horizontally...
+            matrix.postScale(-1.0f, 1.0f);
+            // For selfie images...
+            matrix.postRotate(90);
         }
 
         // Correct preview output to account for display rotation
