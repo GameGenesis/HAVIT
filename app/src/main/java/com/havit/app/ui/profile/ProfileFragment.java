@@ -61,20 +61,20 @@ public class ProfileFragment extends Fragment {
 
     private void resetPassword(View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
-        String emailAddress = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+        String emailAddress = Objects.requireNonNull(auth.getCurrentUser()).getEmail();
 
         auth.useAppLanguage();
+
+        assert emailAddress != null;
+
         auth.sendPasswordResetEmail(emailAddress)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // Password reset email sent
-                            Toast.makeText(requireActivity(), "Password reset email sent to " + emailAddress, Toast.LENGTH_SHORT).show();
-                        } else {
-                            // Error occurred
-                            Toast.makeText(requireActivity(), "Error sending password reset email", Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Password reset email sent
+                        Toast.makeText(requireActivity(), "Password reset email sent to " + emailAddress, Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Error occurred
+                        Toast.makeText(requireActivity(), "Error sending password reset email", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
