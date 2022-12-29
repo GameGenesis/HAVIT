@@ -53,7 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (!MainActivity.isConnected(this)) {
+        if (MainActivity.isNotConnected(this)) {
             Intent i = new Intent(getApplicationContext(), ErrorActivity.class);
             startActivity(i);
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
