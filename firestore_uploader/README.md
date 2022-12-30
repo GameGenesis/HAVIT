@@ -4,7 +4,7 @@
 
 Developed and Designed by John Seong, 2022.
 
-This utility is used to upload templates to the **HAVIT**'s central database.
+This utility is used to upload *Iterative Timeline* templates to the **HAVIT**'s central database.
 
 ---
 
