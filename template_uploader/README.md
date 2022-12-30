@@ -2,7 +2,7 @@
 
 # Firestore JSON Uploader
 
-Developed and Designed by John Seong, 2022.
+*Developed and Designed by John Seong, 2022.*
 
 This utility is used to upload *Iterative Timeline* templates to the **HAVIT**'s central database.
 
