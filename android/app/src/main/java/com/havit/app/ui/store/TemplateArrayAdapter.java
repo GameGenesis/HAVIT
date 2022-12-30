@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.havit.app.MainActivity;
@@ -30,6 +32,8 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.template_item, parent, false);
         }
 
+        LinearLayout templateContainer = convertView.findViewById(R.id.template_container);
+
         // Lookup views for data population
         ImageView templateImageView = convertView.findViewById(R.id.template_image);
 
@@ -37,17 +41,36 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         TextView templateDescriptionTextView = convertView.findViewById(R.id.template_description);
         TextView templatePriceTextView = convertView.findViewById(R.id.template_price);
 
+        CheckBox templateCheckBox = convertView.findViewById(R.id.template_checkbox);
+
+        templateContainer.setOnClickListener(v -> {
+            // Do something when the LinearLayout is clicked
+            templateCheckBox.toggle();
+        });
+
+        templateCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                // The checkbox is checked
+                // Do something here
+            } else {
+                // The checkbox is not checked
+                // Do something here
+            }
+        });
+
         // Populate the data into the template view using the data object
-        templateImageView.setImageBitmap(template.thumbnail);
+        // templateImageView.setImageBitmap(template.thumbnail);
         templateImageView.setMaxWidth(800);
 
         templateNameTextView.setText(template.name.toUpperCase(Locale.ROOT));
         templateDescriptionTextView.setText(template.description.toUpperCase(Locale.ROOT));
 
-        templatePriceTextView.setText(String.format(Locale.ROOT, "$ %d", template.price));
-
         if (template.price != 0) {
+            templatePriceTextView.setText(String.format(Locale.ROOT, "$ %d", template.price));
             templatePriceTextView.setTextColor(MainActivity.colorAccent);
+
+        } else {
+            templatePriceTextView.setText("FREE");
         }
 
         // Return the completed view to render on screen
