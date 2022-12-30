@@ -4,6 +4,8 @@
 
 Developed and Designed by John Seong, 2022.
 
+This utility is used to upload templates to the **HAVIT**'s central database.
+
 ---
 
 This python script essentially "uploads" the JSON object to the famous NoSQL Database, Firestore, without having to go through the hassle of manually adding all the key-value pairs on the Google Firebase website.
