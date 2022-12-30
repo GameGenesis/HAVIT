@@ -2,7 +2,6 @@ package com.havit.app.ui.store;
 
 import android.os.Bundle;
 import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,13 +20,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentStoreBinding;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class StoreFragment extends Fragment {

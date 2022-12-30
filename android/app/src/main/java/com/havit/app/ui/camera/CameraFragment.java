@@ -55,7 +55,6 @@ import com.havit.app.MainActivity;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
-import com.havit.app.ui.store.Template;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -73,6 +72,7 @@ public class CameraFragment extends Fragment {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private FragmentCameraBinding binding;
     private CameraSelector lensFacing = CameraSelector.DEFAULT_BACK_CAMERA;
+
     private int flashMode = ImageCapture.FLASH_MODE_OFF;
 
     private PreviewView previewView;
