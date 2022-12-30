@@ -16,6 +16,8 @@ import com.havit.app.R;
 import java.util.List;
 import java.util.Locale;
 
+// Binding doesn't work here...
+
 public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
     public TemplateArrayAdapter(Context context, List<Template> templates) {
