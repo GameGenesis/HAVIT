@@ -6,20 +6,21 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import org.json.JSONException;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class StoreViewModel extends ViewModel {
 
     private final MutableLiveData<List<Template>> templates;
-
-    // Create a list of templates from the subfolders
     private final List<Template> templateList;
 
     public StoreViewModel() {
@@ -36,61 +37,29 @@ public class StoreViewModel extends ViewModel {
     }
 
     private void loadTemplates() {
-        // Initialize the Firebase Storage service
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference colRef = db.collection("templates");
 
-        // Define the path to the parent folder1
-        String folderPath = "templates";
+        colRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                List<DocumentSnapshot> documents = querySnapshot.getDocuments();
 
-        // Retrieve a reference to the parent folder
-        StorageReference folderRef = storage.getReference(folderPath);
+                for (DocumentSnapshot document : documents) {
+                    Map<String, Object> data = document.getData();
 
-        // Use the list() method to retrieve a list of all the subfolders in the parent folder
-        folderRef.list(1000)
-                .addOnSuccessListener(listResult -> {
-                    // The list of subfolders is stored in the prefixes field
-                    List<StorageReference> subfolders = listResult.getPrefixes();
+                    if (data != null) {
+                        String jsonString = new JSONObject(data).toString();
 
-                    for (StorageReference subfolder : subfolders) {
-                        templateList.add(new Template(subfolder.getName()));
+                        templateList.add(new Template(jsonString));
                     }
-                    // Set the value of the templates LiveData
-                    templates.postValue(templateList);
-                })
-                .addOnFailureListener(exception -> {
-                    // An error occurred while retrieving the list of subfolders
-                    Log.e("Error Retrieving the List of Templates...", exception.getMessage());
-                });
+                }
 
-        for (Template template : templateList) {
-            String filePath = "templates/" + template.name + ".json";
-            StorageReference nestedStorageRef = storage.getReference(filePath);
-
-            nestedStorageRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
-                // Convert the byte array to a string
-                String jsonString = new String(bytes);
-
-                // Parse the JSON string (see next step)
-                parseJsonString(jsonString);
-            });
-        }
-    }
-
-    private void parseJsonString(String jsonString) {
-        try {
-            // Create a JSON object from the JSON string
-            JSONObject jsonObject = new JSONObject(jsonString);
-
-            // Extract the values from the JSON object
-            String name = jsonObject.getString("name");
-            String description = jsonObject.getString("description");
-
-            // Print the values to the log
-            Log.d("JSON Parsing", "Name: " + name);
-            Log.d("JSON Parsing", "Description: " + description);
-        } catch (JSONException e) {
-            // If an error occurs, print the error to the log
-            Log.e("JSON Parsing", "Error parsing JSON string: " + jsonString, e);
-        }
+                templates.postValue(templateList);
+                // do something with the array
+            } else {
+                Log.e("Fatal Error", "Problem in retrieving the JSON template files from the server!");
+            }
+        });
     }
 }
