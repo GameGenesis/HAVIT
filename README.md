@@ -22,7 +22,7 @@
 
 - Minimum SDK level is set to version 23, while the Target SDK level is 33. Camera feature uses the latest CameraX API by Google.
 
-- On public repo, conceal ```app/google-services.json``` as it contains the API key for Firebase.
+- On public repo, conceal ```android/app/google-services.json``` and ```android/app/src/main/res/raw/service_account.json``` as they the API keys for Firebase and Firestore, respectively.
 
 - To refresh & install new dependencies written on ```build.gradle```, simply go to *File* settings on your desktop's top navigation bar, then hit *Sync Project with Gradle* button!
 
