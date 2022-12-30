@@ -8,9 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 
 import java.util.List;
+import java.util.Locale;
 
 public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
@@ -30,11 +32,23 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
         // Lookup views for data population
         ImageView templateImageView = convertView.findViewById(R.id.template_image);
+
         TextView templateNameTextView = convertView.findViewById(R.id.template_name);
+        TextView templateDescriptionTextView = convertView.findViewById(R.id.template_description);
+        TextView templatePriceTextView = convertView.findViewById(R.id.template_price);
 
         // Populate the data into the template view using the data object
-        // templateImageView.setImageResource(template.imageResId);
-        templateNameTextView.setText(template.name);
+        templateImageView.setImageBitmap(template.thumbnail);
+        templateImageView.setMaxWidth(800);
+
+        templateNameTextView.setText(template.name.toUpperCase(Locale.ROOT));
+        templateDescriptionTextView.setText(template.description.toUpperCase(Locale.ROOT));
+
+        templatePriceTextView.setText(String.format(Locale.ROOT, "$ %d", template.price));
+
+        if (template.price != 0) {
+            templatePriceTextView.setTextColor(MainActivity.colorAccent);
+        }
 
         // Return the completed view to render on screen
         return convertView;

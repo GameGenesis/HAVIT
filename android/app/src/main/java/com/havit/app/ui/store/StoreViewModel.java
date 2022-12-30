@@ -51,14 +51,14 @@ public class StoreViewModel extends ViewModel {
                     if (data != null) {
                         String jsonString = new JSONObject(data).toString();
 
-                        templateList.add(new Template(jsonString));
+                        templateList.add(new Template(jsonString, document.getId()));
                     }
                 }
 
                 templates.postValue(templateList);
                 // do something with the array
             } else {
-                Log.e("Fatal Error", "Problem in retrieving the JSON template files from the server!");
+                Log.e("Fatal Error", "Problem in retrieving the JSON template files from the server! It is likely that it's associated with the permission conflict.");
             }
         });
     }
