@@ -26,6 +26,8 @@ This is the Android version of our app that incorporates the native API and Fire
 
 - To refresh & install new dependencies written on ```build.gradle```, simply go to *File* settings on your desktop's top navigation bar, then hit *Sync Project with Gradle* button!
 
+- One of the main benefits of using LiveData is that it is lifecycle-aware, which means it will automatically stop emitting updates when the associated lifecycle owner (such as an activity or fragment) is in the "destroyed" state, and it will only start emitting updates again when the lifecycle owner is in the "started" or "resumed" state. This helps to avoid memory leaks and other problems caused by updating UI elements when they are not being displayed.
+
 ---
 
 <table><tr>
