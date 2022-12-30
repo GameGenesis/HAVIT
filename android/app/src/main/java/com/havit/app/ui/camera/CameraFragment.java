@@ -30,8 +30,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.Camera;
-import androidx.camera.core.CameraControl;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
@@ -179,7 +177,7 @@ public class CameraFragment extends Fragment {
                     List<StorageReference> subfolders = listResult.getPrefixes();
                     // Create a list of templates from the subfolders
                     for (StorageReference subfolder : subfolders) {
-                        timelineItems.add(MainActivity.decodeFileNamingScheme(new Template(subfolder.getName()).name));
+                        timelineItems.add(MainActivity.decodeFileNamingScheme(subfolder.getName()));
                     }
 
                     setUpSpinner();
