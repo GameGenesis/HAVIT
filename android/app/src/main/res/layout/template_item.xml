@@ -28,17 +28,11 @@
         android:textSize="12sp"
         android:padding="8dp" />
 
-    <TextView
-        android:id="@+id/template_price"
+    <Button
+        android:id="@+id/template_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:padding="8dp" />
-
-    <CheckBox
-        android:id="@+id/template_checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="false" />
+        android:layout_margin="8dp"
+        android:text="Button" />
 
 </LinearLayout>

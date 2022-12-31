@@ -1,14 +1,18 @@
 package com.havit.app.ui.store;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.navigation.Navigation;
 
 import com.havit.app.MainActivity;
 import com.havit.app.R;
@@ -41,24 +45,8 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
         TextView templateNameTextView = convertView.findViewById(R.id.template_name);
         TextView templateDescriptionTextView = convertView.findViewById(R.id.template_description);
-        TextView templatePriceTextView = convertView.findViewById(R.id.template_price);
 
-        CheckBox templateCheckBox = convertView.findViewById(R.id.template_checkbox);
-
-        templateContainer.setOnClickListener(v -> {
-            // Do something when the LinearLayout is clicked
-            templateCheckBox.toggle();
-        });
-
-        templateCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                // The checkbox is checked
-                // Do something here
-            } else {
-                // The checkbox is not checked
-                // Do something here
-            }
-        });
+        Button templateButton = convertView.findViewById(R.id.template_button);
 
         // Populate the data into the template view using the data object
         // templateImageView.setImageBitmap(template.thumbnail);
@@ -68,12 +56,15 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         templateDescriptionTextView.setText(template.description.toUpperCase(Locale.ROOT));
 
         if (template.price != 0) {
-            templatePriceTextView.setText(String.format(Locale.ROOT, "$ %d", template.price));
-            templatePriceTextView.setTextColor(MainActivity.colorAccent);
+            templateButton.setText(String.format(Locale.ROOT, "%d DOLLARS", template.price));
+            templateButton.setTextColor(Color.WHITE);
+            templateButton.setBackgroundColor(MainActivity.colorAccent);
 
         } else {
-            templatePriceTextView.setText("FREE");
+            templateButton.setText("FREE");
         }
+
+        templateButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_store_to_timeline));
 
         // Return the completed view to render on screen
         return convertView;

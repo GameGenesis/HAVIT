@@ -44,9 +44,6 @@ public class StoreFragment extends Fragment {
 
         binding = FragmentStoreBinding.inflate(inflater, container, false);
 
-        Button doneButton = binding.doneButton;
-        doneButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_store_to_timeline));
-
         View root = binding.getRoot();
 
         storeViewModel.getTemplates().observe(getViewLifecycleOwner(), templates -> {
