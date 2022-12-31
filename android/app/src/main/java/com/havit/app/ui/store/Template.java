@@ -30,7 +30,7 @@ public class Template {
         timestamp = new HashMap<>();
 
         parseTemplateString(templateString);
-        getThumbnailFromStorage("templates/thumbnails/" + id + ".jpg");
+        // getThumbnailFromStorage("templates/thumbnails/" + id + ".jpg");
         // Currently, the thumbnail image has to be a JPEG file...
     }
 
