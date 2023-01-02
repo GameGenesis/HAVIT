@@ -17,9 +17,14 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.havit.app.LoginActivity;
+import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
 
+import org.w3c.dom.Text;
+
+import java.util.Locale;
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
@@ -36,6 +41,8 @@ public class ProfileFragment extends Fragment {
 
             binding = FragmentProfileBinding.inflate(inflater, container, false);
             View root = binding.getRoot();
+
+            configureUserProfileText();
 
 //            final TextView textView = binding.textNotifications;
 //            profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
@@ -77,5 +84,19 @@ public class ProfileFragment extends Fragment {
                         Toast.makeText(requireActivity(), "Error sending password reset email", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void configureUserProfileText() {
+        FirebaseUser user;
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        TextView userFullName = binding.userFullName;
+        TextView userId = binding.userId;
+
+        if (user == null) {
+            userFullName.setText(R.string.get_started_text);
+        } else {
+            userFullName.setText(Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT));
+        }
     }
 }
