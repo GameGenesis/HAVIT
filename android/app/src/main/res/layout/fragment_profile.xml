@@ -1,46 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
     tools:context=".ui.profile.ProfileFragment"
     android:paddingTop="?attr/actionBarSize">
 
-    <TextView
-        android:id="@+id/title_text"
+<!--    <TextView-->
+<!--        android:id="@+id/title_text"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:textSize="42sp"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:fontFamily="@font/major_mono_display"-->
+<!--        android:textAlignment="center"-->
+<!--        android:text="@string/title_profile" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/text_notifications"-->
+<!--        android:layout_width="358dp"-->
+<!--        android:layout_height="66dp"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:fontFamily="@font/questrial"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="24sp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/sign_out_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="5dp"-->
+<!--        android:fontFamily="@font/questrial"-->
+<!--        android:text="@string/sign_out_text" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/reset_password_button"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Reset Password" />-->
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="42sp"
-        android:layout_margin="5dp"
-        android:fontFamily="@font/major_mono_display"
-        android:textAlignment="center"
-        android:text="@string/title_profile" />
+        android:layout_height="300dp"
+        android:padding="20dp">
 
-    <TextView
-        android:id="@+id/text_notifications"
-        android:layout_width="358dp"
-        android:layout_height="66dp"
-        android:layout_margin="5dp"
-        android:layout_marginStart="8dp"
-        android:fontFamily="@font/questrial"
-        android:textAlignment="center"
-        android:textSize="24sp" />
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/profileimg"
+            android:layout_centerVertical="true">
+        </ImageView>
+        
+        <TextView
+            android:id="@+id/user_full_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/login_name"
+            android:textSize="20sp"
+            android:fontFamily="@font/major_mono_display"
+            android:layout_toEndOf="@+id/profile_image"
+            android:layout_centerVertical="true"
+            android:includeFontPadding="false"
+            android:layout_marginStart="10dp">
+        </TextView>
 
-    <Button
-        android:id="@+id/sign_out_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:fontFamily="@font/questrial"
-        android:text="@string/sign_out_text" />
-
-    <Button
-        android:id="@+id/reset_password_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reset Password" />
+    </RelativeLayout>
 
 </LinearLayout>
