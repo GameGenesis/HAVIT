@@ -53,7 +53,7 @@
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginStart="30dp"
             android:src="@drawable/profileimg"
             android:layout_centerVertical="true">
         </ImageView>
@@ -91,5 +91,52 @@
 
 
     </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            app:cardBackgroundColor="@color/navy"
+            app:cardElevation="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/logout_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_baseline_logout_24"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:contentDescription="@string/logout_icon">
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/logout_icon"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/logout"
+                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/questrial"
+                    android:layout_centerInParent="true">
+
+                </TextView>
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </LinearLayout>
 
 </LinearLayout>
