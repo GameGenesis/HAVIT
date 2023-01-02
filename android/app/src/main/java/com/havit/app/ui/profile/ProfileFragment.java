@@ -97,6 +97,7 @@ public class ProfileFragment extends Fragment {
             userFullName.setText(R.string.get_started_text);
         } else {
             userFullName.setText(Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT));
+            userId.setText(Objects.requireNonNull(user.getEmail()));
         }
     }
 }
