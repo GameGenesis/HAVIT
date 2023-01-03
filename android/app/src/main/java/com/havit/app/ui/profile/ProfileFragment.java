@@ -11,11 +11,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.havit.app.LoginActivity;
@@ -43,6 +45,16 @@ public class ProfileFragment extends Fragment {
             View root = binding.getRoot();
 
             configureUserProfileText();
+
+            MaterialCardView logoutButton = binding.logoutButton;
+            MaterialCardView resetPasswordButton = binding.resetPasswordButton;
+
+            logoutButton.setOnClickListener(v -> {
+                Intent i = new Intent(requireActivity(), LoginActivity.class);
+                i.putExtra("isSignOut", true);
+                startActivity(i);
+            });
+
 
 //            final TextView textView = binding.textNotifications;
 //            profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
