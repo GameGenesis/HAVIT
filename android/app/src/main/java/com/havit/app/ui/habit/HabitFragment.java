@@ -28,11 +28,15 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class HabitFragment extends Fragment {
 
     private FragmentHabitBinding binding;
+
+    public static String name, time;
+    public static ArrayList<String> daysPicked;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,8 @@ public class HabitFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
+
+        daysPicked = new ArrayList<>();
 
         HabitViewModel habitViewModel =
                 new ViewModelProvider(this).get(HabitViewModel.class);
@@ -98,21 +104,24 @@ public class HabitFragment extends Fragment {
     // Called when the Create Button is pressed
     private void createNewHabit(View view) {
         // Name and Description fields
-        String name = Objects.requireNonNull(binding.nameFieldEdit.getText()).toString();
+        name = Objects.requireNonNull(binding.nameFieldEdit.getText()).toString();
 
         // Array of what days were picked. Starts at Sunday (index 0)
-        boolean[] daysPicked = new boolean[7];
+        boolean[] isPickedArray = new boolean[7];
+
         LinearLayout dayPickerLayout = binding.dayPickerLayout;
 
         // Whether at least one day was chosen
         boolean anyDaysPicked = false;
 
         for (int i = 0; i < dayPickerLayout.getChildCount(); i++) {
+            Days day = Days.fromValue(i);
             ToggleButton toggle = (ToggleButton) dayPickerLayout.getChildAt(i);
-            daysPicked[i] = toggle.isChecked();
+            isPickedArray[i] = toggle.isChecked();
 
             if (toggle.isChecked()) {
                 anyDaysPicked = true;
+                daysPicked.add(day.getName());
             }
         }
 
@@ -121,6 +130,8 @@ public class HabitFragment extends Fragment {
 
         int hour = timePicker.getHour();
         int minute = timePicker.getMinute();
+
+        time = hour + ":" + minute;
 
         // Checks whether all of the required fields have been filled
         if (!name.isEmpty() && anyDaysPicked) {

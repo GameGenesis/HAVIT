@@ -25,10 +25,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
+import com.havit.app.ui.habit.HabitFragment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -83,8 +86,13 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         }
 
         templateButton.setOnClickListener(v -> {
+            Map<String, Object> timelineMetaData = new HashMap<>();
+            timelineMetaData.put("name", HabitFragment.name);
+            timelineMetaData.put("dates", HabitFragment.daysPicked);
+            timelineMetaData.put("time", HabitFragment.time);
+            timelineMetaData.put("selected_template", template.name);
 
-
+            uploadUserData(timelineMetaData);
             Navigation.findNavController(v).navigate(R.id.action_store_to_timeline);
         });
 
@@ -92,7 +100,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         return convertView;
     }
 
-    private void uploadUserData() {
+    private void uploadUserData(Map<String, Object> timelineMetaData) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(user.getEmail()));
 
@@ -104,12 +112,25 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
                 if (document.exists()) {
                     Log.d(TAG, "Document exists");
 
+                    Map<String, Object> updates = new HashMap<>();
+                    updates.put("user_timelines", FieldValue.arrayUnion(timelineMetaData));
+
+                    docRef.update(updates)
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Document update successful!"))
+                            .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
+
                 } else {
                     // If the user does not exist in the database...
                     Log.d(TAG, "Document does not exist, adding it");
+
                     Map<String, Object> data = new HashMap<>();
-                    data.put("name", "John Smith");
-                    data.put("age", 30);
+
+                    ArrayList<Map<String, Object>> array = new ArrayList<>();
+                    array.add(timelineMetaData);
+
+                    data.put("name", user.getDisplayName());
+                    data.put("user_timelines", array);
+
                     docRef.set(data);
                 }
 
