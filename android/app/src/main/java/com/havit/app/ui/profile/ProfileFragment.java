@@ -1,14 +1,22 @@
 package com.havit.app.ui.profile;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -21,17 +29,20 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.havit.app.LoginActivity;
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 
 public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
+    public static ImageView profileImage;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
@@ -48,6 +59,9 @@ public class ProfileFragment extends Fragment {
 
             MaterialCardView logoutButton = binding.logoutButton;
             MaterialCardView resetPasswordButton = binding.resetPasswordButton;
+            profileImage = binding.profileImage;
+            Button changeProfilePictureButton = binding.changeProfilePictureButton;
+
 
             logoutButton.setOnClickListener(v -> {
                 Intent i = new Intent(requireActivity(), LoginActivity.class);
@@ -56,6 +70,7 @@ public class ProfileFragment extends Fragment {
             });
 
             resetPasswordButton.setOnClickListener(this::resetPassword);
+            changeProfilePictureButton.setOnClickListener(this::changeProfilePicture);
 
             return root;
     }
@@ -99,5 +114,13 @@ public class ProfileFragment extends Fragment {
             userFullName.setText(Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT));
             userId.setText(Objects.requireNonNull(user.getEmail()));
         }
+    }
+
+    private void changeProfilePicture(View view){
+        Intent openGalleryIntent = new Intent();
+        openGalleryIntent.setType("image/*");
+        openGalleryIntent.setAction(Intent.ACTION_GET_CONTENT);
+
+        MainActivity.galleryActivity.launch(openGalleryIntent);
     }
 }
