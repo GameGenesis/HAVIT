@@ -5,6 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.Shader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -52,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     public static int colorAccent;
 
     public static ActivityResultLauncher<Intent> galleryActivity;
+
+    public static Bitmap profileImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    ProfileFragment.profileImage.setImageBitmap(selectedImageBitmap);
+
+                    ProfileFragment.profileImage.setImageBitmap(cropImage(selectedImageBitmap));
                 }
             }
         });
@@ -169,5 +176,22 @@ public class MainActivity extends AppCompatActivity {
 
         // convert the array to string
         return String.valueOf(phraseChars);
+    }
+
+    private Bitmap cropImage(Bitmap bitmap){
+        Bitmap circleBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(circleBitmap);
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+        float centerX = (float) bitmap.getWidth() / 2;
+        float centerY = (float) bitmap.getHeight() / 2;
+
+        canvas.drawCircle(centerX, centerY, Math.min(centerX, centerY), paint);
+
+        return circleBitmap;
     }
 }
