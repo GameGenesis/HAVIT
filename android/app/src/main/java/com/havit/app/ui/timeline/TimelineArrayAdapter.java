@@ -1,10 +1,6 @@
 package com.havit.app.ui.timeline;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,29 +10,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.navigation.Navigation;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.havit.app.MainActivity;
-import com.havit.app.R;
-import com.havit.app.ui.habit.HabitFragment;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import com.havit.app.R;
+
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 // Binding doesn't work here...
 
