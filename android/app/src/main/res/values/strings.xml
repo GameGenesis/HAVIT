@@ -26,4 +26,9 @@
     <string name="get_started_text">HAVIT</string>
     <string name="sign_out_text">Sign Out</string>
     <string name="title_store">Templates</string>
+    <string name="username">username</string>
+    <string name="logout_icon">Logout Icon</string>
+    <string name="logout">Logout</string>
+    <string name="reset_password_icon">Reset Password Icon</string>
+    <string name="reset_password">Reset Password</string>
 </resources>
