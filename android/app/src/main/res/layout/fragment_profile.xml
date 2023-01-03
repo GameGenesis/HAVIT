@@ -7,41 +7,6 @@
     android:layout_gravity="center"
     android:orientation="vertical"
     tools:context=".ui.profile.ProfileFragment">
-    <!--    android:paddingTop="?attr/actionBarSize">-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/title_text"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:textSize="42sp"-->
-    <!--        android:layout_margin="5dp"-->
-    <!--        android:fontFamily="@font/major_mono_display"-->
-    <!--        android:textAlignment="center"-->
-    <!--        android:text="@string/title_profile" />-->
-
-    <!--    <TextView-->
-    <!--        android:id="@+id/text_notifications"-->
-    <!--        android:layout_width="358dp"-->
-    <!--        android:layout_height="66dp"-->
-    <!--        android:layout_margin="5dp"-->
-    <!--        android:layout_marginStart="8dp"-->
-    <!--        android:fontFamily="@font/questrial"-->
-    <!--        android:textAlignment="center"-->
-    <!--        android:textSize="24sp" />-->
-
-    <!--    <Button-->
-    <!--        android:id="@+id/sign_out_button"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_margin="5dp"-->
-    <!--        android:fontFamily="@font/questrial"-->
-    <!--        android:text="@string/sign_out_text" />-->
-
-    <!--    <Button-->
-    <!--        android:id="@+id/reset_password_button"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="Reset Password" />-->
 
     <RelativeLayout
         android:layout_width="match_parent"
