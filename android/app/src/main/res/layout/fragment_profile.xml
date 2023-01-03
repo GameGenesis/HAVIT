@@ -145,7 +145,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/change_profile_picture"
+        android:id="@+id/change_profile_picture_button"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
