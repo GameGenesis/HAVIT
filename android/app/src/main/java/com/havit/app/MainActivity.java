@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -19,6 +22,8 @@ import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MotionEventCompat;
@@ -30,7 +35,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.databinding.ActivityMainBinding;
+import com.havit.app.ui.profile.ProfileFragment;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -43,6 +50,8 @@ public class MainActivity extends AppCompatActivity {
     public static int screenWidth, screenHeight;
 
     public static int colorAccent;
+
+    public static ActivityResultLauncher<Intent> galleryActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,24 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
+
+        // for openGalleryIntent
+        galleryActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null && data.getData() != null) {
+                    Uri selectedImageUri = data.getData();
+                    Bitmap selectedImageBitmap = null;
+
+                    try {
+                        selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    ProfileFragment.profileImage.setImageBitmap(selectedImageBitmap);
+                }
+            }
+        });
     }
 
     @Override
