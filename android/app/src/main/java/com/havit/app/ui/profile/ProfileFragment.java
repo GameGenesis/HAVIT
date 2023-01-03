@@ -55,19 +55,7 @@ public class ProfileFragment extends Fragment {
                 startActivity(i);
             });
 
-
-//            final TextView textView = binding.textNotifications;
-//            profileViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-//
-//            Button signOutButton = binding.signOutButton;
-//            signOutButton.setOnClickListener(v -> {
-//                Intent i = new Intent(requireActivity(), LoginActivity.class);
-//                i.putExtra("isSignOut", true);
-//                startActivity(i);
-//            });
-//
-//            Button resetPasswordButton = binding.resetPasswordButton;
-//            resetPasswordButton.setOnClickListener(this::resetPassword);
+            resetPasswordButton.setOnClickListener(this::resetPassword);
 
             return root;
     }
