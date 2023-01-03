@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -93,6 +94,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
             timelineMetaData.put("selected_template", template.name);
 
             uploadUserData(timelineMetaData);
+
             Navigation.findNavController(v).navigate(R.id.action_store_to_timeline);
         });
 

@@ -12,10 +12,14 @@
         tools:layout="@layout/fragment_profile" >
         <action
             android:id="@+id/action_profile_to_camera"
-            app:destination="@id/navigation_camera" />
+            app:destination="@id/navigation_camera"
+            app:popUpTo="@+id/navigation_camera"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_profile_to_timeline"
-            app:destination="@id/navigation_timeline" />
+            app:destination="@id/navigation_timeline"
+            app:popUpTo="@+id/navigation_timeline"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -25,10 +29,14 @@
         tools:layout="@layout/fragment_camera" >
         <action
             android:id="@+id/action_camera_to_profile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@+id/navigation_profile"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_camera_to_timeline"
-            app:destination="@id/navigation_timeline" />
+            app:destination="@id/navigation_timeline"
+            app:popUpTo="@+id/navigation_timeline"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -38,13 +46,20 @@
         tools:layout="@layout/fragment_timeline" >
         <action
             android:id="@+id/action_timeline_to_camera"
-            app:destination="@id/navigation_camera" />
+            app:destination="@id/navigation_camera"
+            app:popUpTo="@+id/navigation_camera"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_timeline_to_profile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@+id/navigation_profile"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_timeline_to_habit"
-            app:destination="@id/navigation_habit" />
+            app:destination="@id/navigation_habit"
+            app:popUpTo="@+id/navigation_habit"
+            app:popUpToInclusive="true"
+            app:restoreState="false" />
     </fragment>
 
     <fragment
@@ -54,16 +69,24 @@
         tools:layout="@layout/fragment_habit" >
         <action
             android:id="@+id/action_habit_to_camera"
-            app:destination="@id/navigation_camera" />
+            app:destination="@id/navigation_camera"
+            app:popUpTo="@+id/navigation_camera"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_habit_to_profile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@+id/navigation_profile"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_habit_to_timeline"
-            app:destination="@id/navigation_timeline" />
+            app:destination="@id/navigation_timeline"
+            app:popUpTo="@+id/navigation_timeline"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_habit_to_store"
-            app:destination="@id/navigation_store" />
+            app:destination="@id/navigation_store"
+            app:popUpTo="@+id/navigation_store"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -73,15 +96,23 @@
         tools:layout="@layout/fragment_store" >
         <action
             android:id="@+id/action_store_to_camera"
-            app:destination="@id/navigation_camera" />
+            app:destination="@id/navigation_camera"
+            app:popUpTo="@+id/navigation_camera"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_store_to_profile"
-            app:destination="@id/navigation_profile" />
+            app:destination="@id/navigation_profile"
+            app:popUpTo="@+id/navigation_profile"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_store_to_timeline"
-            app:destination="@id/navigation_timeline" />
+            app:destination="@id/navigation_timeline"
+            app:popUpTo="@+id/navigation_timeline"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_store_to_habit"
-            app:destination="@id/navigation_habit" />
+            app:destination="@id/navigation_habit"
+            app:popUpTo="@+id/navigation_habit"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

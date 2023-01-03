@@ -167,12 +167,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/reset_password_icon"
+                    android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
-                    android:text="@string/reset_password"
-                    android:textSize="15sp"
-                    android:textColor="@color/white"
                     android:fontFamily="@font/questrial"
-                    android:layout_centerInParent="true">
+                    android:text="@string/reset_password"
+                    android:textColor="@color/white"
+                    android:textSize="15sp">
 
                 </TextView>
 
