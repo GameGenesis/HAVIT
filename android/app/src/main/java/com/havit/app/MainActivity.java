@@ -107,25 +107,6 @@ public class MainActivity extends AppCompatActivity {
 
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-
-        // for openGalleryIntent
-        galleryActivity = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                Intent data = result.getData();
-                if (data != null && data.getData() != null) {
-                    Uri selectedImageUri = data.getData();
-                    Bitmap selectedImageBitmap = null;
-
-                    try {
-                        selectedImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    ProfileFragment.profileImage.setImageBitmap(selectedImageBitmap);
-                }
-            }
-        });
     }
 
     @Override

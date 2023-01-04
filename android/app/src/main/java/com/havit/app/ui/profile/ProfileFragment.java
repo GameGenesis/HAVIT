@@ -46,7 +46,6 @@ public class ProfileFragment extends Fragment {
     private ProfileViewModel profileViewModel;
 
     private FragmentProfileBinding binding;
-    public static ImageView profileImage;
 
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
 
