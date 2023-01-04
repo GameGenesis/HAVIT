@@ -1,6 +1,7 @@
 package com.havit.app.ui.timeline;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,23 +31,36 @@ public class TimelineFragment extends Fragment {
     private FragmentTimelineBinding binding;
     private TimelineViewModel timelineViewModel;
 
+    private ImageButton newHabitButton;
+    private ListView listView;
+    private TextView textView;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
-        timelineViewModel =
-                new ViewModelProvider(this).get(TimelineViewModel.class);
+        timelineViewModel = new ViewModelProvider(this).get(TimelineViewModel.class);
 
         binding = FragmentTimelineBinding.inflate(inflater, container, false);
 
         View root = binding.getRoot();
 
-        ImageButton button = binding.newHabitActionButton;
-        ListView listView = binding.timelineListView;
-        TextView textView = binding.textNotifications;
+        newHabitButton = binding.newHabitActionButton;
+        listView = binding.timelineListView;
+        textView = binding.textNotifications;
 
-        button.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
+        newHabitButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
+
+        timelineViewModel.loadTimelines();
+        Log.d("reload", "Reloading timelines");
+
+        return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         timelineViewModel.getTimelines().observe(getViewLifecycleOwner(), timelines -> {
@@ -61,8 +75,6 @@ public class TimelineFragment extends Fragment {
                 textView.setVisibility(View.GONE);
             }
         });
-
-        return root;
     }
 
     @Override
