@@ -6,9 +6,9 @@
     <string name="login_name">Name</string>
     <string name="login_name_text_field">Name</string>
     <string name="login_submit_button">Get Started</string>
-    <string name="title_habit">New HAVIT</string>
+    <string name="title_habit">New Havit</string>
     <string name="button_capture">Capture</string>
-    <string name="add_habit_btn">Add New HAVIT</string>
+    <string name="add_habit_btn">Add New Havit</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
