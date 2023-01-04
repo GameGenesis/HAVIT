@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
 import com.havit.app.ui.camera.CameraViewModel;
