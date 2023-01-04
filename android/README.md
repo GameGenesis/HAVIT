@@ -1,8 +1,8 @@
 ![ic_launcher_round](https://user-images.githubusercontent.com/35755386/209804411-ac4fadb7-2978-4075-81aa-12fb11967a83.png)
 
-# HAVIT: The Iterative Timeline
+# HAVIT for Android
 
-**HAVIT** brings an unique set of features that combines social media, video editing platform, and a daily habit tracker.
+This is the Android version of our app that incorporates the native API and Firestore to create a harmony between.
 
 ---
 
@@ -22,7 +22,7 @@
 
 - Minimum SDK level is set to version 23, while the Target SDK level is 33. Camera feature uses the latest CameraX API by Google.
 
-- On public repo, conceal ```android/app/google-services.json``` as it contains the API key for Firebase.
+- On public repo, conceal ```app/google-services.json``` as it contains the API key for Firebase.
 
 - To refresh & install new dependencies written on ```build.gradle```, simply go to *File* settings on your desktop's top navigation bar, then hit *Sync Project with Gradle* button!
 
