@@ -1,5 +1,7 @@
 package com.havit.app.ui.profile;
 
+import android.graphics.Bitmap;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -11,6 +13,8 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class ProfileViewModel extends ViewModel {
+
+    public Bitmap profilePictureBitmap;
 
     private final MutableLiveData<String> mText;
 

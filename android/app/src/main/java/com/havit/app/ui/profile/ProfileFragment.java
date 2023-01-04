@@ -42,6 +42,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
+    private ProfileViewModel profileViewModel;
+
     private FragmentProfileBinding binding;
 
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
@@ -51,8 +53,7 @@ public class ProfileFragment extends Fragment {
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
-        ProfileViewModel profileViewModel =
-                new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -90,19 +91,6 @@ public class ProfileFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final String profilePictureFilepath = "users/" + user.getEmail() + "/profile-picture";
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(profilePictureFilepath);
-
-        // Download the image file
-        final long ONE_MEGABYTE = 1024 * 1024;
-        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-            // Data for "images/image.jpg" is returned, use this as needed
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            profileImage.setImageBitmap(bitmap);
-        }).addOnFailureListener(exception -> {
-            // Handle any errors
-            Log.d("profile", exception.getMessage());
-        });
-
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
@@ -113,17 +101,35 @@ public class ProfileFragment extends Fragment {
 
                             try {
                                 InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
-                                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                                profileViewModel.profilePictureBitmap = BitmapFactory.decodeStream(inputStream);
                                 inputStream.close();
 
-                                CameraViewModel.saveImageToDatabase(bitmap, requireActivity(), profilePictureFilepath);
+                                CameraViewModel.saveImageToDatabase(profileViewModel.profilePictureBitmap, requireActivity(), profilePictureFilepath);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         }
                     }
                 });
-    }
+
+        if (profileViewModel.profilePictureBitmap != null) {
+            profileImage.setImageBitmap(profileViewModel.profilePictureBitmap);
+            return;
+        }
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(profilePictureFilepath);
+
+        // Download the image file
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            // Data for "images/image.jpg" is returned, use this as needed
+            profileViewModel.profilePictureBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            profileImage.setImageBitmap(profileViewModel.profilePictureBitmap);
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            Log.d("profile", exception.getMessage());
+        });
+}
 
     private void resetPassword(View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
