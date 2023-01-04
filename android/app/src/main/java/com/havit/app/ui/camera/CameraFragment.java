@@ -505,6 +505,13 @@ public class CameraFragment extends Fragment {
                 return super.onFling(e1, e2, velocityX, velocityY);
             }
         });
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
     }
 
     @Override
