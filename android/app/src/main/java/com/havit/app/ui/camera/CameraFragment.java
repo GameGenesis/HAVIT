@@ -169,6 +169,9 @@ public class CameraFragment extends Fragment {
     }
 
     private void loadTemplates() {
+        if (user == null || user.getEmail() == null)
+            return;
+
         timelineItems.clear();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -180,9 +183,9 @@ public class CameraFragment extends Fragment {
 
                 if (document.exists()) {
                     // the value is in the document.get() method
-                    List<Map<String, String>> timelines = (List<Map<String, String>>) document.getData().get("user_timelines");
+                    List<Map<String, Object>> timelines = (List<Map<String, Object>>) document.get("user_timelines");
 
-                    for (Map<String, String> timeline: timelines) {
+                    for (Map<String, Object> timeline: timelines) {
                         timelineItems.add(timeline.get("name").toString());
                     }
 
