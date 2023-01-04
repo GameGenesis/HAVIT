@@ -1,5 +1,7 @@
 package com.havit.app.ui.timeline;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -32,8 +34,6 @@ public class TimelineViewModel extends ViewModel {
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         mText.setValue("THERE'S NOTHING HERE");
-
-        loadTimelines();
     }
 
     public LiveData<List<Timeline>> getTimelines() {
