@@ -135,6 +135,9 @@ public class CameraFragment extends Fragment {
         });
 
         flashButton = binding.flashButton;
+        if (lensFacing == CameraSelector.DEFAULT_FRONT_CAMERA) {
+            flashButton.setVisibility(View.GONE);
+        }
 
         flashButton.setOnClickListener(view -> {
             toggleFlash();
