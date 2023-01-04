@@ -21,8 +21,7 @@
             android:layout_height="100dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
-            android:src="@drawable/profile_picture"
-            android:layout_centerVertical="true"/>
+            android:src="@drawable/profile_picture"/>
 
         <TextView
             android:id="@+id/user_full_name"
