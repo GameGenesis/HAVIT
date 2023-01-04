@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.util.Size;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -29,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -119,6 +122,7 @@ public class CameraFragment extends Fragment {
 
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             handleShutter();
             takePhoto();
         });
@@ -126,11 +130,13 @@ public class CameraFragment extends Fragment {
         cancelButton = binding.cancelButton;
         cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             closeImageView();
         });
 
         flipButton = binding.flipButton;
         flipButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             flipCamera();
         });
 
@@ -139,7 +145,8 @@ public class CameraFragment extends Fragment {
             flashButton.setVisibility(View.GONE);
         }
 
-        flashButton.setOnClickListener(view -> {
+        flashButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             toggleFlash();
         });
 
@@ -466,6 +473,12 @@ public class CameraFragment extends Fragment {
         if (forceCameraSound || am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             MediaActionSound sound = new MediaActionSound();
             sound.play(MediaActionSound.SHUTTER_CLICK);
+        }
+    }
+
+    public void hapticFeedback(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            view.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
         }
     }
 
