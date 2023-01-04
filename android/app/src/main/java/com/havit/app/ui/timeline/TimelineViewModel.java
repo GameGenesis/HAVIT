@@ -50,6 +50,8 @@ public class TimelineViewModel extends ViewModel {
     }
 
     public void loadTimelines() {
+        timelineList.clear();
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(user.getEmail()));
 
