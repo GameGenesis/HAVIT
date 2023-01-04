@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    ProfileFragment.profileImage.setImageBitmap(cropImage(selectedImageBitmap));
+                    ProfileFragment.profileImage.setImageBitmap(selectedImageBitmap);
                 }
             }
         });
@@ -176,22 +176,5 @@ public class MainActivity extends AppCompatActivity {
 
         // convert the array to string
         return String.valueOf(phraseChars);
-    }
-
-    private Bitmap cropImage(Bitmap bitmap){
-        Bitmap circleBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(circleBitmap);
-
-        Paint paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
-
-        float centerX = (float) bitmap.getWidth() / 2;
-        float centerY = (float) bitmap.getHeight() / 2;
-
-        canvas.drawCircle(centerX, centerY, Math.min(centerX, centerY), paint);
-
-        return circleBitmap;
     }
 }

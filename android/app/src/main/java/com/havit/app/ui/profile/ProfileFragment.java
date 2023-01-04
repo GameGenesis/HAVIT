@@ -64,17 +64,6 @@ public class ProfileFragment extends Fragment {
             MaterialCardView logoutButton = binding.logoutButton;
             MaterialCardView resetPasswordButton = binding.resetPasswordButton;
             profileImage = binding.profileImage;
-            Button changeProfilePictureButton = binding.changeProfilePictureButton;
-
-
-            logoutButton.setOnClickListener(v -> {
-                Intent i = new Intent(requireActivity(), LoginActivity.class);
-                i.putExtra("isSignOut", true);
-                startActivity(i);
-            });
-
-            resetPasswordButton.setOnClickListener(this::resetPassword);
-            changeProfilePictureButton.setOnClickListener(this::changeProfilePicture);
 
             return root;
     }
@@ -119,14 +108,4 @@ public class ProfileFragment extends Fragment {
             userId.setText(Objects.requireNonNull(user.getEmail()));
         }
     }
-
-    private void changeProfilePicture(View view){
-        Intent openGalleryIntent = new Intent();
-        openGalleryIntent.setType("image/*");
-        openGalleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-
-        MainActivity.galleryActivity.launch(openGalleryIntent);
-    }
-
-
 }
