@@ -90,6 +90,19 @@ public class ProfileFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         final String profilePictureFilepath = "users/" + user.getEmail() + "/profile-picture";
 
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(profilePictureFilepath);
+
+        // Download the image file
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            // Data for "images/image.jpg" is returned, use this as needed
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            profileImage.setImageBitmap(bitmap);
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            Log.d("profile", exception.getMessage());
+        });
+
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
