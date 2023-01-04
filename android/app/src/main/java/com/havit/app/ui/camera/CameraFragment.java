@@ -50,6 +50,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
@@ -57,10 +62,14 @@ import com.havit.app.MainActivity;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
+import com.havit.app.ui.store.Template;
+
+import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -171,31 +180,30 @@ public class CameraFragment extends Fragment {
     private void loadTemplates() {
         timelineItems.clear();
 
-        // Initialize the Firebase Storage service
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(user.getEmail());
 
-        // Define the path to the parent folder
-        String folderPath = "users/" + user.getEmail();
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
 
-        // Retrieve a reference to the parent folder
-        StorageReference folderRef = storage.getReference(folderPath);
+                if (document.exists()) {
+                    // the value is in the document.get() method
+                    List<Map<String, String>> timelines = (List<Map<String, String>>) document.getData().get("user_timelines");
 
-        // Use the list() method to retrieve a list of all the subfolders in the parent folder
-        folderRef.list(1000)
-                .addOnSuccessListener(listResult -> {
-                    // The list of subfolders is stored in the prefixes field
-                    List<StorageReference> subfolders = listResult.getPrefixes();
-                    // Create a list of templates from the subfolders
-                    for (StorageReference subfolder : subfolders) {
-                        timelineItems.add(MainActivity.decodeFileNamingScheme(subfolder.getName()));
+                    for (Map<String, String> timeline: timelines) {
+                        timelineItems.add(timeline.get("name").toString());
                     }
 
                     setUpSpinner();
-                })
-                .addOnFailureListener(exception -> {
-                    // An error occurred while retrieving the list of subfolders
-                    Log.e("Error Retrieving the List of Templates...", exception.getMessage());
-                });
+
+                } else {
+                    // the document does not exist
+                }
+            } else {
+                Log.e("Fatal Error", "Problem in retrieving the JSON template files from the server! It is likely that it's associated with the permission conflict.");
+            }
+        });
     }
 
     private void setUpSpinner() {
