@@ -1,8 +1,11 @@
 package com.havit.app.ui.profile;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -29,6 +36,8 @@ public class ProfileFragment extends Fragment {
 
     private FragmentProfileBinding binding;
 
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
             // Hide the action bar...
@@ -43,7 +52,6 @@ public class ProfileFragment extends Fragment {
             configureUserProfileText();
 
             MaterialCardView logoutButton = binding.logoutButton;
-            MaterialCardView resetPasswordButton = binding.resetPasswordButton;
 
             logoutButton.setOnClickListener(v -> {
                 Intent i = new Intent(requireActivity(), LoginActivity.class);
@@ -51,7 +59,22 @@ public class ProfileFragment extends Fragment {
                 startActivity(i);
             });
 
+            MaterialCardView resetPasswordButton = binding.resetPasswordButton;
             resetPasswordButton.setOnClickListener(this::resetPassword);
+
+            MaterialCardView updateProfileButton = binding.updateProfileButton;
+            updateProfileButton.setOnClickListener(this::updateProfile);
+
+            galleryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Uri selectedImageUri = data.getData();
+                            binding.profileImage.setImageURI(selectedImageUri);
+                        }
+                    }
+                });
 
             return root;
     }
@@ -80,6 +103,11 @@ public class ProfileFragment extends Fragment {
                         Toast.makeText(requireActivity(), "Error sending password reset email", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void updateProfile(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryActivityResultLauncher.launch(intent);
     }
 
     private void configureUserProfileText() {
