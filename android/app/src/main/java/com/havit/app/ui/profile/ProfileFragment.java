@@ -2,10 +2,13 @@ package com.havit.app.ui.profile;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +16,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -25,12 +26,19 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
+import com.havit.app.ui.camera.CameraViewModel;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
 
@@ -40,49 +48,68 @@ public class ProfileFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
-            // Hide the action bar...
-            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+        // Hide the action bar...
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
-            ProfileViewModel profileViewModel =
-                    new ViewModelProvider(this).get(ProfileViewModel.class);
+        ProfileViewModel profileViewModel =
+                new ViewModelProvider(this).get(ProfileViewModel.class);
 
-            binding = FragmentProfileBinding.inflate(inflater, container, false);
-            View root = binding.getRoot();
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
-            configureUserProfileText();
+        configureUserProfileText();
 
-            MaterialCardView logoutButton = binding.logoutButton;
+        MaterialCardView logoutButton = binding.logoutButton;
 
-            logoutButton.setOnClickListener(v -> {
-                Intent i = new Intent(requireActivity(), LoginActivity.class);
-                i.putExtra("isSignOut", true);
-                startActivity(i);
-            });
+        logoutButton.setOnClickListener(v -> {
+            Intent i = new Intent(requireActivity(), LoginActivity.class);
+            i.putExtra("isSignOut", true);
+            startActivity(i);
+        });
 
-            MaterialCardView resetPasswordButton = binding.resetPasswordButton;
-            resetPasswordButton.setOnClickListener(this::resetPassword);
+        MaterialCardView resetPasswordButton = binding.resetPasswordButton;
+        resetPasswordButton.setOnClickListener(this::resetPassword);
 
-            MaterialCardView updateProfileButton = binding.updateProfileButton;
-            updateProfileButton.setOnClickListener(this::updateProfile);
+        MaterialCardView updateProfileButton = binding.updateProfileButton;
+        updateProfileButton.setOnClickListener(this::updateProfile);
 
-            galleryActivityResultLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-                        Intent data = result.getData();
-                        if (data != null) {
-                            Uri selectedImageUri = data.getData();
-                            binding.profileImage.setImageURI(selectedImageUri);
-                        }
-                    }
-                });
+        setUpProfilePicture();
 
-            return root;
+        return root;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void setUpProfilePicture() {
+        CircleImageView profileImage = binding.profileImage;
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String profilePictureFilepath = "users/" + user.getEmail() + "/profile-picture";
+
+        galleryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Uri imageUri = data.getData();
+                            profileImage.setImageURI(imageUri);
+
+                            try {
+                                InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
+                                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                                inputStream.close();
+
+                                CameraViewModel.saveImageToDatabase(bitmap, requireActivity(), profilePictureFilepath);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
     }
 
     private void resetPassword(View view) {
@@ -111,8 +138,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void configureUserProfileText() {
-        FirebaseUser user;
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         TextView userFullName = binding.userFullName;
         TextView userId = binding.userId;

@@ -53,6 +53,11 @@ public class CameraViewModel extends ViewModel {
 
     // TODO: save the image to the storage and link it to the json in db
     public void addImageToDatabase(FirebaseUser user, Bitmap bitmap, FragmentActivity activity, String selectedItem) {
+        String filePath = "users/" + user.getEmail() + "/" + MainActivity.applyFileNamingScheme(selectedItem) + "/img-" + System.currentTimeMillis();
+        saveImageToDatabase(bitmap, activity, filePath);
+}
+
+    public static void saveImageToDatabase(Bitmap bitmap, FragmentActivity activity, String filePath) {
         // Run a new thread for an asynchronous operation, separate from the main thread...
         new Thread() {
             public void run() {
@@ -60,11 +65,10 @@ public class CameraViewModel extends ViewModel {
                 try {
                     // Convert the bitmap to a byte array...
                     ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
                     byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-                    // users/<selected_user_email>/<selected_template_name>/img-<date_taken>.jpg
-                    StorageReference image = MainActivity.storageReference.child("users/" + user.getEmail() + "/" + MainActivity.applyFileNamingScheme(selectedItem) + "/img-" + System.currentTimeMillis());
+                    StorageReference image = MainActivity.storageReference.child(filePath);
                     image.putBytes(byteArray).addOnSuccessListener(taskSnapshot -> {
                         // Run the code below on the main thread that handles the UI events...
                         activity.runOnUiThread(() -> Toast.makeText(activity, "Photo was successfully uploaded", Toast.LENGTH_LONG).show());
@@ -72,7 +76,6 @@ public class CameraViewModel extends ViewModel {
                         // Run the code below on the main thread that handles the UI events...
                         activity.runOnUiThread(() -> Toast.makeText(activity, "An error occurred while uploading the photo", Toast.LENGTH_LONG).show());
                     });
-                    //// viewModel.saveImageToGallery(requireActivity(), viewModel.getCapturedBitmap());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
