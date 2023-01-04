@@ -1,10 +1,12 @@
 package com.havit.app.ui.timeline;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,26 +29,52 @@ https://developer.android.com/guide/navigation/navigation-navigate#java
 public class TimelineFragment extends Fragment {
 
     private FragmentTimelineBinding binding;
+    private TimelineViewModel timelineViewModel;
 
-        public View onCreateView(@NonNull LayoutInflater inflater,
-                ViewGroup container, Bundle savedInstanceState) {
-            // Hide the action bar...
-            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+    private ImageButton newHabitButton;
+    private ListView listView;
+    private TextView textView;
 
-            TimelineViewModel timelineViewModel =
-                    new ViewModelProvider(this).get(TimelineViewModel.class);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+            ViewGroup container, Bundle savedInstanceState) {
+        // Hide the action bar...
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
-            binding = FragmentTimelineBinding.inflate(inflater, container, false);
+        timelineViewModel = new ViewModelProvider(this).get(TimelineViewModel.class);
 
-            View root = binding.getRoot();
-            ImageButton button = binding.newHabitActionButton;
+        binding = FragmentTimelineBinding.inflate(inflater, container, false);
 
-            button.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
+        View root = binding.getRoot();
 
-            final TextView textView = binding.textNotifications;
-            timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        newHabitButton = binding.newHabitActionButton;
+        listView = binding.timelineListView;
+        textView = binding.textNotifications;
+
+        newHabitButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
+
+        timelineViewModel.loadTimelines();
+        Log.d("reload", "Reloading timelines");
 
         return root;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        timelineViewModel.getTimelines().observe(getViewLifecycleOwner(), timelines -> {
+            // Update the UI with the templates data
+            listView.setAdapter(new TimelineArrayAdapter(requireContext(), timelines));
+
+            if (timelines.isEmpty()) {
+                listView.setVisibility(View.GONE);
+                textView.setVisibility(View.VISIBLE);
+            } else {
+                listView.setVisibility(View.VISIBLE);
+                textView.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override

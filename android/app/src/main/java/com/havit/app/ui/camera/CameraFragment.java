@@ -39,7 +39,6 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
-import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
@@ -50,10 +49,10 @@ import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.havit.app.LoginActivity;
-import com.havit.app.MainActivity;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
@@ -61,6 +60,7 @@ import com.havit.app.databinding.FragmentCameraBinding;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -135,6 +135,9 @@ public class CameraFragment extends Fragment {
         });
 
         flashButton = binding.flashButton;
+        if (lensFacing == CameraSelector.DEFAULT_FRONT_CAMERA) {
+            flashButton.setVisibility(View.GONE);
+        }
 
         flashButton.setOnClickListener(view -> {
             toggleFlash();
@@ -169,33 +172,35 @@ public class CameraFragment extends Fragment {
     }
 
     private void loadTemplates() {
+        if (user == null || user.getEmail() == null)
+            return;
+
         timelineItems.clear();
 
-        // Initialize the Firebase Storage service
-        FirebaseStorage storage = FirebaseStorage.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("users").document(user.getEmail());
 
-        // Define the path to the parent folder
-        String folderPath = "users/" + user.getEmail();
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
 
-        // Retrieve a reference to the parent folder
-        StorageReference folderRef = storage.getReference(folderPath);
+                if (document.exists()) {
+                    // the value is in the document.get() method
+                    List<Map<String, Object>> timelines = (List<Map<String, Object>>) document.get("user_timelines");
 
-        // Use the list() method to retrieve a list of all the subfolders in the parent folder
-        folderRef.list(1000)
-                .addOnSuccessListener(listResult -> {
-                    // The list of subfolders is stored in the prefixes field
-                    List<StorageReference> subfolders = listResult.getPrefixes();
-                    // Create a list of templates from the subfolders
-                    for (StorageReference subfolder : subfolders) {
-                        timelineItems.add(MainActivity.decodeFileNamingScheme(subfolder.getName()));
+                    for (Map<String, Object> timeline: timelines) {
+                        timelineItems.add(timeline.get("name").toString());
                     }
 
                     setUpSpinner();
-                })
-                .addOnFailureListener(exception -> {
-                    // An error occurred while retrieving the list of subfolders
-                    Log.e("Error Retrieving the List of Templates...", exception.getMessage());
-                });
+
+                } else {
+                    // the document does not exist
+                }
+            } else {
+                Log.e("Fatal Error", "Problem in retrieving the JSON template files from the server! It is likely that it's associated with the permission conflict.");
+            }
+        });
     }
 
     private void setUpSpinner() {

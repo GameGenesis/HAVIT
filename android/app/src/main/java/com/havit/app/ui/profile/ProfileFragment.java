@@ -3,69 +3,82 @@ package com.havit.app.ui.profile;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Shader;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
-
-import org.w3c.dom.Text;
+import com.havit.app.ui.camera.CameraViewModel;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.Objects;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ProfileFragment extends Fragment {
+
+    private ProfileViewModel profileViewModel;
 
     private FragmentProfileBinding binding;
     public static ImageView profileImage;
 
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
-            // Hide the action bar...
-            Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
+        // Hide the action bar...
+        Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
-            ProfileViewModel profileViewModel =
-                    new ViewModelProvider(this).get(ProfileViewModel.class);
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
-            binding = FragmentProfileBinding.inflate(inflater, container, false);
-            View root = binding.getRoot();
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
 
-            configureUserProfileText();
+        configureUserProfileText();
 
-            MaterialCardView logoutButton = binding.logoutButton;
-            MaterialCardView resetPasswordButton = binding.resetPasswordButton;
-            profileImage = binding.profileImage;
+        MaterialCardView logoutButton = binding.logoutButton;
 
-            return root;
+        logoutButton.setOnClickListener(v -> {
+            Intent i = new Intent(requireActivity(), LoginActivity.class);
+            i.putExtra("isSignOut", true);
+            startActivity(i);
+        });
+
+        MaterialCardView resetPasswordButton = binding.resetPasswordButton;
+        resetPasswordButton.setOnClickListener(this::resetPassword);
+
+        MaterialCardView updateProfileButton = binding.updateProfileButton;
+        updateProfileButton.setOnClickListener(this::updateProfile);
+
+        setUpProfilePicture();
+
+        return root;
     }
 
     @Override
@@ -73,6 +86,52 @@ public class ProfileFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    private void setUpProfilePicture() {
+        CircleImageView profileImage = binding.profileImage;
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String profilePictureFilepath = "users/" + user.getEmail() + "/profile-picture";
+
+        galleryActivityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        Intent data = result.getData();
+                        if (data != null) {
+                            Uri imageUri = data.getData();
+                            profileImage.setImageURI(imageUri);
+
+                            try {
+                                InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
+                                profileViewModel.profilePictureBitmap = BitmapFactory.decodeStream(inputStream);
+                                inputStream.close();
+
+                                CameraViewModel.saveImageToDatabase(profileViewModel.profilePictureBitmap, requireActivity(), profilePictureFilepath);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+        if (profileViewModel.profilePictureBitmap != null) {
+            profileImage.setImageBitmap(profileViewModel.profilePictureBitmap);
+            return;
+        }
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(profilePictureFilepath);
+
+        // Download the image file
+        final long ONE_MEGABYTE = 1024 * 1024;
+        storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            // Data for "images/image.jpg" is returned, use this as needed
+            profileViewModel.profilePictureBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            profileImage.setImageBitmap(profileViewModel.profilePictureBitmap);
+        }).addOnFailureListener(exception -> {
+            // Handle any errors
+            Log.d("profile", exception.getMessage());
+        });
+}
 
     private void resetPassword(View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -94,9 +153,13 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
+    private void updateProfile(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryActivityResultLauncher.launch(intent);
+    }
+
     private void configureUserProfileText() {
-        FirebaseUser user;
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         TextView userFullName = binding.userFullName;
         TextView userId = binding.userId;
