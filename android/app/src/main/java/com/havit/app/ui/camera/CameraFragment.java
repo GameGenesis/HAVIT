@@ -23,7 +23,6 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -31,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.camera.core.AspectRatio;
@@ -171,7 +171,27 @@ public class CameraFragment extends Fragment {
         detectHorizontalSwipe(root);
         loadTemplates();
 
+        setUpNavigation();
+
         return root;
+    }
+
+    private void setUpNavigation() {
+        // When the user uses the back navigation button or gesture
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (imageView.getVisibility() == View.GONE) {
+                    // If the user is in the camera view, exits the app
+                    requireActivity().finish();
+                } else {
+                    // If the user is in the image view, closes the image view
+                    closeImageView();
+                }
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     private void loadTemplates() {
@@ -246,7 +266,7 @@ public class CameraFragment extends Fragment {
         });*/
 
         // Called when an item is selected
-        habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Do something here when an item in the Spinner is selected
@@ -268,7 +288,7 @@ public class CameraFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
                 // Do something here when nothing is selected in the Spinner
             }
-        });
+        });*/
     }
 
     private void takePhoto() {
