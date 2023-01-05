@@ -103,41 +103,31 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
     }
 
     private void uploadUserData(Map<String, Object> timelineMetaData) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(user.getEmail()));
+        MainActivity.updateFirestoreDatabase(user, (documentReference, documentSnapshot) -> {
+            // If the user exists in the database...
+            if (documentSnapshot.exists()) {
+                Log.d(TAG, "Document exists");
 
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("user_timelines", FieldValue.arrayUnion(timelineMetaData));
 
-                // If the user exists in the database...
-                if (document.exists()) {
-                    Log.d(TAG, "Document exists");
-
-                    Map<String, Object> updates = new HashMap<>();
-                    updates.put("user_timelines", FieldValue.arrayUnion(timelineMetaData));
-
-                    docRef.update(updates)
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Document update successful!"))
-                            .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
-
-                } else {
-                    // If the user does not exist in the database...
-                    Log.d(TAG, "Document does not exist, adding it");
-
-                    Map<String, Object> data = new HashMap<>();
-
-                    ArrayList<Map<String, Object>> array = new ArrayList<>();
-                    array.add(timelineMetaData);
-
-                    data.put("name", user.getDisplayName());
-                    data.put("user_timelines", array);
-
-                    docRef.set(data);
-                }
+                documentReference.update(updates)
+                        .addOnSuccessListener(aVoid -> Log.d(TAG, "Document update successful!"))
+                        .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
 
             } else {
-                Log.d(TAG, "Failed to get document", task.getException());
+                // If the user does not exist in the database...
+                Log.d(TAG, "Document does not exist, adding it");
+
+                Map<String, Object> data = new HashMap<>();
+
+                ArrayList<Map<String, Object>> array = new ArrayList<>();
+                array.add(timelineMetaData);
+
+                data.put("name", user.getDisplayName());
+                data.put("user_timelines", array);
+
+                documentReference.set(data);
             }
         });
     }
