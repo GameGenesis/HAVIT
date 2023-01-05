@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
@@ -168,7 +169,27 @@ public class CameraFragment extends Fragment {
 
         loadTemplates();
 
+        setUpNavigation();
+
         return root;
+    }
+
+    private void setUpNavigation() {
+        // When the user uses the back navigation button or gesture
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (imageView.getVisibility() == View.GONE) {
+                    // If the user is in the camera view, exits the app
+                    requireActivity().finish();
+                } else {
+                    // If the user is in the image view, closes the image view
+                    closeImageView();
+                }
+            }
+        };
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
     private void loadTemplates() {
