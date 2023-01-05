@@ -1,5 +1,7 @@
 package com.havit.app;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +40,11 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import androidx.navigation.ui.NavigationUI;
+
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.databinding.ActivityMainBinding;
@@ -192,5 +199,25 @@ public class MainActivity extends AppCompatActivity {
         canvas.drawCircle(centerX, centerY, Math.min(centerX, centerY), paint);
 
         return circleBitmap;
+    }
+
+    @FunctionalInterface
+    public interface OnTaskSuccessful {
+        void invoke(DocumentReference documentReference, DocumentSnapshot documentSnapshot);
+    }
+
+    public static void updateFirestoreDatabase(FirebaseUser user, OnTaskSuccessful onTaskSuccessful) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = db.collection("users").document(Objects.requireNonNull(user.getEmail()));
+
+        documentReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot documentSnapshot = task.getResult();
+                onTaskSuccessful.invoke(documentReference, documentSnapshot);
+
+            } else {
+                Log.d(TAG, "Failed to get document", task.getException());
+            }
+        });
     }
 }
