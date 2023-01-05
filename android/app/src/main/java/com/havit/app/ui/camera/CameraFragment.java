@@ -20,7 +20,6 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -264,7 +263,7 @@ public class CameraFragment extends Fragment {
         });*/
 
         // Called when an item is selected
-        habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Do something here when an item in the Spinner is selected
@@ -286,7 +285,7 @@ public class CameraFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
                 // Do something here when nothing is selected in the Spinner
             }
-        });
+        });*/
     }
 
     private void takePhoto() {
