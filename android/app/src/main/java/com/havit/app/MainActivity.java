@@ -71,13 +71,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE); // the results will be higher than using the activity context object or the getWindowManager() shortcut
-        wm.getDefaultDisplay().getMetrics(displayMetrics);
-
-        screenWidth = displayMetrics.widthPixels;
-        screenHeight = displayMetrics.heightPixels;
-
         storageReference = FirebaseStorage.getInstance().getReference();
 
         LoginActivity.sDefSystemLanguage = Locale.getDefault().getLanguage();
