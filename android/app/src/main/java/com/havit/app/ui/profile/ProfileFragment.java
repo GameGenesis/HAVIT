@@ -105,7 +105,7 @@ public class ProfileFragment extends Fragment {
                                 profileViewModel.profilePictureBitmap = BitmapFactory.decodeStream(inputStream);
                                 inputStream.close();
 
-                                CameraViewModel.saveImageToDatabase(profileViewModel.profilePictureBitmap, requireActivity(), profilePictureFilepath);
+                                MainActivity.saveImageToDatabase(profileViewModel.profilePictureBitmap, requireActivity(), profilePictureFilepath);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

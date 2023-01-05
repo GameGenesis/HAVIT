@@ -23,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -31,6 +32,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MotionEventCompat;
+import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,6 +43,7 @@ import com.google.firebase.storage.StorageReference;
 import com.havit.app.databinding.ActivityMainBinding;
 import com.havit.app.ui.profile.ProfileFragment;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
@@ -54,10 +57,6 @@ public class MainActivity extends AppCompatActivity {
     public static int screenWidth, screenHeight;
 
     public static int colorAccent;
-
-    public static ActivityResultLauncher<Intent> galleryActivity;
-
-    public static Bitmap profileImageBitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,5 +156,48 @@ public class MainActivity extends AppCompatActivity {
 
         // convert the array to string
         return String.valueOf(phraseChars);
+    }
+
+    public static void saveImageToDatabase(Bitmap bitmap, FragmentActivity activity, String filePath) {
+        // Run a new thread for an asynchronous operation, separate from the main thread...
+        new Thread() {
+            public void run() {
+                // To save the image...
+                try {
+                    // Convert the bitmap to a byte array...
+                    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, byteArrayOutputStream);
+                    byte[] byteArray = byteArrayOutputStream.toByteArray();
+
+                    StorageReference image = MainActivity.storageReference.child(filePath);
+                    image.putBytes(byteArray).addOnSuccessListener(taskSnapshot -> {
+                        // Run the code below on the main thread that handles the UI events...
+                        activity.runOnUiThread(() -> Toast.makeText(activity, "Photo was successfully uploaded", Toast.LENGTH_LONG).show());
+                    }).addOnFailureListener(e -> {
+                        // Run the code below on the main thread that handles the UI events...
+                        activity.runOnUiThread(() -> Toast.makeText(activity, "An error occurred while uploading the photo", Toast.LENGTH_LONG).show());
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
+    public static Bitmap cropImage(Bitmap bitmap){
+        Bitmap circleBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(circleBitmap);
+
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setShader(new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+
+        float centerX = (float) bitmap.getWidth() / 2;
+        float centerY = (float) bitmap.getHeight() / 2;
+
+        canvas.drawCircle(centerX, centerY, Math.min(centerX, centerY), paint);
+
+        return circleBitmap;
     }
 }
