@@ -7,13 +7,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -29,6 +32,7 @@ import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -43,6 +47,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 
+import com.google.android.gms.common.internal.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -96,8 +101,9 @@ public class CameraFragment extends Fragment {
 
     private final ArrayList<String> timelineItems = new ArrayList<>();
 
+    @SuppressLint("ClickableViewAccessibility")
     public View onCreateView(@NonNull LayoutInflater inflater,
-            ViewGroup container, Bundle savedInstanceState) {
+                             ViewGroup container, Bundle savedInstanceState) {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -119,6 +125,7 @@ public class CameraFragment extends Fragment {
 
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             handleShutter();
             takePhoto();
         });
@@ -126,11 +133,13 @@ public class CameraFragment extends Fragment {
         cancelButton = binding.cancelButton;
         cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             closeImageView();
         });
 
         flipButton = binding.flipButton;
         flipButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             flipCamera();
         });
 
@@ -139,16 +148,9 @@ public class CameraFragment extends Fragment {
             flashButton.setVisibility(View.GONE);
         }
 
-        flashButton.setOnClickListener(view -> {
+        flashButton.setOnClickListener(v -> {
+            hapticFeedback(v);
             toggleFlash();
-        });
-
-        previewView.setOnTouchListener(new View.OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                // ... Respond to touch events
-                Log.d("TAG", "Swipe right");
-                return true;
-            }
         });
 
         habitSpinner = binding.habitSpinner;
@@ -166,6 +168,7 @@ public class CameraFragment extends Fragment {
             }
         });
 
+        detectHorizontalSwipe(root);
         loadTemplates();
 
         setUpNavigation();
@@ -487,6 +490,48 @@ public class CameraFragment extends Fragment {
             MediaActionSound sound = new MediaActionSound();
             sound.play(MediaActionSound.SHUTTER_CLICK);
         }
+    }
+
+    private void hapticFeedback(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            view.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
+        }
+    }
+
+    private void detectHorizontalSwipe(View view){
+        final GestureDetector gesture = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
+
+            @Override
+            public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                final int SWIPE_MIN_DISTANCE = 120;
+                final int SWIPE_MAX_OFF_PATH = 250;
+                final int SWIPE_THRESHOLD_VELOCITY = 200;
+                try {
+                    if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+                        return false;
+                    if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                        Log.d("TOUCH", "Right to Left");
+                    } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+                        Log.d("TOUCH", "Left to Right");
+                    }
+                } catch (Exception e) {
+                    // nothing
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+        });
+
+        view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent event) {
+                return gesture.onTouchEvent(event);
+            }
+        });
     }
 
     @Override
