@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -22,11 +24,13 @@ import java.util.Locale;
 
 public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
+    private TimelineFragment owner;
     private FirebaseUser user;
 
-    public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
+    public TimelineArrayAdapter(Context context, List<Timeline> timelines, TimelineFragment owner) {
         super(context, 0, timelines);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        this.owner = owner;
     }
 
     @Override
@@ -47,9 +51,13 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
         TextView nameTextView = convertView.findViewById(R.id.template_name);
         TextView descriptionTextView = convertView.findViewById(R.id.template_description);
 
-        Button button = convertView.findViewById(R.id.template_button);
+        Button editButton = convertView.findViewById(R.id.template_button);
+        editButton.setText("Edit");
 
-        button.setText("Edit");
+        editButton.setOnClickListener(v -> {
+            TimelineViewModel timelineViewModel = new ViewModelProvider(owner).get(TimelineViewModel.class);
+            timelineViewModel.removeTimeline(position);
+        });
 
         // Populate the data into the template view using the data object
         // templateImageView.setImageBitmap(template.thumbnail);

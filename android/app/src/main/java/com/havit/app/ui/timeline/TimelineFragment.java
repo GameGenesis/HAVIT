@@ -65,7 +65,7 @@ public class TimelineFragment extends Fragment {
         timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         timelineViewModel.getTimelines().observe(getViewLifecycleOwner(), timelines -> {
             // Update the UI with the templates data
-            listView.setAdapter(new TimelineArrayAdapter(requireContext(), timelines));
+            listView.setAdapter(new TimelineArrayAdapter(requireContext(), timelines, this));
 
             if (timelines.isEmpty()) {
                 listView.setVisibility(View.GONE);
