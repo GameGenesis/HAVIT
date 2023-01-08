@@ -95,7 +95,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
             uploadUserData(timelineMetaData);
 
-            Navigation.findNavController(v).navigate(R.id.action_store_to_timeline);
+            Navigation.findNavController(v).navigate(R.id.action_store_to_camera);
         });
 
         // Return the completed view to render on screen

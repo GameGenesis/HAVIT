@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.navigation.Navigation;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -50,6 +52,9 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
         Button button = convertView.findViewById(R.id.template_button);
 
         button.setText("Edit");
+        button.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_timeline_to_edit);
+        });
 
         // Populate the data into the template view using the data object
         // templateImageView.setImageBitmap(template.thumbnail);
