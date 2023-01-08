@@ -23,6 +23,16 @@
         android:textAlignment="center"
         android:textSize="42sp" />
 
+    <TextView
+        android:id="@+id/text_notifications"
+        android:layout_width="393dp"
+        android:layout_height="83dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/questrial"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
