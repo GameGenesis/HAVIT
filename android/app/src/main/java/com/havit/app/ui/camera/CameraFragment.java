@@ -46,6 +46,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.common.internal.Constants;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -86,12 +87,11 @@ public class CameraFragment extends Fragment {
 
     private PreviewView previewView;
     private ImageView imageView;
+    private TextView emptyText;
 
     private FloatingActionButton shutterButton;
-    private ImageButton cancelButton;
-    private ImageButton flipButton;
-    private ImageButton flashButton;
-    private Button addButton;
+    private ImageButton cancelButton, flipButton, flashButton;
+    private Button addButton, createHabitButton;
 
     private Spinner habitSpinner;
     private ImageCapture imageCapture;
@@ -121,6 +121,7 @@ public class CameraFragment extends Fragment {
         addCameraProvider();
 
         previewView = binding.previewView;
+        emptyText = binding.emptyText;
 
         imageView = binding.imageView;
         imageView.setVisibility(View.GONE);
@@ -153,6 +154,11 @@ public class CameraFragment extends Fragment {
         flashButton.setOnClickListener(v -> {
             hapticFeedback(v);
             toggleFlash();
+        });
+
+        createHabitButton = binding.createHabitButton;
+        createHabitButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_camera_to_timeline);
         });
 
         habitSpinner = binding.habitSpinner;
@@ -304,6 +310,17 @@ public class CameraFragment extends Fragment {
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 bitmapImage = captureBitmap(image);
 
+                // If the user hasn't created any timelines...
+                if (timelineItems.isEmpty()) {
+                    emptyText.setVisibility(View.VISIBLE);
+                    habitSpinner.setVisibility(View.GONE);
+                    createHabitButton.setVisibility(View.VISIBLE);
+                    imageView.setImageBitmap(null);
+                    imageView.setVisibility(View.GONE);
+                    previewView.setVisibility(View.GONE);
+                    addButton.setVisibility(View.GONE);
+                }
+
                 // Display the image on the ImageView
                 imageView.setImageBitmap(bitmapImage);
             }
@@ -316,6 +333,7 @@ public class CameraFragment extends Fragment {
     }
 
     private void closeImageView() {
+        previewView.setVisibility(View.VISIBLE);
         imageView.setImageBitmap(null);
         imageView.setVisibility(View.GONE);
         shutterButton.show();
@@ -323,6 +341,8 @@ public class CameraFragment extends Fragment {
         addButton.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.GONE);
         flipButton.setVisibility(View.VISIBLE);
+        emptyText.setVisibility(View.GONE);
+        createHabitButton.setVisibility(View.GONE);
 
         if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA) {
             flashButton.setVisibility(View.VISIBLE);
@@ -488,7 +508,9 @@ public class CameraFragment extends Fragment {
         handler.postDelayed(() -> {
             habitSpinner.setVisibility(View.VISIBLE);
             cancelButton.setVisibility(View.VISIBLE);
-            addButton.setVisibility(View.VISIBLE);
+            if (!timelineItems.isEmpty()) {
+                addButton.setVisibility(View.VISIBLE);
+            }
         }, 300);
 
         // Play the snap sound...
