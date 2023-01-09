@@ -61,9 +61,11 @@ import com.havit.app.LoginActivity;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
+import com.havit.app.ui.timeline.TimelineFragment;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -228,6 +230,10 @@ public class CameraFragment extends Fragment {
 
     private void setUpSpinner() {
         // Create a new ArrayAdapter
+        if (TimelineFragment.isOrderNewest) {
+            Collections.reverse(timelineItems);
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_item, timelineItems) {
             // Override the getView() and getDropDownView() methods to set the textAllCaps attribute
             @Override
