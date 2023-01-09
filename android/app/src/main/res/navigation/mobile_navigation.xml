@@ -132,7 +132,7 @@
     <fragment
         android:id="@+id/navigation_edit"
         android:name="com.havit.app.ui.edit.EditFragment"
-        android:label="Edit"
+        android:label="Compose"
         tools:layout="@layout/fragment_edit" >
         <action
             android:id="@+id/action_edit_to_camera"

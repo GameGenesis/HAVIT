@@ -51,34 +51,13 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
         Button button = convertView.findViewById(R.id.template_button);
         Button button2 = convertView.findViewById(R.id.template_button2);
 
-        button.setText("Edit");
+        button.setText("Compose");
         button.setOnClickListener(v -> {
             selectedTimeline = timeline;
             Navigation.findNavController(v).navigate(R.id.action_timeline_to_edit);
         });
 
-        button2.setText("Delete");
-        // Make it appear red...
-        button2.setTextColor(Color.WHITE);
-        button2.setBackgroundColor(MainActivity.colorAccent);
-        button2.setOnClickListener(v -> {
-            // Write code for deleting a timeline here...
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Delete");
-            builder.setMessage("Are you sure you want to delete this item?");
-
-            builder.setPositiveButton("Delete", (dialog, which) -> {
-                // Delete the item
-                Navigation.findNavController(v).navigate(R.id.action_timeline_to_timeline);
-            });
-
-            builder.setNegativeButton("Cancel", (dialog, which) -> {
-                // Cancel the dialog
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        });
+        button2.setVisibility(View.GONE);
 
         // Populate the data into the template view using the data object
         // templateImageView.setImageBitmap(template.thumbnail);

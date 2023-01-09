@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
@@ -123,6 +124,8 @@ public class CameraFragment extends Fragment {
         previewView = binding.previewView;
         emptyText = binding.emptyText;
 
+        emptyText.setTextColor(Color.WHITE);
+
         imageView = binding.imageView;
         imageView.setVisibility(View.GONE);
 
@@ -224,10 +227,12 @@ public class CameraFragment extends Fragment {
                         }
 
                         setUpSpinner();
+                        cancelDisplayEmptyTimelineMessage();
                     }
 
                 } else {
                     // the document does not exist
+                    displayEmptyTimelineMessage();
                 }
             } else {
                 Log.e("Fatal Error", "Problem in retrieving the JSON template files from the server! It is likely that it's associated with the permission conflict.");
@@ -313,13 +318,7 @@ public class CameraFragment extends Fragment {
 
                 // If the user hasn't created any timelines...
                 if (timelineItems.isEmpty()) {
-                    emptyText.setVisibility(View.VISIBLE);
-                    habitSpinner.setVisibility(View.GONE);
-                    createHabitButton.setVisibility(View.VISIBLE);
-                    imageView.setImageBitmap(null);
-                    imageView.setVisibility(View.GONE);
-                    previewView.setVisibility(View.GONE);
-                    addButton.setVisibility(View.GONE);
+                    displayEmptyTimelineMessage();
                 }
 
                 // Display the image on the ImageView
@@ -331,6 +330,24 @@ public class CameraFragment extends Fragment {
                 // Image capture failed
             }
         });
+    }
+
+    private void displayEmptyTimelineMessage() {
+        emptyText.setVisibility(View.VISIBLE);
+        habitSpinner.setVisibility(View.GONE);
+        createHabitButton.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.GONE);
+        previewView.setVisibility(View.GONE);
+        addButton.setVisibility(View.GONE);
+    }
+
+    private void cancelDisplayEmptyTimelineMessage() {
+        emptyText.setVisibility(View.GONE);
+        habitSpinner.setVisibility(View.VISIBLE);
+        createHabitButton.setVisibility(View.GONE);
+        imageView.setVisibility(View.VISIBLE);
+        previewView.setVisibility(View.VISIBLE);
+        addButton.setVisibility(View.VISIBLE);
     }
 
     private void closeImageView() {

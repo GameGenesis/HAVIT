@@ -1,17 +1,21 @@
 package com.havit.app.ui.edit;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.transition.TransitionInflater;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -42,7 +46,6 @@ import java.util.Comparator;
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 
-import java.util.HashMap;
 import java.util.List;
 
 import java.util.Map;
@@ -56,6 +59,8 @@ public class EditFragment extends Fragment {
     private Map<String, String> timestamp;
     private ArrayList<int[]> sortedTimestampKeys;
     private String totalLength;
+
+    private Timeline selectedTimeline;
 
     private int totalLengthMillis;
     private int previousEndMillis = 0;
@@ -90,12 +95,42 @@ public class EditFragment extends Fragment {
         final TextView nameTextView = binding.nameText;
         final TextView templateNameTextView = binding.templateNameText;
 
+        Button deleteButton = binding.deleteButton;
+
+        deleteButton.setOnClickListener(v -> {
+            // Write code for deleting a timeline here...
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Delete");
+            builder.setMessage("Are you sure you want to delete this item?");
+
+            builder.setPositiveButton("Delete", (dialog, which) -> {
+                // Delete the item
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_edit_to_timeline);
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> {
+                // Cancel the dialog
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
+
         editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
         editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
 
         retrieveTimestamp();
 
         timelineContainer = binding.timelineContainer;
+
+        int borderColor = Color.parseColor("#FF0000"); // red border
+        int borderSize = 2; // 2dp border
+
+        GradientDrawable border = new GradientDrawable();
+        border.setColor(0xFFFFFFFF); // white background
+        border.setStroke(borderSize, borderColor);
+
+        timelineContainer.setBackground(border);
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
@@ -130,7 +165,9 @@ public class EditFragment extends Fragment {
     @SuppressWarnings("unchecked")
     private void retrieveTimestamp() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Timeline selectedTimeline = TimelineArrayAdapter.selectedTimeline;
+
+        // Arguably the most important line...
+        selectedTimeline = TimelineArrayAdapter.selectedTimeline;
 
         DocumentReference docRef = db.collection("templates").document(MainActivity.applyFileNamingScheme(selectedTimeline.selectedTemplate));
 
@@ -146,8 +183,6 @@ public class EditFragment extends Fragment {
                         weightSum = totalLengthMillis;
 
                         timelineContainer.setWeightSum(weightSum);
-
-                        Log.d("TOTAL_LENGTH", String.valueOf(totalLengthMillis));
                     }
 
                     // Iterate over the timestamp hashmap...
@@ -181,15 +216,11 @@ public class EditFragment extends Fragment {
                             int startMillis = entry[0];
                             int endMillis = entry[1];
 
-                            Log.d("MOTHER", String.valueOf(startMillis));
-
                             if (startMillis - previousEndMillis > 0) {
                                 View view = new View(requireContext());
 
                                 // Set a weight corresponding to the gap between the previous clip and the current clip...
                                 float weight = (float) startMillis - previousEndMillis;
-
-                                Log.d("INIT_WEIGHT", String.valueOf(weight));
 
                                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                                         0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
@@ -215,7 +246,7 @@ public class EditFragment extends Fragment {
                                 view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500));
                                 isFlipColor = false;
                             } else {
-                                view.setBackgroundColor(Color.WHITE);
+                                view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200));
                                 isFlipColor = true;
                             }
 
@@ -259,14 +290,15 @@ public class EditFragment extends Fragment {
         list.add(
                 new CarouselItem(
                         "https://images.unsplash.com/photo-1532581291347-9c39cf10a73c?w=1080",
-                        "Photo by Aaron Wu on Unsplash"
+                        "YEAR TWO"
                 )
         );
 
         // Just image URL
         list.add(
                 new CarouselItem(
-                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080"
+                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080",
+                        "YEAR THREE"
                 )
         );
 
