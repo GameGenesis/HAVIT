@@ -28,11 +28,26 @@
         android:textSize="12sp"
         android:padding="8dp" />
 
-    <Button
-        android:id="@+id/template_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="Button" />
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/template_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/template_button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="Button" />
+
+    </LinearLayout>
 
 </LinearLayout>

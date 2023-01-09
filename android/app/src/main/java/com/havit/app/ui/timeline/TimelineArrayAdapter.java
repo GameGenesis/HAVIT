@@ -1,6 +1,8 @@
 package com.havit.app.ui.timeline;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,7 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 
 import java.util.List;
@@ -24,13 +24,10 @@ import java.util.Locale;
 
 public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
-    private FirebaseUser user;
-
     public static Timeline selectedTimeline;
 
     public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
         super(context, 0, timelines);
-        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -52,11 +49,35 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
         TextView descriptionTextView = convertView.findViewById(R.id.template_description);
 
         Button button = convertView.findViewById(R.id.template_button);
+        Button button2 = convertView.findViewById(R.id.template_button2);
 
         button.setText("Edit");
         button.setOnClickListener(v -> {
             selectedTimeline = timeline;
             Navigation.findNavController(v).navigate(R.id.action_timeline_to_edit);
+        });
+
+        button2.setText("Delete");
+        // Make it appear red...
+        button2.setTextColor(Color.WHITE);
+        button2.setBackgroundColor(MainActivity.colorAccent);
+        button2.setOnClickListener(v -> {
+            // Write code for deleting a timeline here...
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Delete");
+            builder.setMessage("Are you sure you want to delete this item?");
+
+            builder.setPositiveButton("Delete", (dialog, which) -> {
+                // Delete the item
+                Navigation.findNavController(v).navigate(R.id.action_timeline_to_timeline);
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> {
+                // Cancel the dialog
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
 
         // Populate the data into the template view using the data object
