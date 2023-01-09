@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/central_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
     tools:context=".ui.edit.EditFragment">
-
-
-
 
     <TextView
         android:id="@+id/title_text"
@@ -36,26 +29,40 @@
         android:textAlignment="center"
         android:textSize="18sp" />
 
-    <LinearLayout
-        android:id="@+id/timeline_container"
-        android:orientation="horizontal"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/template_name_text"
-        android:layout_width="393dp"
-        android:layout_height="83dp"
-        android:layout_margin="10dp"
-        android:fontFamily="@font/questrial"
-        android:textAlignment="center"
-        android:textSize="28sp" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+             android:layout_width="match_parent">
 
-    <org.imaginativeworld.whynotimagecarousel.ImageCarousel
-        android:id="@+id/carousel"
-        android:layout_width="match_parent"
-        android:layout_height="431dp" />
+            <LinearLayout
+                android:id="@+id/timeline_container"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp" />
+
+            <TextView
+                android:id="@+id/template_name_text"
+                android:layout_width="393dp"
+                android:layout_height="83dp"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/questrial"
+                android:textAlignment="center"
+                android:textSize="28sp" />
+
+            <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+                android:id="@+id/carousel"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_margin="20dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
