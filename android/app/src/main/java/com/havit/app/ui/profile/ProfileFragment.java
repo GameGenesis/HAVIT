@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -72,7 +73,7 @@ public class ProfileFragment extends Fragment {
         MaterialCardView resetPasswordButton = binding.resetPasswordButton;
         resetPasswordButton.setOnClickListener(this::resetPassword);
 
-        MaterialCardView updateProfileButton = binding.updateProfileButton;
+        Button updateProfileButton = binding.updateProfileButton;
         updateProfileButton.setOnClickListener(this::updateProfile);
 
         setUpProfilePicture();
