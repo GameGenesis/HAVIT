@@ -1,5 +1,6 @@
 package com.havit.app.ui.edit;
 
+import android.app.AlertDialog;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -58,6 +60,8 @@ public class EditFragment extends Fragment {
     private ArrayList<int[]> sortedTimestampKeys;
     private String totalLength;
 
+    private Timeline selectedTimeline;
+
     private int totalLengthMillis;
     private int previousEndMillis = 0;
 
@@ -90,6 +94,27 @@ public class EditFragment extends Fragment {
 
         final TextView nameTextView = binding.nameText;
         final TextView templateNameTextView = binding.templateNameText;
+
+        Button deleteButton = binding.deleteButton;
+
+        deleteButton.setOnClickListener(v -> {
+            // Write code for deleting a timeline here...
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle("Delete");
+            builder.setMessage("Are you sure you want to delete this item?");
+
+            builder.setPositiveButton("Delete", (dialog, which) -> {
+                // Delete the item
+                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_edit_to_timeline);
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> {
+                // Cancel the dialog
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        });
 
         editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
         editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
@@ -140,7 +165,9 @@ public class EditFragment extends Fragment {
     @SuppressWarnings("unchecked")
     private void retrieveTimestamp() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Timeline selectedTimeline = TimelineArrayAdapter.selectedTimeline;
+
+        // Arguably the most important line...
+        selectedTimeline = TimelineArrayAdapter.selectedTimeline;
 
         DocumentReference docRef = db.collection("templates").document(MainActivity.applyFileNamingScheme(selectedTimeline.selectedTemplate));
 
@@ -263,14 +290,15 @@ public class EditFragment extends Fragment {
         list.add(
                 new CarouselItem(
                         "https://images.unsplash.com/photo-1532581291347-9c39cf10a73c?w=1080",
-                        "Photo by Aaron Wu on Unsplash"
+                        "YEAR TWO"
                 )
         );
 
         // Just image URL
         list.add(
                 new CarouselItem(
-                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080"
+                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080",
+                        "YEAR THREE"
                 )
         );
 
