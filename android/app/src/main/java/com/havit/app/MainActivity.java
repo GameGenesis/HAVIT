@@ -149,6 +149,12 @@ public class MainActivity extends AppCompatActivity {
         return String.valueOf(phraseChars);
     }
 
+    public static int parseStringToSeconds(String ) {
+        int startHour = Integer.parseInt(startTimeArray[0]);
+        int startMinute = Integer.parseInt(startTimeArray[1]);
+        int startSeconds = Integer.parseInt(startTimeArray[2]) + startMinute * 60 + startHour * 3600;
+    }
+
     public static void saveImageToDatabase(Bitmap bitmap, FragmentActivity activity, String filePath) {
         // Run a new thread for an asynchronous operation, separate from the main thread...
         new Thread() {

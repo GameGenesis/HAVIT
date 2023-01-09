@@ -12,6 +12,7 @@ public class Timeline {
     }
 
     // Parsing the value of the user_timelines in user.json located in the Firebase Firestore...
+    @SuppressWarnings("unchecked")
     private void parseTimelineString(Map<String, Object> metadata) {
         this.name = (String) metadata.get("name");
         this.selectedTemplate = (String) metadata.get("selected_template");

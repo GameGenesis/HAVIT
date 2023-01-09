@@ -40,6 +40,7 @@ public class EditFragment extends Fragment {
     private LinearLayout timelineContainer;
 
     private Map<String, String> timestamp;
+    private String totalLength;
 
     private final float weightSum = 100;
 
@@ -116,12 +117,41 @@ public class EditFragment extends Fragment {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
                     timestamp = (Map<String, String>) document.get("timestamp");
+                    totalLength = (String) document.get("total_length");
 
                     // Iterate over the timestamp hashmap...
                     assert timestamp != null;
+
+                    Map.Entry<String, String> lastEntry = null;
+
                     for (Map.Entry<String, String> entry : timestamp.entrySet()) {
                         String key = entry.getKey();
                         String value = entry.getValue();
+
+                        String[] keyArray = key.split("-");
+                        String[] startTimeArray = keyArray[0].split(":");
+                        String[] endTimeArray = keyArray[1].split(":");
+
+                        int startHour = Integer.parseInt(startTimeArray[0]);
+                        int startMinute = Integer.parseInt(startTimeArray[1]);
+                        int startSeconds = Integer.parseInt(startTimeArray[2]) + startMinute * 60 + startHour * 3600;
+
+                        int endHour = Integer.parseInt(endTimeArray[0]);
+                        int endMinute = Integer.parseInt(endTimeArray[1]);
+                        int endSeconds = Integer.parseInt(endTimeArray[2]) + endMinute * 60 + endHour * 3600;
+
+                        if (startSeconds <= 0) {
+                            View view = new View(requireContext());
+
+                            // Set a random weight
+                            float weight = (float) Math.random() * weightSum;
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
+                            view.setLayoutParams(layoutParams);
+                            view.setBackgroundColor(Color.rgb(0, 0, 0));
+
+                            timelineContainer.addView(view);
+                        }
 
                         View view = new View(requireContext());
 
