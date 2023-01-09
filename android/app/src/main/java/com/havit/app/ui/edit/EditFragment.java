@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,12 @@ public class EditFragment extends Fragment {
         binding = FragmentEditBinding.inflate(inflater, container, false);
 
         View root = binding.getRoot();
+
+        final TextView nameTextView = binding.nameText;
+        final TextView templateNameTextView = binding.templateNameText;
+
+        timelineViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
+        timelineViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation

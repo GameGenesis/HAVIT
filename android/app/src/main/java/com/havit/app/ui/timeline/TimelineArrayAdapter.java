@@ -26,6 +26,8 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
     private FirebaseUser user;
 
+    public static Timeline selectedTimeline;
+
     public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
         super(context, 0, timelines);
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -53,6 +55,7 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
         button.setText("Edit");
         button.setOnClickListener(v -> {
+            selectedTimeline = timeline;
             Navigation.findNavController(v).navigate(R.id.action_timeline_to_edit);
         });
 
