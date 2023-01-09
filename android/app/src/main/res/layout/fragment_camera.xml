@@ -13,12 +13,40 @@
         android:id="@+id/preview_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#000000" />
+        android:background="#000000">
+
+    </androidx.camera.view.PreviewView>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ui_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="NO TIMELINES CREATED"
+            android:textSize="20sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/create_habit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CREATE HAVIT"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.568" />
 
         <Spinner
             android:id="@+id/habit_spinner"
@@ -27,10 +55,10 @@
             android:layout_margin="10dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
+            android:background="@drawable/roundstyle"
             android:contentDescription="Select Habit"
             android:elevation="20dp"
             android:textColor="?attr/colorOnSecondary"
-            android:background="@drawable/roundstyle"
             app:backgroundTint="?attr/colorOnPrimary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
