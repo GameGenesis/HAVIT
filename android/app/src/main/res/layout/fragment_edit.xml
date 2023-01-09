@@ -13,6 +13,9 @@
     app:layout_constraintTop_toTopOf="parent"
     tools:context=".ui.edit.EditFragment">
 
+
+
+
     <TextView
         android:id="@+id/title_text"
         android:layout_width="match_parent"
@@ -49,5 +52,10 @@
         android:fontFamily="@font/questrial"
         android:textAlignment="center"
         android:textSize="28sp" />
+
+    <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+        android:id="@+id/carousel"
+        android:layout_width="match_parent"
+        android:layout_height="431dp" />
 
 </LinearLayout>
