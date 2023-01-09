@@ -132,13 +132,8 @@ public class EditFragment extends Fragment {
                         String[] startTimeArray = keyArray[0].split(":");
                         String[] endTimeArray = keyArray[1].split(":");
 
-                        int startHour = Integer.parseInt(startTimeArray[0]);
-                        int startMinute = Integer.parseInt(startTimeArray[1]);
-                        int startSeconds = Integer.parseInt(startTimeArray[2]) + startMinute * 60 + startHour * 3600;
-
-                        int endHour = Integer.parseInt(endTimeArray[0]);
-                        int endMinute = Integer.parseInt(endTimeArray[1]);
-                        int endSeconds = Integer.parseInt(endTimeArray[2]) + endMinute * 60 + endHour * 3600;
+                        int startSeconds = MainActivity.parseStringToSeconds(startTimeArray);
+                        int endSeconds = MainActivity.parseStringToSeconds(endTimeArray);
 
                         if (startSeconds <= 0) {
                             View view = new View(requireContext());
