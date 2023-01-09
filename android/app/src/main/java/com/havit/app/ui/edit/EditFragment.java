@@ -1,9 +1,11 @@
 package com.havit.app.ui.edit;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -31,6 +34,9 @@ import com.havit.app.databinding.FragmentEditBinding;
 import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -40,9 +46,15 @@ public class EditFragment extends Fragment {
     private LinearLayout timelineContainer;
 
     private Map<String, String> timestamp;
+    private ArrayList<int[]> sortedTimestampKeys;
     private String totalLength;
 
-    private final float weightSum = 100;
+    private int totalLengthMillis;
+    private int previousEndMillis = 0;
+
+    private float weightSum = 100;
+
+    private boolean isFlipColor = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +71,8 @@ public class EditFragment extends Fragment {
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
+        sortedTimestampKeys = new ArrayList<>();
+
         EditViewModel editViewModel = new ViewModelProvider(this).get(EditViewModel.class);
 
         binding = FragmentEditBinding.inflate(inflater, container, false);
@@ -74,7 +88,6 @@ public class EditFragment extends Fragment {
         retrieveTimestamp();
 
         timelineContainer = binding.timelineContainer;
-        timelineContainer.setWeightSum(weightSum);
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
@@ -119,50 +132,88 @@ public class EditFragment extends Fragment {
                     timestamp = (Map<String, String>) document.get("timestamp");
                     totalLength = (String) document.get("total_length");
 
+                    if (totalLength != null) {
+                        totalLengthMillis = MainActivity.parseStringToMillis(totalLength.split(":"));
+                        weightSum = totalLengthMillis;
+
+                        timelineContainer.setWeightSum(weightSum);
+
+                        Log.d("TOTAL_LENGTH", String.valueOf(totalLengthMillis));
+                    }
+
                     // Iterate over the timestamp hashmap...
-                    assert timestamp != null;
+                    if (timestamp != null) {
+                        for (Map.Entry<String, String> entry : timestamp.entrySet()) {
+                            String key = entry.getKey();
+                            String value = entry.getValue();
 
-                    Map.Entry<String, String> lastEntry = null;
+                            String[] keyArray = key.split("-");
+                            String[] startTimeArray = keyArray[0].split(":");
+                            String[] endTimeArray = keyArray[1].split(":");
 
-                    for (Map.Entry<String, String> entry : timestamp.entrySet()) {
-                        String key = entry.getKey();
-                        String value = entry.getValue();
+                            int startMillis = MainActivity.parseStringToMillis(startTimeArray);
+                            int endMillis = MainActivity.parseStringToMillis(endTimeArray);
+                            int deltaMillis = MainActivity.parseStringToMillis(endTimeArray);
 
-                        String[] keyArray = key.split("-");
-                        String[] startTimeArray = keyArray[0].split(":");
-                        String[] endTimeArray = keyArray[1].split(":");
-
-                        int startSeconds = MainActivity.parseStringToSeconds(startTimeArray);
-                        int endSeconds = MainActivity.parseStringToSeconds(endTimeArray);
-
-                        if (startSeconds <= 0) {
-                            View view = new View(requireContext());
-
-                            // Set a random weight
-                            float weight = (float) Math.random() * weightSum;
-                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                    0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
-                            view.setLayoutParams(layoutParams);
-                            view.setBackgroundColor(Color.rgb(0, 0, 0));
-
-                            timelineContainer.addView(view);
+                            // [startMillis, endMillis, deltaMillis] pairs...
+                            sortedTimestampKeys.add(new int[]{startMillis, endMillis, deltaMillis});
                         }
 
-                        View view = new View(requireContext());
+                        // Sort the list in ascending order based on the third element of the nested arrays
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            Collections.sort(sortedTimestampKeys, Comparator.comparingInt(a -> a[0]));
+                        }
 
-                        // Set a random weight
-                        float weight = (float) Math.random() * weightSum;
-                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                                0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
-                        view.setLayoutParams(layoutParams);
+                        for (int[] entry : sortedTimestampKeys) {
+                            // If the clip is not at the start of the timeline or the difference
+                            // between the previous timestamp and the current timestamp exceeds zero
+                            // (meaning there's a gap between the clips)
 
-                        // Set a random color
-                        int r = (int) (Math.random() * 256);
-                        int g = (int) (Math.random() * 256);
-                        int b = (int) (Math.random() * 256);
-                        view.setBackgroundColor(Color.rgb(r, g, b));
+                            int startMillis = entry[0];
+                            int endMillis = entry[1];
 
-                        timelineContainer.addView(view);
+                            Log.d("MOTHER", String.valueOf(startMillis));
+
+                            if (startMillis - previousEndMillis > 0) {
+                                View view = new View(requireContext());
+
+                                // Set a weight corresponding to the gap between the previous clip and the current clip...
+                                float weight = (float) startMillis - previousEndMillis;
+
+                                Log.d("INIT_WEIGHT", String.valueOf(weight));
+
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                        0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
+
+                                view.setLayoutParams(layoutParams);
+
+                                // Dark timeline "gap" clip...
+                                view.setBackgroundColor(Color.rgb(75, 75, 75));
+
+                                timelineContainer.addView(view);
+                            }
+
+                            View view = new View(requireContext());
+
+                            float weight = (float) (endMillis - startMillis);
+
+                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                    0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
+
+                            view.setLayoutParams(layoutParams);
+
+                            if (isFlipColor) {
+                                view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500));
+                                isFlipColor = false;
+                            } else {
+                                view.setBackgroundColor(Color.WHITE);
+                                isFlipColor = true;
+                            }
+
+                            timelineContainer.addView(view);
+
+                            previousEndMillis = endMillis;
+                        }
                     }
 
                 } else {
