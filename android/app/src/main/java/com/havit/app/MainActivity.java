@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
 import android.net.ConnectivityManager;
@@ -47,6 +48,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -147,6 +149,21 @@ public class MainActivity extends AppCompatActivity {
 
         // convert the array to string
         return String.valueOf(phraseChars);
+    }
+
+    public static int parseStringToMillis(String[] startTimeArray) {
+        int startMinute = Integer.parseInt(startTimeArray[0]);
+        int startSeconds = Integer.parseInt(startTimeArray[1]);
+
+        return Integer.parseInt(startTimeArray[2]) + startSeconds * 1000 + startMinute * 6000;
+    }
+
+    public static String parseMillisToString(int millis) {
+        int startMinute = Math.floorDiv(millis, 6000);
+        int startSeconds = Math.floorDiv(millis % 6000, 1000);
+        int startMillis = millis % 6000 % 1000;
+
+        return startMinute + ":" + startSeconds + ":" + startMillis;
     }
 
     public static void saveImageToDatabase(Bitmap bitmap, FragmentActivity activity, String filePath) {
