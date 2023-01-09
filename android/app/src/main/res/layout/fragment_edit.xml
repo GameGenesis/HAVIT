@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/central_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:context=".ui.edit.EditFragment">
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:fontFamily="@font/major_mono_display"
+        android:text="Edit"
+        android:textAlignment="center"
+        android:textSize="42sp" />
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layoutDescription="@xml/fragment_edit_scene">
+<!--
+        <ImageView android:id="@+id/imageView0" />
+        <ImageView android:id="@+id/imageView1" />
+        <ImageView android:id="@+id/imageView2" />
+        <ImageView android:id="@+id/imageView3"  />
+        <ImageView  ndroid:id="@+id/imageView4"  />-->
+
+    <androidx.constraintlayout.helper.widget.Carousel
+        android:id="@+id/carousel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:carousel_forwardTransition="@+id/forward"
+        app:carousel_backwardTransition="@+id/backward"
+        app:carousel_previousState="@+id/previous"
+        app:carousel_nextState="@+id/next"
+        app:carousel_infinite="true"
+        app:carousel_firstView="@+id/imageView2"
+        app:constraint_referenced_ids="imageView0" />
+
+</androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <TextView
+        android:id="@+id/name_text"
+        android:layout_width="393dp"
+        android:layout_height="83dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/questrial"
+        android:textAlignment="center"
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/timeline_container"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:id="@+id/template_name_text"
+        android:layout_width="393dp"
+        android:layout_height="83dp"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/questrial"
+        android:textAlignment="center"
+        android:textSize="28sp" />
+
+</LinearLayout>
