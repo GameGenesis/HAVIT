@@ -46,9 +46,9 @@ public class TimelineViewModel extends ViewModel {
 
     public LiveData<String> getOrderButtonName() {
         if (TimelineFragment.isOrderNewest) {
-            orderButtonName.setValue("Order by Oldest");
+            orderButtonName.setValue("Sort by Oldest");
         } else {
-            orderButtonName.setValue("Order by Newest");
+            orderButtonName.setValue("Sort by Newest");
         }
 
         return orderButtonName;
