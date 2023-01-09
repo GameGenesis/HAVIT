@@ -31,6 +31,12 @@ import com.havit.app.databinding.FragmentEditBinding;
 import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -100,6 +106,7 @@ public class EditFragment extends Fragment {
                 return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
+        addImg();
 
         return root;
     }
@@ -160,5 +167,43 @@ public class EditFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void addImg(){
+        ImageCarousel carousel = binding.carousel;
+
+        // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
+        carousel.registerLifecycle(getLifecycle());
+
+        List<CarouselItem> list = new ArrayList<>();
+
+        // Image URL with caption
+        list.add(
+                new CarouselItem(
+                        "https://images.unsplash.com/photo-1532581291347-9c39cf10a73c?w=1080",
+                        "Photo by Aaron Wu on Unsplash"
+                )
+        );
+
+        // Just image URL
+        list.add(
+                new CarouselItem(
+                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080"
+                )
+        );
+
+//        // Image URL with header
+//        Map<String, String> headers = new HashMap<>();
+//        headers.put("header_key", "header_value");
+//
+//        list.add(
+//                new CarouselItem(
+//                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080",
+//                        headers
+//                )
+//        );
+
+
+        carousel.setData(list);
     }
 }
