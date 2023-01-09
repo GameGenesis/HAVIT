@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -30,10 +32,12 @@ public class TimelineFragment extends Fragment {
 
     private FragmentTimelineBinding binding;
     private TimelineViewModel timelineViewModel;
+    private TimelineArrayAdapter adapter;
 
-    private ImageButton newHabitButton;
     private ListView listView;
     private TextView textView;
+
+    public static boolean isOrderNewest = true;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -46,13 +50,21 @@ public class TimelineFragment extends Fragment {
 
         View root = binding.getRoot();
 
-        newHabitButton = binding.newHabitActionButton;
+        ImageButton newHabitButton = binding.newHabitActionButton;
+        Button orderButton = binding.orderButton;
+
         listView = binding.timelineListView;
         textView = binding.textNotifications;
 
         newHabitButton.setOnClickListener(v -> Navigation.findNavController(v).navigate(R.id.action_timeline_to_habit));
+        orderButton.setOnClickListener(v -> {
+            isOrderNewest = !isOrderNewest;
+            Navigation.findNavController(v).navigate(R.id.action_timeline_to_timeline);
+        });
 
+        timelineViewModel.getOrderButtonName().observe(getViewLifecycleOwner(), orderButton::setText);
         timelineViewModel.loadTimelines();
+
         Log.d("reload", "Reloading timelines");
 
         return root;
@@ -65,7 +77,8 @@ public class TimelineFragment extends Fragment {
         timelineViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         timelineViewModel.getTimelines().observe(getViewLifecycleOwner(), timelines -> {
             // Update the UI with the templates data
-            listView.setAdapter(new TimelineArrayAdapter(requireContext(), timelines));
+            adapter = new TimelineArrayAdapter(requireContext(), timelines);
+            listView.setAdapter(adapter);
 
             if (timelines.isEmpty()) {
                 listView.setVisibility(View.GONE);

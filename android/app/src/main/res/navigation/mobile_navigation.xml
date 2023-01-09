@@ -66,6 +66,12 @@
             app:popUpTo="@+id/navigation_edit"
             app:popUpToInclusive="true"
             app:restoreState="false" />
+        <action
+            android:id="@+id/action_timeline_to_timeline"
+            app:destination="@id/navigation_timeline"
+            app:popUpTo="@+id/navigation_timeline"
+            app:popUpToInclusive="true"
+            app:restoreState="false" />
     </fragment>
 
     <fragment
@@ -114,7 +120,8 @@
             android:id="@+id/action_store_to_timeline"
             app:destination="@id/navigation_timeline"
             app:popUpTo="@+id/navigation_timeline"
-            app:popUpToInclusive="true" />
+            app:popUpToInclusive="true"
+            app:restoreState="false" />
         <action
             android:id="@+id/action_store_to_habit"
             app:destination="@id/navigation_habit"

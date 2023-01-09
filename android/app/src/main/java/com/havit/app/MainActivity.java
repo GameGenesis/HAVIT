@@ -54,9 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static StorageReference storageReference;
 
-    public static int screenWidth, screenHeight;
-
-    public static int colorAccent;
+    public static int screenWidth, screenHeight, colorAccent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

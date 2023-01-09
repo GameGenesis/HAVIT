@@ -96,19 +96,17 @@ public class ProfileFragment extends Fragment {
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Intent data = result.getData();
-                        if (data != null) {
-                            Uri imageUri = data.getData();
-                            profileImage.setImageURI(imageUri);
+                        Uri imageUri = data.getData();
+                        profileImage.setImageURI(imageUri);
 
-                            try {
-                                InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
-                                profileViewModel.profilePictureBitmap = BitmapFactory.decodeStream(inputStream);
-                                inputStream.close();
+                        try {
+                            InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
+                            profileViewModel.profilePictureBitmap = BitmapFactory.decodeStream(inputStream);
+                            inputStream.close();
 
-                                MainActivity.saveImageToDatabase(profileViewModel.profilePictureBitmap, requireActivity(), profilePictureFilepath);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
+                            MainActivity.saveImageToDatabase(profileViewModel.profilePictureBitmap, requireActivity(), profilePictureFilepath);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 });
