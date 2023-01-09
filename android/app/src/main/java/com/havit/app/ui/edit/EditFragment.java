@@ -1,5 +1,6 @@
 package com.havit.app.ui.edit;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.transition.TransitionInflater;
@@ -9,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,15 +22,26 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentEditBinding;
+import com.havit.app.ui.timeline.Timeline;
+import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
+import java.util.Map;
 import java.util.Objects;
 
 public class EditFragment extends Fragment {
 
     private FragmentEditBinding binding;
-    private EditViewModel timelineViewModel;
+    private LinearLayout timelineContainer;
+
+    private Map<String, String> timestamp;
+
+    private final float weightSum = 100;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +58,7 @@ public class EditFragment extends Fragment {
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
-        timelineViewModel = new ViewModelProvider(this).get(EditViewModel.class);
+        EditViewModel editViewModel = new ViewModelProvider(this).get(EditViewModel.class);
 
         binding = FragmentEditBinding.inflate(inflater, container, false);
 
@@ -54,8 +67,13 @@ public class EditFragment extends Fragment {
         final TextView nameTextView = binding.nameText;
         final TextView templateNameTextView = binding.templateNameText;
 
-        timelineViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
-        timelineViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
+        editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
+        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
+
+        retrieveTimestamp();
+
+        timelineContainer = binding.timelineContainer;
+        timelineContainer.setWeightSum(weightSum);
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
@@ -84,6 +102,53 @@ public class EditFragment extends Fragment {
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         return root;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void retrieveTimestamp() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Timeline selectedTimeline = TimelineArrayAdapter.selectedTimeline;
+
+        DocumentReference docRef = db.collection("templates").document(MainActivity.applyFileNamingScheme(selectedTimeline.selectedTemplate));
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    timestamp = (Map<String, String>) document.get("timestamp");
+
+                    // Iterate over the timestamp hashmap...
+                    assert timestamp != null;
+                    for (Map.Entry<String, String> entry : timestamp.entrySet()) {
+                        String key = entry.getKey();
+                        String value = entry.getValue();
+
+                        View view = new View(requireContext());
+
+                        // Set a random weight
+                        float weight = (float) Math.random() * weightSum;
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                0, ViewGroup.LayoutParams.MATCH_PARENT, weight);
+                        view.setLayoutParams(layoutParams);
+
+                        // Set a random color
+                        int r = (int) (Math.random() * 256);
+                        int g = (int) (Math.random() * 256);
+                        int b = (int) (Math.random() * 256);
+                        view.setBackgroundColor(Color.rgb(r, g, b));
+
+                        timelineContainer.addView(view);
+                    }
+
+                } else {
+                    // Document does not exist
+                    System.out.println("Document does not exist");
+                }
+            } else {
+                // Failed to get the document
+                System.out.println("Failed to get document");
+            }
+        });
     }
 
     @Override

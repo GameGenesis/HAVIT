@@ -128,6 +128,7 @@ public class CameraFragment extends Fragment {
 
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
+            loadTemplates();
             hapticFeedback(v);
             handleShutter();
             takePhoto();
@@ -177,8 +178,6 @@ public class CameraFragment extends Fragment {
         });
 
         detectHorizontalSwipe(root);
-        loadTemplates();
-
         setUpNavigation();
 
         return root;
@@ -219,11 +218,13 @@ public class CameraFragment extends Fragment {
                     // the value is in the document.get() method
                     List<Map<String, Object>> timelines = (List<Map<String, Object>>) document.get("user_timelines");
 
-                    for (Map<String, Object> timeline: timelines) {
-                        timelineItems.add(timeline.get("name").toString());
-                    }
+                    if (timelines != null) {
+                        for (Map<String, Object> timeline : timelines) {
+                            timelineItems.add(Objects.requireNonNull(timeline.get("name")).toString());
+                        }
 
-                    setUpSpinner();
+                        setUpSpinner();
+                    }
 
                 } else {
                     // the document does not exist
