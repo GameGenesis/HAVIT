@@ -37,6 +37,8 @@ public class TimelineFragment extends Fragment {
     private ListView listView;
     private TextView textView;
 
+    private Button orderButton;
+
     public static boolean isOrderNewest = true;
 
     @Override
@@ -61,7 +63,7 @@ public class TimelineFragment extends Fragment {
         View root = binding.getRoot();
 
         ImageButton newHabitButton = binding.newHabitActionButton;
-        Button orderButton = binding.orderButton;
+        orderButton = binding.orderButton;
 
         listView = binding.timelineListView;
         textView = binding.textNotifications;
@@ -91,9 +93,11 @@ public class TimelineFragment extends Fragment {
             listView.setAdapter(adapter);
 
             if (timelines.isEmpty()) {
+                orderButton.setVisibility(View.GONE);
                 listView.setVisibility(View.GONE);
                 textView.setVisibility(View.VISIBLE);
             } else {
+                orderButton.setVisibility(View.VISIBLE);
                 listView.setVisibility(View.VISIBLE);
                 textView.setVisibility(View.GONE);
             }
