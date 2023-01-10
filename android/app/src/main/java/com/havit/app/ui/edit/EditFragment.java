@@ -304,9 +304,6 @@ public class EditFragment extends Fragment {
                 )
         );
 
-
-
-
         carousel.setData(list);
     }
 }
