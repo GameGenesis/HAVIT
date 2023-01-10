@@ -51,15 +51,6 @@ public class TimelineViewModel extends ViewModel {
         return orderButtonName;
     }
 
-    public void removeTimeline(int index) {
-        timelineList.remove(index);
-        timelines.postValue(timelineList);
-
-        MainActivity.updateFirestoreDatabase(user, (documentReference, documentSnapshot) -> {
-
-        });
-    }
-
     public void loadTimelines() {
         timelineList.clear();
 
