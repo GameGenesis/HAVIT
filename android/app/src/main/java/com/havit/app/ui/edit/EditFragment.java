@@ -306,36 +306,21 @@ public class EditFragment extends Fragment {
 
         Log.d("EMAIL", timeLineDirPath);
 
-        folderRef.listAll()
-                .addOnSuccessListener(listResult -> {
-                    for (StorageReference item : listResult.getItems()) {
-                        item.getDownloadUrl().addOnSuccessListener(uri -> {
-                            String url = uri.toString();
-                            Log.d("CAROUSEL", url);
-                            list.add(new CarouselItem(url));
-                        });
-                    }
-//                    carousel.setData(list);
-//                    carousel.setDa
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Handle any errors
-                    }
+        folderRef.listAll().addOnSuccessListener(listResult -> {
+            for (StorageReference item : listResult.getItems()) {
+                item.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String url = uri.toString();
+                    Log.d("CAROUSEL", url);
+                    list.add(new CarouselItem(url));
+                    carousel.setData(list);
                 });
+            }
 
-        CarouselItem test = list.get(0);
-
-        // Image URL with caption
-        list.add(test);
-
-        carousel.setData(list);
-
-
-
-
-
-
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Handle any errors
+            }
+        });
     }
 }
