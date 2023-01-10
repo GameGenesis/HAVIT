@@ -4,16 +4,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -31,7 +36,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
@@ -56,11 +63,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static StorageReference storageReference;
 
-    public static int screenWidth, screenHeight, colorAccent;
+    public static int screenWidth, screenHeight, colorAccent, currentNightMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+        setUpActionBar();
 
         colorAccent = getResources().getColor(com.firebase.ui.auth.R.color.colorAccent, getTheme());
 
@@ -121,6 +132,21 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    private void setUpActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+
+        // Change action bar background's colour...
+        if (actionBar != null) {
+            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES || currentNightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                // Dark mode is enabled, do something
+                actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
+            } else {
+                // Dark mode is disabled, do something else
+                actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.navy)));
+            }
+        }
     }
 
     public static boolean isNotConnected(Activity activity) {
