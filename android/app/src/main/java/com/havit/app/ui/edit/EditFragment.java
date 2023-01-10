@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.animation.Animation;
+import android.view.animation.Transformation;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -106,14 +108,9 @@ public class EditFragment extends Fragment {
 
         View root = binding.getRoot();
 
-        final TextView nameTextView = binding.nameText;
         final TextView templateNameTextView = binding.templateNameText;
-        final TextView titleText = binding.titleText;
-        final TextView nameText = binding.nameText;
-
         final ScrollView scrollView = binding.scrollView;
 
-        editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
         editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
 
         retrieveTimestamp();
@@ -171,8 +168,6 @@ public class EditFragment extends Fragment {
                 params.height = pixels;
                 carousel.setLayoutParams(params);
 
-                titleText.setVisibility(View.GONE);
-                nameText.setVisibility(View.GONE);
                 scrollView.setVisibility(View.GONE);
 
                 isFullScreen = true;
@@ -180,15 +175,13 @@ public class EditFragment extends Fragment {
             } else {
                 previewButton.setText("Preview");
 
-                int dp = 250;
+                int dp = 350;
                 int pixels = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
 
                 LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
                 params.height = pixels;
                 carousel.setLayoutParams(params);
 
-                titleText.setVisibility(View.VISIBLE);
-                nameText.setVisibility(View.VISIBLE);
                 scrollView.setVisibility(View.VISIBLE);
 
                 isFullScreen = false;
@@ -357,6 +350,17 @@ public class EditFragment extends Fragment {
         carousel.setAutoPlay(true);
         carousel.setAutoPlayDelay(1000);
         carousel.setShowIndicator(false);
+        carousel.setShowNavigationButtons(false);
+        carousel.setTouchToPause(true);
+        carousel.setShowBottomShadow(false);
+        carousel.setShowTopShadow(false);
+
+        carousel.setAnimation(new Animation() {
+            @Override
+            public void applyTransformation(float interpolatedTime, Transformation t) {
+
+            }
+        });
 
         int[] currentTimestamp = sortedTimestampKeys.get(0);
         seekBar.setProgress((currentTimestamp[0] + currentTimestamp[1]) / 2);
@@ -379,8 +383,6 @@ public class EditFragment extends Fragment {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference folderRef = storageRef.child(timeLineDirPath);
-
-        Log.d("EMAIL", timeLineDirPath);
 
         folderRef.listAll().addOnSuccessListener(listResult -> {
             List<StorageReference> items = listResult.getItems();
@@ -410,4 +412,6 @@ public class EditFragment extends Fragment {
             // Handle any errors
         });
     }
+
+
 }
