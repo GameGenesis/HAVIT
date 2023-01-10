@@ -3,11 +3,13 @@ package com.havit.app.ui.edit;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.transition.TransitionInflater;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +32,8 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +41,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
@@ -283,12 +288,11 @@ public class EditFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         List<String> timelineImgpath = new ArrayList<>();
 
-        String timeLineDirPath = "users/" + user.getEmail() + "/" + editViewModel.getName().getValue() + "/";
+        String timeLineDirPath = "users/" + user.getEmail() + "/" + MainActivity.applyFileNamingScheme(Objects.requireNonNull(editViewModel.getName().getValue()));
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(timeLineDirPath);
 
         List<String> imageUrls = new ArrayList<>();
-
 
 
         // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
@@ -296,17 +300,42 @@ public class EditFragment extends Fragment {
 
         List<CarouselItem> list = new ArrayList<>();
 
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference folderRef = storageRef.child(timeLineDirPath);
+
+        Log.d("EMAIL", timeLineDirPath);
+
+        folderRef.listAll()
+                .addOnSuccessListener(listResult -> {
+                    for (StorageReference item : listResult.getItems()) {
+                        item.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String url = uri.toString();
+                            Log.d("CAROUSEL", url);
+                            list.add(new CarouselItem(url));
+                        });
+                    }
+//                    carousel.setData(list);
+//                    carousel.setDa
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle any errors
+                    }
+                });
+
+        CarouselItem test = list.get(0);
+
         // Image URL with caption
-        list.add(
-                new CarouselItem(
-                        "https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Fqqqqqq%2Fimg-1673276856461?alt=media&token=51d24ce3-5011-4235-8a6b-69d4a36fef80",
-                        "YEAR TWO"
-                )
-        );
-
-
-
+        list.add(test);
 
         carousel.setData(list);
+
+
+
+
+
+
     }
 }
