@@ -289,7 +289,8 @@ public class EditFragment extends Fragment {
 
         // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
         carousel.registerLifecycle(getLifecycle());
-
+        carousel.setAutoPlay(true);
+        carousel.setAutoPlayDelay(1000);
 
         List<CarouselItem> list = new ArrayList<>();
 
