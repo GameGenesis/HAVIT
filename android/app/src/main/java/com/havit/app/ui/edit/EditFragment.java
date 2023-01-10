@@ -1,9 +1,7 @@
 package com.havit.app.ui.edit;
 
-import android.app.AlertDialog;
 import android.content.res.Configuration;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -16,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -39,7 +36,6 @@ import com.havit.app.R;
 import com.havit.app.databinding.FragmentEditBinding;
 import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -130,7 +126,8 @@ public class EditFragment extends Fragment {
                 return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-        addImg();
+
+        populateImageCarousel();
 
         return root;
     }
@@ -258,7 +255,7 @@ public class EditFragment extends Fragment {
         binding = null;
     }
 
-    private void addImg(){
+    private void populateImageCarousel(){
         ImageCarousel carousel = binding.carousel;
 
         // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
@@ -281,18 +278,6 @@ public class EditFragment extends Fragment {
                         "YEAR THREE"
                 )
         );
-
-//        // Image URL with header
-//        Map<String, String> headers = new HashMap<>();
-//        headers.put("header_key", "header_value");
-//
-//        list.add(
-//                new CarouselItem(
-//                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080",
-//                        headers
-//                )
-//        );
-
 
         carousel.setData(list);
     }
