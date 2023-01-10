@@ -1,6 +1,5 @@
 package com.havit.app.ui.edit;
 
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -290,9 +289,6 @@ public class EditFragment extends Fragment {
                         "YEAR THREE"
                 )
         );
-
-
-
 
         carousel.setData(list);
     }
