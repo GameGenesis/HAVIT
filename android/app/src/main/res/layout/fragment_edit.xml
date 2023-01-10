@@ -13,31 +13,10 @@
 
     <org.imaginativeworld.whynotimagecarousel.ImageCarousel
         android:id="@+id/carousel"
-        android:layout_width="wrap_content"
-        android:layout_height="250dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:layout_gravity="center"
-        android:layout_margin="20dp" />
-
-    <TextView
-        android:id="@+id/title_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:fontFamily="@font/major_mono_display"
-        android:text="Compose"
-        android:textAlignment="center"
-        android:textSize="42sp" />
-
-    <TextView
-        android:id="@+id/name_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:fontFamily="@font/questrial"
-        android:textAlignment="center"
-        android:textSize="18sp" />
+        android:layout_marginBottom="15dp"/>
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -83,12 +62,13 @@
 
             <TextView
                 android:id="@+id/template_name_text"
-                android:layout_width="393dp"
-                android:layout_height="83dp"
-                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
                 android:fontFamily="@font/questrial"
                 android:textAlignment="center"
-                android:textSize="28sp" />
+                android:textSize="13sp" />
 
         </LinearLayout>
 
@@ -100,6 +80,7 @@
         android:orientation="horizontal"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
         android:layout_gravity="center_horizontal">
 
         <Button
