@@ -1,5 +1,6 @@
 package com.havit.app.ui.edit;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -29,9 +31,13 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentEditBinding;
@@ -67,6 +73,8 @@ public class EditFragment extends Fragment {
 
     private boolean isFlipColor = true;
 
+    private EditViewModel editViewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +92,7 @@ public class EditFragment extends Fragment {
 
         sortedTimestampKeys = new ArrayList<>();
 
-        EditViewModel editViewModel = new ViewModelProvider(this).get(EditViewModel.class);
+        editViewModel = new ViewModelProvider(this).get(EditViewModel.class);
 
         binding = FragmentEditBinding.inflate(inflater, container, false);
 
@@ -270,6 +278,19 @@ public class EditFragment extends Fragment {
     private void populateImageCarousel(){
         ImageCarousel carousel = binding.carousel;
 
+        ActivityResultLauncher<Intent> galleryActivityResultLauncher;
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        List<String> timelineImgpath = new ArrayList<>();
+
+        String timeLineDirPath = "users/" + user.getEmail() + "/" + editViewModel.getName().getValue() + "/";
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(timeLineDirPath);
+
+        List<String> imageUrls = new ArrayList<>();
+
+
+
         // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
         carousel.registerLifecycle(getLifecycle());
 
@@ -280,14 +301,6 @@ public class EditFragment extends Fragment {
                 new CarouselItem(
                         "https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Fqqqqqq%2Fimg-1673276856461?alt=media&token=51d24ce3-5011-4235-8a6b-69d4a36fef80",
                         "YEAR TWO"
-                )
-        );
-
-        // Just image URL
-        list.add(
-                new CarouselItem(
-                        "https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1080",
-                        "YEAR THREE"
                 )
         );
 
