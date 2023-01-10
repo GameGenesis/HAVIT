@@ -54,11 +54,24 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp">
 
-                <LinearLayout
-                    android:id="@+id/timeline_container"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp" />
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/timeline_container"
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="100dp" />
+
+                    <SeekBar
+                        android:id="@+id/seek_bar"
+                        android:thumb="@drawable/custom_thumb"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_height="wrap_content" />
+
+                </FrameLayout>
 
             </com.google.android.material.card.MaterialCardView>
 

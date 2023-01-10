@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,6 +59,7 @@ public class EditFragment extends Fragment {
     private FragmentEditBinding binding;
     private LinearLayout timelineContainer;
     private MaterialCardView timelineWrapper;
+    private SeekBar seekBar;
 
     private Map<String, String> timestamp;
     private ArrayList<int[]> sortedTimestampKeys;
@@ -97,6 +99,24 @@ public class EditFragment extends Fragment {
         final TextView templateNameTextView = binding.templateNameText;
 
         timelineWrapper = binding.timelineWrapper;
+        seekBar = binding.seekBar;
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+           @Override
+           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+               // Do something here with the changed progress value
+           }
+
+           @Override
+           public void onStartTrackingTouch(SeekBar seekBar) {
+               // Do something here when the user starts sliding the thumb
+           }
+
+           @Override
+           public void onStopTrackingTouch(SeekBar seekBar) {
+
+           }
+       });
 
         editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
         editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
@@ -203,12 +223,7 @@ public class EditFragment extends Fragment {
                                 // Dark timeline "gap" clip...
                                 MainActivity.currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
 
-                                if (MainActivity.currentNightMode == Configuration.UI_MODE_NIGHT_YES || MainActivity.currentNightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
-                                    // Dark mode enabled...
-                                    view.setBackgroundColor(Color.BLACK);
-                                } else {
-                                    view.setBackgroundColor(Color.LTGRAY);
-                                }
+                                view.setBackgroundColor(Color.BLACK);
 
                                 timelineContainer.addView(view);
                             }
