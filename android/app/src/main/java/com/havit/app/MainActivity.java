@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         colorAccent = getResources().getColor(com.firebase.ui.auth.R.color.colorAccent, getTheme());
 
         if (MainActivity.isNotConnected(this)) {

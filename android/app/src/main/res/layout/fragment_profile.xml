@@ -152,28 +152,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/title_text2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:fontFamily="@font/major_mono_display"
-        android:text="FEED"
-        android:textAlignment="center"
-        android:textSize="42sp" />
-
-    <Button
-        android:id="@+id/open_feed_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="See What's New" />
-
 
 </LinearLayout>
