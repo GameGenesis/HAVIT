@@ -283,20 +283,13 @@ public class EditFragment extends Fragment {
     private void populateImageCarousel(){
         ImageCarousel carousel = binding.carousel;
 
-        ActivityResultLauncher<Intent> galleryActivityResultLauncher;
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        List<String> timelineImgpath = new ArrayList<>();
 
         String timeLineDirPath = "users/" + user.getEmail() + "/" + MainActivity.applyFileNamingScheme(Objects.requireNonNull(editViewModel.getName().getValue()));
 
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(timeLineDirPath);
-
-        List<String> imageUrls = new ArrayList<>();
-
-
         // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
         carousel.registerLifecycle(getLifecycle());
+
 
         List<CarouselItem> list = new ArrayList<>();
 
