@@ -1,6 +1,7 @@
 package com.havit.app.ui.edit;
 
 import android.app.AlertDialog;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -29,6 +30,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,12 +57,11 @@ public class EditFragment extends Fragment {
 
     private FragmentEditBinding binding;
     private LinearLayout timelineContainer;
+    private MaterialCardView timelineWrapper;
 
     private Map<String, String> timestamp;
     private ArrayList<int[]> sortedTimestampKeys;
     private String totalLength;
-
-    private Timeline selectedTimeline;
 
     private int totalLengthMillis;
     private int previousEndMillis = 0;
@@ -95,26 +96,7 @@ public class EditFragment extends Fragment {
         final TextView nameTextView = binding.nameText;
         final TextView templateNameTextView = binding.templateNameText;
 
-        Button deleteButton = binding.deleteButton;
-
-        deleteButton.setOnClickListener(v -> {
-            // Write code for deleting a timeline here...
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-            builder.setTitle("Delete");
-            builder.setMessage("Are you sure you want to delete this item?");
-
-            builder.setPositiveButton("Delete", (dialog, which) -> {
-                // Delete the item
-                Navigation.findNavController(binding.getRoot()).navigate(R.id.action_edit_to_timeline);
-            });
-
-            builder.setNegativeButton("Cancel", (dialog, which) -> {
-                // Cancel the dialog
-            });
-
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        });
+        timelineWrapper = binding.timelineWrapper;
 
         editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
         editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
@@ -122,15 +104,6 @@ public class EditFragment extends Fragment {
         retrieveTimestamp();
 
         timelineContainer = binding.timelineContainer;
-
-        int borderColor = Color.parseColor("#FF0000"); // red border
-        int borderSize = 2; // 2dp border
-
-        GradientDrawable border = new GradientDrawable();
-        border.setColor(0xFFFFFFFF); // white background
-        border.setStroke(borderSize, borderColor);
-
-        timelineContainer.setBackground(border);
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
@@ -167,7 +140,7 @@ public class EditFragment extends Fragment {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Arguably the most important line...
-        selectedTimeline = TimelineArrayAdapter.selectedTimeline;
+        Timeline selectedTimeline = TimelineArrayAdapter.selectedTimeline;
 
         DocumentReference docRef = db.collection("templates").document(MainActivity.applyFileNamingScheme(selectedTimeline.selectedTemplate));
 
@@ -228,7 +201,14 @@ public class EditFragment extends Fragment {
                                 view.setLayoutParams(layoutParams);
 
                                 // Dark timeline "gap" clip...
-                                view.setBackgroundColor(Color.rgb(75, 75, 75));
+                                MainActivity.currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+                                if (MainActivity.currentNightMode == Configuration.UI_MODE_NIGHT_YES || MainActivity.currentNightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
+                                    // Dark mode enabled...
+                                    view.setBackgroundColor(Color.BLACK);
+                                } else {
+                                    view.setBackgroundColor(Color.LTGRAY);
+                                }
 
                                 timelineContainer.addView(view);
                             }
@@ -243,10 +223,10 @@ public class EditFragment extends Fragment {
                             view.setLayoutParams(layoutParams);
 
                             if (isFlipColor) {
-                                view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_500));
+                                view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.navy));
                                 isFlipColor = false;
                             } else {
-                                view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.purple_200));
+                                view.setBackgroundColor(Color.rgb(38, 68, 77));
                                 isFlipColor = true;
                             }
 
