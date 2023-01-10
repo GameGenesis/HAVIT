@@ -12,21 +12,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.navigation.Navigation;
-
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 
 import java.util.List;
 import java.util.Locale;
 
-// Binding doesn't work here...
-
 public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
-    public static Timeline selectedTimeline;
+    private TimelineFragment owner;
 
-    public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
+    public TimelineArrayAdapter(Context context, List<Timeline> timelines, TimelineFragment owner) {
         super(context, 0, timelines);
     }
 

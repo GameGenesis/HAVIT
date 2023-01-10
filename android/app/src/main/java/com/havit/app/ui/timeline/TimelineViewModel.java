@@ -9,10 +9,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.havit.app.MainActivity;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -54,39 +54,36 @@ public class TimelineViewModel extends ViewModel {
         return orderButtonName;
     }
 
+    public void removeTimeline(int index) {
+        timelineList.remove(index);
+        timelines.postValue(timelineList);
+
+        MainActivity.updateFirestoreDatabase(user, (documentReference, documentSnapshot) -> {
+
+        });
+    }
+
     public void loadTimelines() {
         timelineList.clear();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference docRef = db.collection("users").document(Objects.requireNonNull(user.getEmail()));
+        MainActivity.updateFirestoreDatabase(user, (documentReference, documentSnapshot) -> {
+            if (documentSnapshot.exists()) {
+                // Document exists, get the fields
+                @SuppressWarnings("unchecked")
+                List<Map<String, Object>> list = (List<Map<String, Object>>) documentSnapshot.get("user_timelines");
 
-        docRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    // Document exists, get the fields
-                    @SuppressWarnings("unchecked")
-                    List<Map<String, Object>> list = (List<Map<String, Object>>) document.get("user_timelines");
-
-                    if (list != null) {
-                        for (Map<String, Object> item : list) {
-                            timelineList.add(new Timeline(item));
-                        }
-
-                        if (TimelineFragment.isOrderNewest) {
-                            // List by newest...
-                            Collections.reverse(timelineList);
-                        }
-
-                        timelines.postValue(timelineList);
+                if (list != null) {
+                    for (Map<String, Object> item : list) {
+                        timelineList.add(new Timeline(item));
                     }
-                } else {
-                    // Document does not exist
-                    System.out.println("Document does not exist");
+                    
+                     if (TimelineFragment.isOrderNewest) {
+                          // List by newest...
+                          Collections.reverse(timelineList);
+                    }
+
+                    timelines.postValue(timelineList);
                 }
-            } else {
-                // Failed to get the document
-                System.out.println("Failed to get document");
             }
         });
     }
