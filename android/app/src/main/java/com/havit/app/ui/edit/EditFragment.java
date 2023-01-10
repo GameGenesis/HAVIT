@@ -365,7 +365,7 @@ public class EditFragment extends Fragment {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int i, int i1, @Nullable CarouselItem carouselItem) {
                 int[] currentTimestamp = sortedTimestampKeys.get(i1);
-                seekBar.setProgress(currentTimestamp[0] + currentTimestamp[1] / 2);
+                seekBar.setProgress((currentTimestamp[0] + currentTimestamp[1]) / 2);
             }
 
             @Override
