@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -86,6 +87,11 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
                             MainActivity.updateFirestoreDatabase(user, (documentReference, documentSnapshot) -> {
                                 // Get the current value of the array field
                                 List<Object> array = (List<Object>) documentSnapshot.get("user_timelines");
+
+                                if (TimelineFragment.isOrderNewest && array != null) {
+                                    // List by newest...
+                                    Collections.reverse(array);
+                                }
 
                                 // Replace the element at the specified index with null
                                 Objects.requireNonNull(array).remove(position);
