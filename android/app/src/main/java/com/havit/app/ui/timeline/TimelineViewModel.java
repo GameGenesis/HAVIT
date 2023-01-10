@@ -1,9 +1,5 @@
 package com.havit.app.ui.timeline;
 
-import static android.content.ContentValues.TAG;
-
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -17,15 +13,13 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.havit.app.MainActivity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class TimelineViewModel extends ViewModel {
 
-    private final MutableLiveData<String> mText;
+    private final MutableLiveData<String> mText, orderButtonName;
     private final MutableLiveData<List<Timeline>> timelines;
     private final List<Timeline> timelineList;
 
@@ -33,6 +27,7 @@ public class TimelineViewModel extends ViewModel {
 
     public TimelineViewModel() {
         mText = new MutableLiveData<>();
+        orderButtonName = new MutableLiveData<>();
         timelines = new MutableLiveData<>();
         timelineList = new ArrayList<>();
 
@@ -49,9 +44,14 @@ public class TimelineViewModel extends ViewModel {
         return mText;
     }
 
-    public void clearTimelines() {
-        timelineList.clear();
-        timelines.postValue(timelineList);
+    public LiveData<String> getOrderButtonName() {
+        if (TimelineFragment.isOrderNewest) {
+            orderButtonName.setValue("Sort by Oldest");
+        } else {
+            orderButtonName.setValue("Sort by Newest");
+        }
+
+        return orderButtonName;
     }
 
     public void removeTimeline(int index) {
@@ -75,6 +75,11 @@ public class TimelineViewModel extends ViewModel {
                 if (list != null) {
                     for (Map<String, Object> item : list) {
                         timelineList.add(new Timeline(item));
+                    }
+                    
+                     if (TimelineFragment.isOrderNewest) {
+                          // List by newest...
+                          Collections.reverse(timelineList);
                     }
 
                     timelines.postValue(timelineList);

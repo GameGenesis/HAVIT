@@ -69,6 +69,10 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         TextView templateDescriptionTextView = convertView.findViewById(R.id.template_description);
 
         Button templateButton = convertView.findViewById(R.id.template_button);
+        Button templateButton2 = convertView.findViewById(R.id.template_button2);
+
+        // We don't need a secondary button here...
+        templateButton2.setVisibility(View.GONE);
 
         // Populate the data into the template view using the data object
         // templateImageView.setImageBitmap(template.thumbnail);
@@ -95,7 +99,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
             uploadUserData(timelineMetaData);
 
-            Navigation.findNavController(v).navigate(R.id.action_store_to_timeline);
+            Navigation.findNavController(v).navigate(R.id.action_store_to_camera);
         });
 
         // Return the completed view to render on screen

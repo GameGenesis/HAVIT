@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
@@ -46,6 +47,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -60,9 +62,11 @@ import com.havit.app.LoginActivity;
 
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentCameraBinding;
+import com.havit.app.ui.timeline.TimelineFragment;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -83,12 +87,11 @@ public class CameraFragment extends Fragment {
 
     private PreviewView previewView;
     private ImageView imageView;
+    private TextView emptyText;
 
     private FloatingActionButton shutterButton;
-    private ImageButton cancelButton;
-    private ImageButton flipButton;
-    private ImageButton flashButton;
-    private Button addButton;
+    private ImageButton cancelButton, flipButton, flashButton;
+    private Button addButton, createHabitButton;
 
     private Spinner habitSpinner;
     private ImageCapture imageCapture;
@@ -118,12 +121,16 @@ public class CameraFragment extends Fragment {
         addCameraProvider();
 
         previewView = binding.previewView;
+        emptyText = binding.emptyText;
+
+        emptyText.setTextColor(Color.WHITE);
 
         imageView = binding.imageView;
         imageView.setVisibility(View.GONE);
 
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
+            loadTemplates();
             hapticFeedback(v);
             handleShutter();
             takePhoto();
@@ -152,6 +159,11 @@ public class CameraFragment extends Fragment {
             toggleFlash();
         });
 
+        createHabitButton = binding.createHabitButton;
+        createHabitButton.setOnClickListener(v -> {
+            Navigation.findNavController(v).navigate(R.id.action_camera_to_timeline);
+        });
+
         habitSpinner = binding.habitSpinner;
         habitSpinner.setVisibility(View.GONE);
 
@@ -168,8 +180,6 @@ public class CameraFragment extends Fragment {
         });
 
         detectHorizontalSwipe(root);
-        loadTemplates();
-
         setUpNavigation();
 
         return root;
@@ -210,14 +220,18 @@ public class CameraFragment extends Fragment {
                     // the value is in the document.get() method
                     List<Map<String, Object>> timelines = (List<Map<String, Object>>) document.get("user_timelines");
 
-                    for (Map<String, Object> timeline: timelines) {
-                        timelineItems.add(timeline.get("name").toString());
-                    }
+                    if (timelines != null) {
+                        for (Map<String, Object> timeline : timelines) {
+                            timelineItems.add(Objects.requireNonNull(timeline.get("name")).toString());
+                        }
 
-                    setUpSpinner();
+                        setUpSpinner();
+                        cancelDisplayEmptyTimelineMessage();
+                    }
 
                 } else {
                     // the document does not exist
+                    displayEmptyTimelineMessage();
                 }
             } else {
                 Log.e("Fatal Error", "Problem in retrieving the JSON template files from the server! It is likely that it's associated with the permission conflict.");
@@ -227,6 +241,10 @@ public class CameraFragment extends Fragment {
 
     private void setUpSpinner() {
         // Create a new ArrayAdapter
+        if (TimelineFragment.isOrderNewest) {
+            Collections.reverse(timelineItems);
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_item, timelineItems) {
             // Override the getView() and getDropDownView() methods to set the textAllCaps attribute
             @Override
@@ -297,6 +315,11 @@ public class CameraFragment extends Fragment {
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 bitmapImage = captureBitmap(image);
 
+                // If the user hasn't created any timelines...
+                if (timelineItems.isEmpty()) {
+                    displayEmptyTimelineMessage();
+                }
+
                 // Display the image on the ImageView
                 imageView.setImageBitmap(bitmapImage);
             }
@@ -308,7 +331,26 @@ public class CameraFragment extends Fragment {
         });
     }
 
+    private void displayEmptyTimelineMessage() {
+        emptyText.setVisibility(View.VISIBLE);
+        habitSpinner.setVisibility(View.GONE);
+        createHabitButton.setVisibility(View.VISIBLE);
+        imageView.setVisibility(View.GONE);
+        previewView.setVisibility(View.GONE);
+        addButton.setVisibility(View.GONE);
+    }
+
+    private void cancelDisplayEmptyTimelineMessage() {
+        emptyText.setVisibility(View.GONE);
+        habitSpinner.setVisibility(View.VISIBLE);
+        createHabitButton.setVisibility(View.GONE);
+        imageView.setVisibility(View.VISIBLE);
+        previewView.setVisibility(View.VISIBLE);
+        addButton.setVisibility(View.VISIBLE);
+    }
+
     private void closeImageView() {
+        previewView.setVisibility(View.VISIBLE);
         imageView.setImageBitmap(null);
         imageView.setVisibility(View.GONE);
         shutterButton.show();
@@ -316,6 +358,8 @@ public class CameraFragment extends Fragment {
         addButton.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.GONE);
         flipButton.setVisibility(View.VISIBLE);
+        emptyText.setVisibility(View.GONE);
+        createHabitButton.setVisibility(View.GONE);
 
         if (lensFacing == CameraSelector.DEFAULT_BACK_CAMERA) {
             flashButton.setVisibility(View.VISIBLE);
@@ -481,7 +525,9 @@ public class CameraFragment extends Fragment {
         handler.postDelayed(() -> {
             habitSpinner.setVisibility(View.VISIBLE);
             cancelButton.setVisibility(View.VISIBLE);
-            addButton.setVisibility(View.VISIBLE);
+            if (!timelineItems.isEmpty()) {
+                addButton.setVisibility(View.VISIBLE);
+            }
         }, 300);
 
         // Play the snap sound...

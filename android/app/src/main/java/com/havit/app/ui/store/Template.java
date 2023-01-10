@@ -19,7 +19,7 @@ import java.util.Map;
  */
 
 public class Template {
-    public String id, name, description, music;
+    public String id, name, description, music, totalLength;
     public Map<String, String> timestamp;
     public Bitmap thumbnail;
 
@@ -43,6 +43,7 @@ public class Template {
             this.name = jsonObject.getString("name");
             this.description = jsonObject.getString("description");
             this.music = jsonObject.getString("music");
+            this.totalLength = jsonObject.getString("total_length");
 
             this.featured = jsonObject.getBoolean("featured");
             this.price = jsonObject.getInt("price");

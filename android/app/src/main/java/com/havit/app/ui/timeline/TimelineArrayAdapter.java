@@ -1,6 +1,8 @@
 package com.havit.app.ui.timeline;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,27 +12,18 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.lifecycle.ViewModelProvider;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 
 import java.util.List;
 import java.util.Locale;
 
-// Binding doesn't work here...
-
 public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
     private TimelineFragment owner;
-    private FirebaseUser user;
 
     public TimelineArrayAdapter(Context context, List<Timeline> timelines, TimelineFragment owner) {
         super(context, 0, timelines);
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        this.owner = owner;
     }
 
     @Override
@@ -51,13 +44,16 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
         TextView nameTextView = convertView.findViewById(R.id.template_name);
         TextView descriptionTextView = convertView.findViewById(R.id.template_description);
 
-        Button editButton = convertView.findViewById(R.id.template_button);
-        editButton.setText("Edit");
+        Button button = convertView.findViewById(R.id.template_button);
+        Button button2 = convertView.findViewById(R.id.template_button2);
 
-        editButton.setOnClickListener(v -> {
-            TimelineViewModel timelineViewModel = new ViewModelProvider(owner).get(TimelineViewModel.class);
-            timelineViewModel.removeTimeline(position);
+        button.setText("Compose");
+        button.setOnClickListener(v -> {
+            selectedTimeline = timeline;
+            Navigation.findNavController(v).navigate(R.id.action_timeline_to_edit);
         });
+
+        button2.setVisibility(View.GONE);
 
         // Populate the data into the template view using the data object
         // templateImageView.setImageBitmap(template.thumbnail);
