@@ -70,16 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static StorageReference storageReference;
 
-    public static int screenWidth, screenHeight, colorAccent, currentNightMode;
+    public static int colorAccent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-
-        setUpActionBar();
-
+        
         colorAccent = getResources().getColor(com.firebase.ui.auth.R.color.colorAccent, getTheme());
 
         if (MainActivity.isNotConnected(this)) {
@@ -139,21 +135,6 @@ public class MainActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
         return super.dispatchTouchEvent(ev);
-    }
-
-    private void setUpActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-
-        // Change action bar background's colour...
-        if (actionBar != null) {
-            if (currentNightMode == Configuration.UI_MODE_NIGHT_YES || currentNightMode == Configuration.UI_MODE_NIGHT_UNDEFINED) {
-                // Dark mode is enabled, do something
-                actionBar.setBackgroundDrawable(new ColorDrawable(Color.BLACK));
-            } else {
-                // Dark mode is disabled, do something else
-                actionBar.setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(this, R.color.navy)));
-            }
-        }
     }
 
     public static boolean isNotConnected(Activity activity) {

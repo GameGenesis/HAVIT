@@ -217,11 +217,6 @@ public class EditFragment extends Fragment {
 
                                 view.setLayoutParams(layoutParams);
 
-                                // Dark timeline "gap" clip...
-                                MainActivity.currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-
-                                view.setBackgroundColor(Color.BLACK);
-
                                 timelineContainer.addView(view);
                             }
 
