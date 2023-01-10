@@ -103,8 +103,8 @@ public class EditFragment extends Fragment {
 
         View root = binding.getRoot();
 
-        final TextView nameTextView = binding.nameText;
-        final TextView templateNameTextView = binding.templateNameText;
+//        final TextView nameTextView = binding.nameText;
+//        final TextView templateNameTextView = binding.templateNameText;
 
         timelineWrapper = binding.timelineWrapper;
 
@@ -127,8 +127,8 @@ public class EditFragment extends Fragment {
            }
        });
 
-        editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
-        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
+//        editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
+//        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
 
         retrieveTimestamp();
 
@@ -291,6 +291,7 @@ public class EditFragment extends Fragment {
         carousel.registerLifecycle(getLifecycle());
         carousel.setAutoPlay(true);
         carousel.setAutoPlayDelay(1000);
+        carousel.setShowIndicator(false);
 
         List<CarouselItem> list = new ArrayList<>();
 
