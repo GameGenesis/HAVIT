@@ -55,7 +55,6 @@ public class EditFragment extends Fragment {
     private FragmentEditBinding binding;
     private LinearLayout timelineContainer;
     private MaterialCardView timelineWrapper;
-    private SeekBar seekBar;
 
     private Map<String, String> timestamp;
     private ArrayList<int[]> sortedTimestampKeys;
@@ -95,7 +94,8 @@ public class EditFragment extends Fragment {
         final TextView templateNameTextView = binding.templateNameText;
 
         timelineWrapper = binding.timelineWrapper;
-        seekBar = binding.seekBar;
+
+        final SeekBar seekBar = binding.seekBar;
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
            @Override
