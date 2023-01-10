@@ -1,8 +1,6 @@
 package com.havit.app.ui.timeline;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.havit.app.MainActivity;
+import androidx.navigation.Navigation;
+
 import com.havit.app.R;
 
 import java.util.List;
@@ -20,9 +19,9 @@ import java.util.Locale;
 
 public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
-    private TimelineFragment owner;
+    public static Timeline selectedTimeline;
 
-    public TimelineArrayAdapter(Context context, List<Timeline> timelines, TimelineFragment owner) {
+    public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
         super(context, 0, timelines);
     }
 

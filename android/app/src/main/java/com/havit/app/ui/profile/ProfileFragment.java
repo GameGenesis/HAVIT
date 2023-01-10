@@ -2,7 +2,6 @@ package com.havit.app.ui.profile;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,7 +32,6 @@ import com.havit.app.LoginActivity;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
-import com.havit.app.ui.camera.CameraViewModel;
 
 import java.io.IOException;
 import java.io.InputStream;
