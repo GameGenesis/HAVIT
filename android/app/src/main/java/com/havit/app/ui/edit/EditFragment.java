@@ -1,15 +1,14 @@
 package com.havit.app.ui.edit;
 
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 
 import android.transition.TransitionInflater;
 
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,12 +16,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuHost;
@@ -31,9 +32,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +41,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
@@ -54,6 +53,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.listener.CarouselOnScrollListener;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 
 import java.util.List;
@@ -66,6 +66,8 @@ public class EditFragment extends Fragment {
     private FragmentEditBinding binding;
     private LinearLayout timelineContainer;
     private MaterialCardView timelineWrapper;
+    private ImageCarousel carousel;
+    private SeekBar seekBar;
 
     private Map<String, String> timestamp;
     private ArrayList<int[]> sortedTimestampKeys;
@@ -77,6 +79,7 @@ public class EditFragment extends Fragment {
     private float weightSum = 100;
 
     private boolean isFlipColor = true;
+    private boolean isFullScreen = false;
 
     private EditViewModel editViewModel;
 
@@ -103,36 +106,94 @@ public class EditFragment extends Fragment {
 
         View root = binding.getRoot();
 
-//        final TextView nameTextView = binding.nameText;
-//        final TextView templateNameTextView = binding.templateNameText;
+        final TextView nameTextView = binding.nameText;
+        final TextView templateNameTextView = binding.templateNameText;
+        final TextView titleText = binding.titleText;
+        final TextView nameText = binding.nameText;
 
-        timelineWrapper = binding.timelineWrapper;
+        final ScrollView scrollView = binding.scrollView;
 
-        final SeekBar seekBar = binding.seekBar;
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-           @Override
-           public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-               // Do something here with the changed progress value
-           }
-
-           @Override
-           public void onStartTrackingTouch(SeekBar seekBar) {
-               // Do something here when the user starts sliding the thumb
-           }
-
-           @Override
-           public void onStopTrackingTouch(SeekBar seekBar) {
-
-           }
-       });
-
-//        editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
-//        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
+        editViewModel.getName().observe(getViewLifecycleOwner(), nameTextView::setText);
+        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
 
         retrieveTimestamp();
 
         timelineContainer = binding.timelineContainer;
+        carousel = binding.carousel;
+        seekBar = binding.seekBar;
+
+        seekBar.setOnClickListener(v -> carousel.setAutoPlay(false));
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int index = 0;
+
+                // Do something here with the changed progress value
+                for (int i = 0; i < sortedTimestampKeys.size(); i++) {
+                    int currentMillis = seekBar.getProgress();
+                    int[] millisArray = sortedTimestampKeys.get(i);
+
+                    if (currentMillis >= millisArray[0] && currentMillis <= millisArray[1]) {
+                        index = i;
+
+                    } else {
+                        // It's a gap clip then...
+                    }
+                }
+
+                // Only if carousel is not autoplaying...
+                if (!carousel.getAutoPlay()) {
+                    carousel.setCurrentPosition(index);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // Do something here when the user starts sliding the thumb
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        Button previewButton = binding.previewButton;
+        previewButton.setOnClickListener(v -> {
+            if (!isFullScreen) {
+                previewButton.setText("Close");
+
+                int dp = 500;
+                int pixels = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
+                params.height = pixels;
+                carousel.setLayoutParams(params);
+
+                titleText.setVisibility(View.GONE);
+                nameText.setVisibility(View.GONE);
+                scrollView.setVisibility(View.GONE);
+
+                isFullScreen = true;
+
+            } else {
+                previewButton.setText("Preview");
+
+                int dp = 250;
+                int pixels = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
+                params.height = pixels;
+                carousel.setLayoutParams(params);
+
+                titleText.setVisibility(View.VISIBLE);
+                nameText.setVisibility(View.VISIBLE);
+                scrollView.setVisibility(View.VISIBLE);
+
+                isFullScreen = false;
+            }
+        });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
@@ -159,8 +220,6 @@ public class EditFragment extends Fragment {
                 return false;
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-
-        populateImageCarousel();
 
         return root;
     }
@@ -206,7 +265,7 @@ public class EditFragment extends Fragment {
                             sortedTimestampKeys.add(new int[]{startMillis, endMillis, deltaMillis});
                         }
 
-                        // Sort the list in ascending order based on the third element of the nested arrays
+                        // Sort the list in ascending order based on the first element of the nested arrays
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                             Collections.sort(sortedTimestampKeys, Comparator.comparingInt(a -> a[0]));
                         }
@@ -247,6 +306,7 @@ public class EditFragment extends Fragment {
                             if (isFlipColor) {
                                 view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.navy));
                                 isFlipColor = false;
+
                             } else {
                                 view.setBackgroundColor(Color.rgb(38, 68, 77));
                                 isFlipColor = true;
@@ -255,6 +315,13 @@ public class EditFragment extends Fragment {
                             timelineContainer.addView(view);
 
                             previousEndMillis = endMillis;
+                        }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            seekBar.setMin(sortedTimestampKeys.get(0)[0]);
+                            seekBar.setMax(sortedTimestampKeys.get(sortedTimestampKeys.size() - 1)[2]);
+
+                            populateImageCarousel();
                         }
                     }
 
@@ -281,8 +348,6 @@ public class EditFragment extends Fragment {
     }
 
     private void populateImageCarousel(){
-        ImageCarousel carousel = binding.carousel;
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         String timeLineDirPath = "users/" + user.getEmail() + "/" + MainActivity.applyFileNamingScheme(Objects.requireNonNull(editViewModel.getName().getValue()));
@@ -293,6 +358,22 @@ public class EditFragment extends Fragment {
         carousel.setAutoPlayDelay(1000);
         carousel.setShowIndicator(false);
 
+        int[] currentTimestamp = sortedTimestampKeys.get(0);
+        seekBar.setProgress((currentTimestamp[0] + currentTimestamp[1]) / 2);
+
+        carousel.setOnScrollListener(new CarouselOnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int i, int i1, @Nullable CarouselItem carouselItem) {
+                int[] currentTimestamp = sortedTimestampKeys.get(i1);
+                seekBar.setProgress(currentTimestamp[0] + currentTimestamp[1] / 2);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int i, int i1, int i2, @Nullable CarouselItem carouselItem) {
+
+            }
+        });
+
         List<CarouselItem> list = new ArrayList<>();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -302,10 +383,24 @@ public class EditFragment extends Fragment {
         Log.d("EMAIL", timeLineDirPath);
 
         folderRef.listAll().addOnSuccessListener(listResult -> {
-            for (StorageReference item : listResult.getItems()) {
+            List<StorageReference> items = listResult.getItems();
+
+            // create a custom comparator that compares the file name numbers
+            Collections.sort(items, (s1, s2) -> {
+                String fileName1 = s1.getName();
+                String fileName2 = s2.getName();
+
+                long fileNum1 = Long.parseLong(fileName1.replace("img-", ""));
+                long fileNum2 = Long.parseLong(fileName2.replace("img-", ""));
+
+                return Long.compare(fileNum1, fileNum2);
+            });
+
+            // Now items is sorted in an increment order (oldest comes first)
+            for (StorageReference item : items) {
                 item.getDownloadUrl().addOnSuccessListener(uri -> {
                     String url = uri.toString();
-                    Log.d("CAROUSEL", url);
+
                     list.add(new CarouselItem(url));
                     carousel.setData(list);
                 });
