@@ -245,6 +245,10 @@ public class CameraFragment extends Fragment {
             Collections.reverse(timelineItems);
         }
 
+        if (timelineItems.size() <= 1) {
+            habitSpinner.setEnabled(false);
+        }
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(requireActivity(), android.R.layout.simple_spinner_item, timelineItems) {
             // Override the getView() and getDropDownView() methods to set the textAllCaps attribute
             @Override
@@ -274,38 +278,6 @@ public class CameraFragment extends Fragment {
 
         // Apply the adapter to the spinner...
         habitSpinner.setAdapter(adapter);
-
-        // ViewModel observes the changes made in the spinner...
-        /*viewModel.getTimelineItems().observe(getViewLifecycleOwner(), (Observer<ArrayList<String>>) timelineItems -> {
-            adapter.clear();
-            adapter.addAll(timelineItems);
-            adapter.notifyDataSetChanged();
-        });*/
-
-        // Called when an item is selected
-        /*habitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Do something here when an item in the Spinner is selected
-                switch (position) {
-                    case 0:
-                        // Whatever you want to happen when the first item gets selected
-                        break;
-                    case 1:
-                        // Whatever you want to happen when the second item gets selected
-                        break;
-                    case 2:
-                        // Whatever you want to happen when the third item gets selected
-                        break;
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Do something here when nothing is selected in the Spinner
-            }
-        });*/
     }
 
     private void takePhoto() {

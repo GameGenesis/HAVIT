@@ -217,6 +217,8 @@ public class EditFragment extends Fragment {
 
                                 view.setLayoutParams(layoutParams);
 
+                                view.setBackgroundColor(Color.DKGRAY);
+
                                 timelineContainer.addView(view);
                             }
 
