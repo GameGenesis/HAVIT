@@ -316,11 +316,8 @@ public class EditFragment extends Fragment {
                 });
             }
 
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Handle any errors
-            }
+        }).addOnFailureListener(e -> {
+            // Handle any errors
         });
     }
 }
