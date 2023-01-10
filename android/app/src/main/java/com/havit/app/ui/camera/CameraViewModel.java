@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.widget.Toast;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
@@ -14,10 +13,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.StorageReference;
 import com.havit.app.MainActivity;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
