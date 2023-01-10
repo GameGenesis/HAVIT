@@ -24,7 +24,15 @@
         android:id="@+id/template_list_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="50"
-        android:layout_margin="20dp" />
+        android:layout_margin="20dp"
+        android:layout_weight="50">
+
+    </ListView>
+
+    <Button
+        android:id="@+id/restore_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Restore Purchases" />
 
 </LinearLayout>
