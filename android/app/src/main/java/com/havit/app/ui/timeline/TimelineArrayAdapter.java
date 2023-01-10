@@ -15,17 +15,24 @@ import android.widget.TextView;
 
 import androidx.navigation.Navigation;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.havit.app.MainActivity;
 import com.havit.app.R;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
     public static Timeline selectedTimeline;
 
+    private FirebaseUser user;
+
     public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
         super(context, 0, timelines);
+        user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
@@ -76,8 +83,17 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
                         builder.setMessage("ARE YOU SURE YOU WANT TO DELETE THIS?");
 
                         builder.setPositiveButton("Delete", (dialog, which) -> {
-                            // Delete the item
-                            Navigation.findNavController(parent).navigate(R.id.action_timeline_to_timeline);
+                            MainActivity.updateFirestoreDatabase(user, (documentReference, documentSnapshot) -> {
+                                // Get the current value of the array field
+                                List<Object> array = (List<Object>) documentSnapshot.get("user_timelines");
+
+                                // Replace the element at the specified index with null
+                                Objects.requireNonNull(array).remove(position);
+
+                                documentReference.update("user_timelines", array);
+                            });
+
+                            Navigation.findNavController(parent).navigate(R.id.action_timeline_to_camera);
                         });
 
                         builder.setNegativeButton("Cancel", (dialog, which) -> {
