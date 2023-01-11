@@ -166,12 +166,12 @@ public class EditFragment extends Fragment {
             if (!isFullScreen) {
                 previewButton.setText("Close");
 
-                int dp = 500;
+                int dp = 600;
                 int pixels = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
 
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
-                params.height = pixels;
-                carousel.setLayoutParams(params);
+                carousel.setAutoPlay(false);
+                carousel.setShowNavigationButtons(true);
+                carousel.setMinimumHeight(pixels);
 
                 scrollView.setVisibility(View.GONE);
 
@@ -182,10 +182,10 @@ public class EditFragment extends Fragment {
 
                 int dp = 350;
                 int pixels = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
-
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
-                params.height = pixels;
-                carousel.setLayoutParams(params);
+                
+                carousel.setAutoPlay(true);
+                carousel.setShowNavigationButtons(false);
+                carousel.setMinimumHeight(pixels);
 
                 scrollView.setVisibility(View.VISIBLE);
 
@@ -353,7 +353,7 @@ public class EditFragment extends Fragment {
         // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
         carousel.registerLifecycle(getLifecycle());
         carousel.setAutoPlay(true);
-        carousel.setAutoPlayDelay(1000);
+        carousel.setAutoPlayDelay(1500);
         carousel.setShowIndicator(false);
         carousel.setShowNavigationButtons(false);
         carousel.setTouchToPause(true);
