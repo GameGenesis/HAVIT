@@ -141,7 +141,12 @@ public class EditFragment extends Fragment {
 
                 // Only if carousel is not autoplaying...
                 if (!carousel.getAutoPlay()) {
-                    carousel.setCurrentPosition(index);
+                    try {
+                        carousel.setCurrentPosition(index);
+
+                    } catch (Exception e) {
+                        Log.e("Index Out of Bounds", "Carousel was unable to find the given index");
+                    }
                 }
             }
 
@@ -368,8 +373,13 @@ public class EditFragment extends Fragment {
         carousel.setOnScrollListener(new CarouselOnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int i, int i1, @Nullable CarouselItem carouselItem) {
-                int[] currentTimestamp = sortedTimestampKeys.get(i1);
-                seekBar.setProgress((currentTimestamp[0] + currentTimestamp[1]) / 2);
+                try {
+                    int[] currentTimestamp = sortedTimestampKeys.get(i1);
+                    seekBar.setProgress((currentTimestamp[0] + currentTimestamp[1]) / 2);
+
+                } catch (Exception e) {
+                    Log.e("Index Out of Bounds", "The seekbar was unable to find the given index");
+                }
             }
 
             @Override
