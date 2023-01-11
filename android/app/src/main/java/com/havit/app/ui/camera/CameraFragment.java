@@ -1,5 +1,7 @@
 package com.havit.app.ui.camera;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +13,8 @@ import android.media.MediaActionSound;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
@@ -510,9 +514,8 @@ public class CameraFragment extends Fragment {
     }
 
     private void hapticFeedback(View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            view.performHapticFeedback(HapticFeedbackConstants.CONFIRM);
-        }
+        Vibrator vibrator = (Vibrator) requireActivity().getSystemService(VIBRATOR_SERVICE);
+        vibrator.vibrate(10);
     }
 
     private void detectHorizontalSwipe(View view){
