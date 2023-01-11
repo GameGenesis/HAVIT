@@ -48,7 +48,7 @@ public class StoreFragment extends Fragment {
         storeViewModel.getTemplates().observe(getViewLifecycleOwner(), templates -> {
             // Update the UI with the templates data
             ListView templateListView = binding.templateListView;
-            templateListView.setAdapter(new TemplateArrayAdapter(requireContext(), templates));
+            templateListView.setAdapter(new TemplateArrayAdapter(requireContext(), templates, requireActivity()));
         });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01

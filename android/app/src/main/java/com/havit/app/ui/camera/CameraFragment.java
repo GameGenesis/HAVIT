@@ -290,7 +290,6 @@ public class CameraFragment extends Fragment {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 bitmapImage = captureBitmap(image);
-
                 // If the user hasn't created any timelines...
                 if (timelineItems.isEmpty()) {
                     displayEmptyTimelineMessage();

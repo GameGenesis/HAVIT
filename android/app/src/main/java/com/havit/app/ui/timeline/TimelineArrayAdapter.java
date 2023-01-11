@@ -50,6 +50,7 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
         // Lookup views for data population
         ImageView imageView = convertView.findViewById(R.id.template_image);
+        imageView.setVisibility(View.GONE);
 
         TextView nameTextView = convertView.findViewById(R.id.template_name);
         TextView descriptionTextView = convertView.findViewById(R.id.template_description);

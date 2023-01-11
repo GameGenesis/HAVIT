@@ -2,6 +2,7 @@ package com.havit.app.ui.store;
 
 import static android.content.ContentValues.TAG;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -32,11 +33,13 @@ import java.util.Map;
 
 public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
-    private FirebaseUser user;
+    private final FirebaseUser user;
+    private final Activity activity;
 
-    public TemplateArrayAdapter(Context context, List<Template> templates) {
+    public TemplateArrayAdapter(Context context, List<Template> templates, Activity activity) {
         super(context, 0, templates);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        this.activity = activity;
     }
 
     @Override
@@ -64,8 +67,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         templateButton2.setVisibility(View.GONE);
 
         // Populate the data into the template view using the data object
-        // templateImageView.setImageBitmap(template.thumbnail);
-        templateImageView.setMaxWidth(800);
+        templateImageView.setImageBitmap(template.thumbnail);
 
         templateNameTextView.setText(template.name.toUpperCase(Locale.ROOT));
         templateDescriptionTextView.setText(template.description.toUpperCase(Locale.ROOT));
