@@ -203,21 +203,25 @@ public class EditFragment extends Fragment {
         exportButton.setOnClickListener(v -> {
             FFmpeg ffmpeg = FFmpeg.getInstance(requireContext());
 
-            StringBuilder input = new StringBuilder();
-            input.append("concat:");
-            for (int i = 0; i < imgUrl.size(); i++) {
-                input.append(imgUrl.get(i));
-                if (i < imgUrl.size() - 1) {
-                    input.append("|");
-                }
-            }
+            String[] cmd = {"-i", "concat:https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673398079943?alt=media&token=95400c11-886c-4a32-a345-04807c488fff|https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673397998068?alt=media&token=b1426033-6517-445d-a34c-ca45e1693f09", "-c:v", "libx264", "-r", "30", "-pix_fmt", "yuv420p", "output.mp4"};
 
-            String[] cmd = { "-y", "-f", "image2", "-i", input.toString(), "-c:v", "libx264", "-r", "30", "-pix_fmt", "yuv420p", "output.mp4" };
             try {
-                ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {});
-            } catch (FFmpegCommandAlreadyRunningException e) {
+                Process ffmpegProcess = new ProcessBuilder(cmd).start();
+                ffmpegProcess.waitFor();
+                File outputFile = new File("output.mp4");
+                //save the video to the camera roll
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Video.Media.TITLE, "video_title");
+                values.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
+                values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                values.put(MediaStore.Video.Media.DATA, outputFile.getAbsolutePath());
+
+                requireContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
+
 
 
         });
