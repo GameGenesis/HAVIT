@@ -203,32 +203,22 @@ public class EditFragment extends Fragment {
         exportButton.setOnClickListener(v -> {
             FFmpeg ffmpeg = FFmpeg.getInstance(requireContext());
 
-            cmd[imgUrl.size() * 2 + 14] = "/Users/lisa.jeong/Documents/GitHub/final-project-havit";
-
-
-            try {
-                ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
-                    // Handle binary loading success
-                });
-            } catch (FFmpegNotSupportedException e) {
-                // Handle FFmpeg not supported exception
+            StringBuilder input = new StringBuilder();
+            input.append("concat:");
+            for (int i = 0; i < imgUrl.size(); i++) {
+                input.append(imgUrl.get(i));
+                if (i < imgUrl.size() - 1) {
+                    input.append("|");
+                }
             }
 
-            StringBuilder sb = new StringBuilder();
-            for (String url : imgUrl) {
-                sb.append(url);
-                sb.append(" ");
-            }
-            String imageURLsString = sb.toString();
-
-            String[] cmd = new String[]{"-y", "-framerate", "30", "-i", imageURLsString, "-c:v", "libx264", "-r", "30", "-pix_fmt", "yuv420p", "/Documents/GitHub/final-project-havit"};
+            String[] cmd = { "-y", "-f", "image2", "-i", input.toString(), "-c:v", "libx264", "-r", "30", "-pix_fmt", "yuv420p", "output.mp4" };
             try {
-                ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
-                    // Handle FFmpeg execution response
-                });
+                ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {});
             } catch (FFmpegCommandAlreadyRunningException e) {
                 e.printStackTrace();
             }
+
 
         });
 
