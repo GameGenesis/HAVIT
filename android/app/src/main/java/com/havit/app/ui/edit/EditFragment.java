@@ -1,11 +1,16 @@
 package com.havit.app.ui.edit;
 
+import android.Manifest;
 import android.content.ContentValues;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.transition.TransitionInflater;
 
@@ -29,6 +34,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
@@ -58,7 +64,10 @@ import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -74,6 +83,7 @@ import java.util.Objects;
 
 public class EditFragment extends Fragment {
 
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 1;
     private FragmentEditBinding binding;
     private LinearLayout timelineContainer;
     private MaterialCardView timelineWrapper;
@@ -201,27 +211,52 @@ public class EditFragment extends Fragment {
 
         Button exportButton = binding.exportButton;
         exportButton.setOnClickListener(v -> {
-            FFmpeg ffmpeg = FFmpeg.getInstance(requireContext());
-
-            String[] cmd = {"-i", "concat:https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673398079943?alt=media&token=95400c11-886c-4a32-a345-04807c488fff|https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673397998068?alt=media&token=b1426033-6517-445d-a34c-ca45e1693f09", "-c:v", "libx264", "-r", "30", "-pix_fmt", "yuv420p", "output.mp4"};
 
             try {
-                Process ffmpegProcess = new ProcessBuilder(cmd).start();
-                ffmpegProcess.waitFor();
-                File outputFile = new File("output.mp4");
-                //save the video to the camera roll
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Video.Media.TITLE, "video_title");
-                values.put(MediaStore.Video.Media.DATE_TAKEN, System.currentTimeMillis());
-                values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                values.put(MediaStore.Video.Media.DATA, outputFile.getAbsolutePath());
+                File tempFile = File.createTempFile("video", ".mp4");
 
-                requireContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+                convertImagesToVideo(imgUrl, tempFile);
 
-            } catch (IOException | InterruptedException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
+
+
+
+
+//            File outputFile = new File(Environment.getExternalStorageDirectory(),"video.mp4");
+//
+//            String[] cmd = ("-y -i https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673398079943?alt=media&token=95400c11-886c-4a32-a345-04807c488fff -i https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673397998068?alt=media&token=b1426033-6517-445d-a34c-ca45e1693f09 -filter_complex \"[0:v][1:v]concat=n=2:v=1[outv]\" -map \"[outv]\"  -c:v mpeg4 -b:v 1000k -r 30 -strict experimental " + outputFile.getAbsolutePath()).split(" ");
+//            FFmpeg ffmpeg = FFmpeg.getInstance(requireContext());
+//            try {
+//                ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
+//                    @Override
+//                    public void onSuccess(String message) {
+//                        // Successful execution, saving the video to camera roll
+//                        ContentValues values = new ContentValues();
+//
+//
+//                        values.put(MediaStore.Video.Media.TITLE, "My video");
+//                        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+//                        values.put(MediaStore.Video.Media.DATA, outputFile.getAbsolutePath());
+//                        Uri videoUri = requireContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+//                        try {
+//                            OutputStream out = requireContext().getContentResolver().openOutputStream(videoUri);
+//                            out.close();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(String message) {
+//                        // Execution failed, show an error message
+//                    }
+//                });
+//            } catch (FFmpegCommandAlreadyRunningException e) {
+//                e.printStackTrace();
+//            }
 
 
         });
@@ -254,6 +289,62 @@ public class EditFragment extends Fragment {
 
         return root;
     }
+
+    private void convertImagesToVideo(List<String> imageUrls, File outputFile) {
+        try {
+            // Create a list of image URLs in the format required by FFmpeg
+            String imageList = "";
+            for (String url : imageUrls) {
+                imageList += "file '" + url + "'\n";
+            }
+
+            // Create a temp file to hold the list of images
+            File tempFile = File.createTempFile("images", ".txt");
+            FileWriter writer = new FileWriter(tempFile);
+            writer.write(imageList);
+            writer.close();
+
+            // Create the FFmpeg command
+            String[] command = {"-f", "concat", "-safe", "0", "-i", tempFile.getAbsolutePath(), "-c", "copy", String.valueOf(outputFile.getAbsolutePath())};
+
+            // Execute the command
+            FFmpeg.getInstance(requireContext()).execute(command, new ExecuteBinaryResponseHandler() {
+                @Override
+                public void onStart() {
+                    // Show progress dialog
+                }
+
+                @Override
+                public void onProgress(String message) {
+                    // Update progress dialog
+                }
+
+                @Override
+                public void onFailure(String message) {
+                    // Handle failure
+                }
+
+                @Override
+                public void onSuccess(String message) {
+                    // Save the video to the camera roll
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Video.Media.TITLE, "My Video");
+                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
+                    values.put(MediaStore.Video.Media.DATA, outputFile.getAbsolutePath());
+                    requireContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
+
+                }
+
+                @Override
+                public void onFinish() {
+                    // Hide progress dialog
+                }
+            });
+        } catch (IOException | FFmpegCommandAlreadyRunningException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     private void retrieveTimestamp() {
@@ -366,6 +457,8 @@ public class EditFragment extends Fragment {
             }
         });
     }
+
+
 
     @Override
     public void onResume() {
