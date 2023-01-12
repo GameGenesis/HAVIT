@@ -1,5 +1,7 @@
 package com.havit.app.ui.store;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
@@ -8,9 +10,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
@@ -19,6 +23,9 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentStoreBinding;
 
@@ -48,7 +55,7 @@ public class StoreFragment extends Fragment {
         storeViewModel.getTemplates().observe(getViewLifecycleOwner(), templates -> {
             // Update the UI with the templates data
             ListView templateListView = binding.templateListView;
-            templateListView.setAdapter(new TemplateArrayAdapter(requireContext(), templates, requireActivity()));
+            templateListView.setAdapter(new TemplateArrayAdapter(requireContext(), templates));
         });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
