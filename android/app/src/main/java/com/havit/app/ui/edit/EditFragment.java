@@ -166,12 +166,15 @@ public class EditFragment extends Fragment {
             if (!isFullScreen) {
                 previewButton.setText("Close");
 
-                int dp = 600;
+                int dp = 500;
                 int pixels = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
 
                 carousel.setAutoPlay(false);
                 carousel.setShowNavigationButtons(true);
-                carousel.setMinimumHeight(pixels);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
+                params.height = pixels;
+                carousel.setLayoutParams(params);
 
                 scrollView.setVisibility(View.GONE);
 
@@ -185,7 +188,10 @@ public class EditFragment extends Fragment {
                 
                 carousel.setAutoPlay(true);
                 carousel.setShowNavigationButtons(false);
-                carousel.setMinimumHeight(pixels);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
+                params.height = pixels;
+                carousel.setLayoutParams(params);
 
                 scrollView.setVisibility(View.VISIBLE);
 

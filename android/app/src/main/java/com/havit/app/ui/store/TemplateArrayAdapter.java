@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -123,23 +116,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
             // Convert the downloaded bytes into a Bitmap
             Bitmap thumbnail = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
 
-            // Glide allows the loading of the image to be run asynchronously from the main UI thread...
-            Glide.with(getContext())
-                    .load(thumbnail)
-                    .addListener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            Log.e(TAG, "Image loading failed");
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            Log.i(TAG, "Image loaded successfully");
-                            return false;
-                        }
-                    })
-                    .into(templateImageView);
+            templateImageView.setImageBitmap(thumbnail);
         });
     }
 

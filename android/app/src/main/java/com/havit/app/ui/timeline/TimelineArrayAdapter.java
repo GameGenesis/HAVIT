@@ -3,7 +3,6 @@ package com.havit.app.ui.timeline;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,11 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.havit.app.MainActivity;
@@ -32,7 +28,7 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
     public static Timeline selectedTimeline;
 
-    private FirebaseUser user;
+    private final FirebaseUser user;
 
     public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
         super(context, 0, timelines);
