@@ -1,10 +1,12 @@
 package com.havit.app.ui.edit;
 
+import android.content.ContentValues;
 import android.graphics.Color;
 
 import android.os.Build;
 import android.os.Bundle;
 
+import android.provider.MediaStore;
 import android.transition.TransitionInflater;
 
 import android.util.Log;
@@ -36,6 +38,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,6 +57,8 @@ import com.havit.app.databinding.FragmentEditBinding;
 import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -84,6 +93,8 @@ public class EditFragment extends Fragment {
     private boolean isFullScreen = false;
 
     private EditViewModel editViewModel;
+
+    private List<String> imgUrl = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -189,9 +200,37 @@ public class EditFragment extends Fragment {
         });
 
         Button exportButton = binding.exportButton;
-//        exportButton.setOnClickListener(v -> {
-//
-//        });
+        exportButton.setOnClickListener(v -> {
+            FFmpeg ffmpeg = FFmpeg.getInstance(requireContext());
+
+            cmd[imgUrl.size() * 2 + 14] = "/Users/lisa.jeong/Documents/GitHub/final-project-havit";
+
+
+            try {
+                ffmpeg.loadBinary(new LoadBinaryResponseHandler() {
+                    // Handle binary loading success
+                });
+            } catch (FFmpegNotSupportedException e) {
+                // Handle FFmpeg not supported exception
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (String url : imgUrl) {
+                sb.append(url);
+                sb.append(" ");
+            }
+            String imageURLsString = sb.toString();
+
+            String[] cmd = new String[]{"-y", "-framerate", "30", "-i", imageURLsString, "-c:v", "libx264", "-r", "30", "-pix_fmt", "yuv420p", "/Documents/GitHub/final-project-havit"};
+            try {
+                ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
+                    // Handle FFmpeg execution response
+                });
+            } catch (FFmpegCommandAlreadyRunningException e) {
+                e.printStackTrace();
+            }
+
+        });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
@@ -407,6 +446,7 @@ public class EditFragment extends Fragment {
             for (StorageReference item : items) {
                 item.getDownloadUrl().addOnSuccessListener(uri -> {
                     String url = uri.toString();
+                    imgUrl.add(url);
 
                     list.add(new CarouselItem(url));
                     carousel.setData(list);
