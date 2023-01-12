@@ -3,7 +3,6 @@ package com.havit.app.ui.timeline;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -29,7 +28,7 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
     public static Timeline selectedTimeline;
 
-    private FirebaseUser user;
+    private final FirebaseUser user;
 
     public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
         super(context, 0, timelines);
@@ -50,6 +49,7 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
         // Lookup views for data population
         ImageView imageView = convertView.findViewById(R.id.template_image);
+        imageView.setVisibility(View.GONE);
 
         TextView nameTextView = convertView.findViewById(R.id.template_name);
         TextView descriptionTextView = convertView.findViewById(R.id.template_description);
@@ -96,10 +96,16 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
                                 // Replace the element at the specified index with null
                                 Objects.requireNonNull(array).remove(position);
 
-                                documentReference.update("user_timelines", array);
+                                documentReference.update("user_timelines", array)
+                                        .addOnSuccessListener(aVoid -> {
+                                            // update successful
+                                            notifyDataSetChanged();
+                                            Navigation.findNavController(parent).navigate(R.id.action_timeline_to_timeline);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            // update failed
+                                        });
                             });
-
-                            Navigation.findNavController(parent).navigate(R.id.action_timeline_to_camera);
                         });
 
                         builder.setNegativeButton("Cancel", (dialog, which) -> {

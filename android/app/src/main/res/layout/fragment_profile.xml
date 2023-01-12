@@ -11,58 +11,49 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@color/navy"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:background="@color/navy">
 
         <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/profile_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
-            android:src="@drawable/profile_picture" />
+            android:src="@drawable/profile_picture"
+            android:layout_centerVertical="true"/>
 
         <TextView
             android:id="@+id/user_full_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/user_id"
-            android:layout_marginStart="25dp"
-            android:layout_toEndOf="@+id/profile_image"
-            android:fontFamily="@font/major_mono_display"
-            android:includeFontPadding="false"
             android:text="@string/login_name"
+            android:textSize="20sp"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:fontFamily="@font/major_mono_display"
+            android:layout_toEndOf="@+id/profile_image"
+            android:layout_centerVertical="true"
+            android:includeFontPadding="false"
+            android:layout_marginStart="25dp">
+        </TextView>
 
         <TextView
             android:id="@+id/user_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/profile_image"
-            android:fontFamily="@font/questrial"
-            android:includeFontPadding="false"
-            android:text="@string/username"
+            android:text="@string/email"
+            android:textSize="14sp"
             android:textColor="@color/white"
-            android:textSize="14sp">
+            android:fontFamily="@font/questrial"
+            android:layout_toEndOf="@+id/profile_image"
+            android:layout_below="@id/user_full_name"
+            android:layout_centerVertical="true"
+            android:includeFontPadding="false"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="25dp">
 
         </TextView>
 
-        <Button
-            android:id="@+id/update_profile_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/user_id"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginTop="5dp"
-            android:layout_toEndOf="@+id/profile_image"
-            android:backgroundTint="@color/white"
-            android:text="Edit Profile"
-            android:textColor="@color/navy" />
 
     </RelativeLayout>
 
@@ -145,6 +136,98 @@
                     android:text="@string/reset_password"
                     android:textColor="@color/white"
                     android:textSize="15sp">
+
+                </TextView>
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:layout_marginTop="-44dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/update_profile_button"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            app:cardBackgroundColor="@color/navy"
+            app:cardElevation="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/update_profile_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/edit_profile"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:contentDescription="@string/update_profile"
+                    app:tint="@color/white">
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/update_profile_icon"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/update_profile"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/questrial"
+                    android:layout_centerInParent="true">
+
+                </TextView>
+
+            </RelativeLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/update_username_button"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            app:cardBackgroundColor="@color/navy"
+            app:cardElevation="10dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/update_username_icon"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/edit_profile"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:contentDescription="@string/update_profile"
+                    app:tint="@color/white">
+                </ImageView>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/update_username_icon"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/update_profile"
+                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/questrial"
+                    android:layout_centerInParent="true">
 
                 </TextView>
 

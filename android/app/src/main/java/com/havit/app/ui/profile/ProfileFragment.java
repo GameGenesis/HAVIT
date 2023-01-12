@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,7 +70,7 @@ public class ProfileFragment extends Fragment {
         MaterialCardView resetPasswordButton = binding.resetPasswordButton;
         resetPasswordButton.setOnClickListener(this::resetPassword);
 
-        Button updateProfileButton = binding.updateProfileButton;
+        MaterialCardView updateProfileButton = binding.updateProfileButton;
         updateProfileButton.setOnClickListener(this::updateProfile);
 
         setUpProfilePicture();
@@ -89,6 +88,8 @@ public class ProfileFragment extends Fragment {
         CircleImageView profileImage = binding.profileImage;
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        assert user != null;
         final String profilePictureFilepath = "users/" + user.getEmail() + "/profile-picture";
 
         galleryActivityResultLauncher = registerForActivityResult(

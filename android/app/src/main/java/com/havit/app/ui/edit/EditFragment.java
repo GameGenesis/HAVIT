@@ -129,10 +129,10 @@ public class EditFragment extends Fragment {
 
         View root = binding.getRoot();
 
-        final TextView templateNameTextView = binding.templateNameText;
+        final TextView timelineNameText = binding.timelineNameText;
         final ScrollView scrollView = binding.scrollView;
 
-        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
+        editViewModel.getName().observe(getViewLifecycleOwner(), timelineNameText::setText);
 
         retrieveTimestamp();
 
@@ -162,7 +162,12 @@ public class EditFragment extends Fragment {
 
                 // Only if carousel is not autoplaying...
                 if (!carousel.getAutoPlay()) {
-                    carousel.setCurrentPosition(index);
+                    try {
+                        carousel.setCurrentPosition(index);
+
+                    } catch (Exception e) {
+                        Log.e("Index Out of Bounds", "Carousel was unable to find the given index");
+                    }
                 }
             }
 
@@ -182,12 +187,15 @@ public class EditFragment extends Fragment {
             if (!isFullScreen) {
                 previewButton.setText("Close");
 
-                int dp = 600;
+                int dp = 500;
                 int pixels = (int) (dp * getResources().getDisplayMetrics().density + 0.5f);
 
                 carousel.setAutoPlay(false);
                 carousel.setShowNavigationButtons(true);
-                carousel.setMinimumHeight(pixels);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
+                params.height = pixels;
+                carousel.setLayoutParams(params);
 
                 scrollView.setVisibility(View.GONE);
 
@@ -201,7 +209,10 @@ public class EditFragment extends Fragment {
                 
                 carousel.setAutoPlay(true);
                 carousel.setShowNavigationButtons(false);
-                carousel.setMinimumHeight(pixels);
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) carousel.getLayoutParams();
+                params.height = pixels;
+                carousel.setLayoutParams(params);
 
                 scrollView.setVisibility(View.VISIBLE);
 
@@ -499,8 +510,13 @@ public class EditFragment extends Fragment {
         carousel.setOnScrollListener(new CarouselOnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int i, int i1, @Nullable CarouselItem carouselItem) {
-                int[] currentTimestamp = sortedTimestampKeys.get(i1);
-                seekBar.setProgress((currentTimestamp[0] + currentTimestamp[1]) / 2);
+                try {
+                    int[] currentTimestamp = sortedTimestampKeys.get(i1);
+                    seekBar.setProgress((currentTimestamp[0] + currentTimestamp[1]) / 2);
+
+                } catch (Exception e) {
+                    Log.e("Index Out of Bounds", "The seekbar was unable to find the given index");
+                }
             }
 
             @Override

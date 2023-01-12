@@ -10,10 +10,8 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.media.AudioManager;
 import android.media.MediaActionSound;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.Log;
 import android.util.Size;
@@ -21,7 +19,6 @@ import android.util.TypedValue;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.Gravity;
-import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
@@ -37,7 +34,6 @@ import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.camera.core.AspectRatio;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
@@ -290,7 +286,6 @@ public class CameraFragment extends Fragment {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 bitmapImage = captureBitmap(image);
-
                 // If the user hasn't created any timelines...
                 if (timelineItems.isEmpty()) {
                     displayEmptyTimelineMessage();
@@ -523,6 +518,12 @@ public class CameraFragment extends Fragment {
 
             @Override
             public boolean onDown(MotionEvent e) {
+                return true;
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                flipCamera();
                 return true;
             }
 
