@@ -108,10 +108,10 @@ public class EditFragment extends Fragment {
 
         View root = binding.getRoot();
 
-        final TextView templateNameTextView = binding.templateNameText;
+        final TextView timelineNameText = binding.timelineNameText;
         final ScrollView scrollView = binding.scrollView;
 
-        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), templateNameTextView::setText);
+        editViewModel.getName().observe(getViewLifecycleOwner(), timelineNameText::setText);
 
         retrieveTimestamp();
 
