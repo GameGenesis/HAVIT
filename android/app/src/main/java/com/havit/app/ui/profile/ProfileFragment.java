@@ -1,11 +1,8 @@
 package com.havit.app.ui.profile;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,23 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -80,7 +70,7 @@ public class ProfileFragment extends Fragment {
         MaterialCardView resetPasswordButton = binding.resetPasswordButton;
         resetPasswordButton.setOnClickListener(this::resetPassword);
 
-        Button updateProfileButton = binding.updateProfileButton;
+        MaterialCardView updateProfileButton = binding.updateProfileButton;
         updateProfileButton.setOnClickListener(this::updateProfile);
 
         setUpProfilePicture();
@@ -133,24 +123,7 @@ public class ProfileFragment extends Fragment {
         storageReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
             // Data for "images/image.jpg" is returned, use this as needed
             profileViewModel.profilePictureBitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
-            Glide.with(requireContext())
-                    .load(profileViewModel.profilePictureBitmap)
-                    .addListener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            Log.e(TAG, "Image loading failed");
-                            return false;
-                        }
-
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            Log.i(TAG, "Image loaded successfully");
-                            return false;
-                        }
-                    })
-                    .into(profileImage);
-
+            profileImage.setImageBitmap(profileViewModel.profilePictureBitmap);
         }).addOnFailureListener(exception -> {
             // Handle any errors
             Log.d("profile", exception.getMessage());
