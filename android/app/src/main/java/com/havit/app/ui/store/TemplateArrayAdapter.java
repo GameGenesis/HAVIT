@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +54,8 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        notifyDataSetInvalidated();
+
         // Get the template data for this position
         Template template = getItem(position);
 
@@ -73,7 +76,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         // We don't need a secondary button here...
         templateButton2.setVisibility(View.GONE);
 
-        getThumbnailFromStorage("templates/thumbnails/" + template.id + ".jpg");
+        getThumbnailFromStorage("templates/thumbnails/" + template.id + ".jpg", position);
         // Currently, the thumbnail image has to be a JPEG file...
 
         templateNameTextView.setText(template.name.toUpperCase(Locale.ROOT));
@@ -104,7 +107,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         return convertView;
     }
 
-    private void getThumbnailFromStorage(String imagePath) {
+    private void getThumbnailFromStorage(String imagePath, int position) {
         // Get a reference to the Cloud Storage bucket
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();

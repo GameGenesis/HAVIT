@@ -13,8 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.Navigation;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.havit.app.MainActivity;
@@ -97,10 +100,16 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
                                 // Replace the element at the specified index with null
                                 Objects.requireNonNull(array).remove(position);
 
-                                documentReference.update("user_timelines", array);
+                                documentReference.update("user_timelines", array)
+                                        .addOnSuccessListener(aVoid -> {
+                                            // update successful
+                                            notifyDataSetChanged();
+                                            Navigation.findNavController(parent).navigate(R.id.action_timeline_to_timeline);
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            // update failed
+                                        });
                             });
-
-                            Navigation.findNavController(parent).navigate(R.id.action_timeline_to_camera);
                         });
 
                         builder.setNegativeButton("Cancel", (dialog, which) -> {
