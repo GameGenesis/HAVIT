@@ -30,9 +30,9 @@
     </ListView>
 
     <Button
-        android:id="@+id/restore_button"
+        android:id="@+id/membership_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Restore Purchases" />
+        android:text="Membership" />
 
 </LinearLayout>

@@ -2,9 +2,12 @@ package com.havit.app.ui.store;
 
 import static android.content.ContentValues.TAG;
 
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +15,22 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.ui.habit.HabitFragment;
@@ -34,16 +44,18 @@ import java.util.Map;
 public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
     private final FirebaseUser user;
-    private final Activity activity;
 
-    public TemplateArrayAdapter(Context context, List<Template> templates, Activity activity) {
+    private ImageView templateImageView;
+
+    public TemplateArrayAdapter(Context context, List<Template> templates) {
         super(context, 0, templates);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        this.activity = activity;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        notifyDataSetInvalidated();
+
         // Get the template data for this position
         Template template = getItem(position);
 
@@ -52,10 +64,8 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.template_item, parent, false);
         }
 
-        LinearLayout templateContainer = convertView.findViewById(R.id.template_container);
-
         // Lookup views for data population
-        ImageView templateImageView = convertView.findViewById(R.id.template_image);
+        templateImageView = convertView.findViewById(R.id.template_image);
 
         TextView templateNameTextView = convertView.findViewById(R.id.template_name);
         TextView templateDescriptionTextView = convertView.findViewById(R.id.template_description);
@@ -66,14 +76,14 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         // We don't need a secondary button here...
         templateButton2.setVisibility(View.GONE);
 
-        // Populate the data into the template view using the data object
-        templateImageView.setImageBitmap(template.thumbnail);
+        getThumbnailFromStorage("templates/thumbnails/" + template.id + ".jpg", position);
+        // Currently, the thumbnail image has to be a JPEG file...
 
         templateNameTextView.setText(template.name.toUpperCase(Locale.ROOT));
         templateDescriptionTextView.setText(template.description.toUpperCase(Locale.ROOT));
 
-        if (template.price != 0) {
-            templateButton.setText(String.format(Locale.ROOT, "%d DOLLARS", template.price));
+        if (template.membershipOnly) {
+            templateButton.setText("hashCreate(PRO)");
             templateButton.setTextColor(Color.WHITE);
             templateButton.setBackgroundColor(MainActivity.colorAccent);
 
@@ -95,6 +105,42 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    private void getThumbnailFromStorage(String imagePath, int position) {
+        // Get a reference to the Cloud Storage bucket
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        Log.d("TEMPLATE_IMAGE_PATH", imagePath);
+
+        // Get a reference to the image file in the bucket
+        StorageReference imageRef = storageRef.child(imagePath);
+
+        // Download the image file
+        final long ONE_MEGABYTE = 2048 * 2048;
+        imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            // Convert the downloaded bytes into a Bitmap
+            Bitmap thumbnail = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+            // Glide allows the loading of the image to be run asynchronously from the main UI thread...
+            Glide.with(getContext())
+                    .load(thumbnail)
+                    .addListener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            Log.e(TAG, "Image loading failed");
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            Log.i(TAG, "Image loaded successfully");
+                            return false;
+                        }
+                    })
+                    .into(templateImageView);
+        });
     }
 
     private void uploadUserData(Map<String, Object> timelineMetaData) {
