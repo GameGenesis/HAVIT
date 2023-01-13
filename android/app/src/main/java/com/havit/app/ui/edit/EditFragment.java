@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.provider.MediaStore;
 import android.transition.TransitionInflater;
 
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
@@ -36,7 +38,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.card.MaterialCardView;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Video;
+import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -50,6 +60,9 @@ import com.havit.app.databinding.FragmentEditBinding;
 import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -231,7 +244,39 @@ public class EditFragment extends Fragment {
             }
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
+        try {
+            // https://www.youtube.com/watch?v=3gxus8LnMf
+            setUpMusicPreview("3gxus8LnMfI");
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
+
         return root;
+    }
+
+    private void setUpMusicPreview(String videoId) throws GeneralSecurityException, IOException {
+        GoogleCredential credential = GoogleCredential.fromStream(getResources().openRawResource(R.raw.credentials))
+                .createScoped(Collections.singletonList("https://www.googleapis.com/auth/youtube.force-ssl"));
+        HttpTransport transport = GoogleNetHttpTransport.newTrustedTransport();
+        YouTube youtube = new YouTube.Builder(transport, JacksonFactory.getDefaultInstance(), credential)
+                .setApplicationName("havit_central")
+                .build();
+
+        YouTube.Videos.List videoRequest = youtube.videos().list("snippet").setId(videoId);
+        VideoListResponse listResponse = videoRequest.execute();
+        List<Video> videoList = listResponse.getItems();
+
+        if (!videoList.isEmpty()) {
+            Video video = videoList.get(0);
+            String title = video.getSnippet().getTitle();
+            String imageUrl = video.getSnippet().getThumbnails().getHigh().getUrl();
+
+            final TextView videoTitle = binding.videoTitle;
+            final ImageView previewImage = binding.previewImage;
+
+            videoTitle.setText(title);
+            Glide.with(this).load(imageUrl).into(previewImage);
+        }
     }
 
     @SuppressWarnings("unchecked")
