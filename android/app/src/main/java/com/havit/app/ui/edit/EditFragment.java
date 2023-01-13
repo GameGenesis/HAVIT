@@ -221,56 +221,6 @@ public class EditFragment extends Fragment {
         });
 
         Button exportButton = binding.exportButton;
-        exportButton.setOnClickListener(v -> {
-
-            try {
-                File tempFile = File.createTempFile("video", ".mp4");
-
-                convertImagesToVideo(imgUrl, tempFile);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-
-
-
-
-//            File outputFile = new File(Environment.getExternalStorageDirectory(),"video.mp4");
-//
-//            String[] cmd = ("-y -i https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673398079943?alt=media&token=95400c11-886c-4a32-a345-04807c488fff -i https://firebasestorage.googleapis.com/v0/b/havitcentral.appspot.com/o/users%2Fpasswordtesting%40gmail.com%2Ftemp-ddubi%2Fimg-1673397998068?alt=media&token=b1426033-6517-445d-a34c-ca45e1693f09 -filter_complex \"[0:v][1:v]concat=n=2:v=1[outv]\" -map \"[outv]\"  -c:v mpeg4 -b:v 1000k -r 30 -strict experimental " + outputFile.getAbsolutePath()).split(" ");
-//            FFmpeg ffmpeg = FFmpeg.getInstance(requireContext());
-//            try {
-//                ffmpeg.execute(cmd, new ExecuteBinaryResponseHandler() {
-//                    @Override
-//                    public void onSuccess(String message) {
-//                        // Successful execution, saving the video to camera roll
-//                        ContentValues values = new ContentValues();
-//
-//
-//                        values.put(MediaStore.Video.Media.TITLE, "My video");
-//                        values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-//                        values.put(MediaStore.Video.Media.DATA, outputFile.getAbsolutePath());
-//                        Uri videoUri = requireContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-//                        try {
-//                            OutputStream out = requireContext().getContentResolver().openOutputStream(videoUri);
-//                            out.close();
-//                        } catch (IOException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(String message) {
-//                        // Execution failed, show an error message
-//                    }
-//                });
-//            } catch (FFmpegCommandAlreadyRunningException e) {
-//                e.printStackTrace();
-//            }
-
-
-        });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
@@ -299,61 +249,6 @@ public class EditFragment extends Fragment {
         }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
 
         return root;
-    }
-
-    private void convertImagesToVideo(List<String> imageUrls, File outputFile) {
-        try {
-            // Create a list of image URLs in the format required by FFmpeg
-            String imageList = "";
-            for (String url : imageUrls) {
-                imageList += "file '" + url + "'\n";
-            }
-
-            // Create a temp file to hold the list of images
-            File tempFile = File.createTempFile("images", ".txt");
-            FileWriter writer = new FileWriter(tempFile);
-            writer.write(imageList);
-            writer.close();
-
-            // Create the FFmpeg command
-            String[] command = {"-f", "concat", "-safe", "0", "-i", tempFile.getAbsolutePath(), "-c", "copy", String.valueOf(outputFile.getAbsolutePath())};
-
-            // Execute the command
-            FFmpeg.getInstance(requireContext()).execute(command, new ExecuteBinaryResponseHandler() {
-                @Override
-                public void onStart() {
-                    // Show progress dialog
-                }
-
-                @Override
-                public void onProgress(String message) {
-                    // Update progress dialog
-                }
-
-                @Override
-                public void onFailure(String message) {
-                    // Handle failure
-                }
-
-                @Override
-                public void onSuccess(String message) {
-                    // Save the video to the camera roll
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Video.Media.TITLE, "My Video");
-                    values.put(MediaStore.Video.Media.MIME_TYPE, "video/mp4");
-                    values.put(MediaStore.Video.Media.DATA, outputFile.getAbsolutePath());
-                    requireContext().getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values);
-
-                }
-
-                @Override
-                public void onFinish() {
-                    // Hide progress dialog
-                }
-            });
-        } catch (IOException | FFmpegCommandAlreadyRunningException e) {
-            e.printStackTrace();
-        }
     }
 
 
