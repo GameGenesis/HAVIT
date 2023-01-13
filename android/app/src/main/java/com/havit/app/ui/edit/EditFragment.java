@@ -110,6 +110,12 @@ public class EditFragment extends Fragment {
 
         final TextView timelineNameText = binding.timelineNameText;
         final ScrollView scrollView = binding.scrollView;
+        final Button exportButton = binding.exportButton;
+
+        exportButton.setOnClickListener(v -> {
+            PopupDialog popup = new PopupDialog();
+            popup.show(getChildFragmentManager(), "popup");
+        });
 
         editViewModel.getName().observe(getViewLifecycleOwner(), timelineNameText::setText);
 
@@ -198,11 +204,6 @@ public class EditFragment extends Fragment {
                 isFullScreen = false;
             }
         });
-
-        Button exportButton = binding.exportButton;
-//        exportButton.setOnClickListener(v -> {
-//
-//        });
 
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation

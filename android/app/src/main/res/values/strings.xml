@@ -23,6 +23,9 @@
     <string name="placeholder_description">Description</string>
     <string name="default_word_count">0</string>
     <string name="login_password_toggle">Toggle</string>
+    <string name="instagram">Instagram</string>
+    <string name="snapchat">Snapchat</string>
+    <string name="tiktok">TikTok</string>
     <string name="get_started_text">HAVIT</string>
     <string name="sign_out_text">Sign Out</string>
     <string name="title_store">Templates</string>
