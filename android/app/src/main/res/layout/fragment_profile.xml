@@ -32,16 +32,35 @@
             android:textColor="@color/white"
             android:fontFamily="@font/major_mono_display"
             android:layout_toEndOf="@+id/profile_image"
+            android:layout_marginStart="25dp"
             android:layout_centerVertical="true"
-            android:includeFontPadding="false"
-            android:layout_marginStart="25dp">
+            android:includeFontPadding="false">
         </TextView>
+
+        <EditText
+            android:id="@+id/edit_username_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_toEndOf="@+id/profile_image"
+            android:layout_above="@id/user_id"
+            android:layout_marginBottom="10dp"
+            android:backgroundTint="@color/white"
+            android:ems="10"
+            android:fontFamily="@font/questrial"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:minHeight="48dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
 
         <TextView
             android:id="@+id/user_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/email"
+            android:text="@string/email_address"
             android:textSize="14sp"
             android:textColor="@color/white"
             android:fontFamily="@font/questrial"
@@ -169,7 +188,7 @@
                     android:id="@+id/update_profile_icon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:src="@drawable/edit_profile"
+                    android:src="@drawable/update_profile_picture"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
                     android:contentDescription="@string/update_profile"
@@ -185,7 +204,8 @@
                     android:textSize="15sp"
                     android:textColor="@color/white"
                     android:fontFamily="@font/questrial"
-                    android:layout_centerInParent="true">
+                    android:layout_centerInParent="true"
+                    android:gravity="center">
 
                 </TextView>
 
@@ -214,20 +234,21 @@
                     android:src="@drawable/edit_profile"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30dp"
-                    android:contentDescription="@string/update_profile"
+                    android:contentDescription="@string/update_username"
                     app:tint="@color/white">
                 </ImageView>
 
                 <TextView
+                    android:id="@+id/update_username_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/update_username_icon"
+                    android:layout_centerInParent="true"
                     android:layout_marginTop="10dp"
-                    android:text="@string/update_profile"
-                    android:textSize="15sp"
-                    android:textColor="@color/white"
                     android:fontFamily="@font/questrial"
-                    android:layout_centerInParent="true">
+                    android:text="@string/update_username"
+                    android:textColor="@color/white"
+                    android:textSize="15sp">
 
                 </TextView>
 
