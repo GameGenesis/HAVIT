@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="center"
+    android:orientation="vertical"
     tools:context=".ui.profile.ProfileFragment">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -43,14 +43,32 @@
                 android:layout_centerVertical="true"
                 android:includeFontPadding="false"
                 android:layout_marginStart="25dp"
-                android:layout_marginEnd="25dp">
-            </TextView>
+                android:layout_marginEnd="25dp"/>
+
+            <EditText
+                android:id="@+id/edit_username_field"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/user_id"
+                android:layout_marginStart="25dp"
+                android:layout_marginBottom="10dp"
+                android:layout_toEndOf="@+id/profile_image"
+                android:backgroundTint="@color/white"
+                android:ems="10"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:fontFamily="@font/questrial"
+                android:hint="Name"
+                android:inputType="textPersonName"
+                android:minHeight="48dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
 
             <TextView
                 android:id="@+id/user_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/email"
+                android:text="@string/email_address"
                 android:textSize="14sp"
                 android:textColor="@color/white"
                 android:fontFamily="@font/questrial"
@@ -199,23 +217,23 @@
                         android:id="@+id/update_profile_icon"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/edit_profile"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="30dp"
-                        android:contentDescription="@string/update_profile"
-                        app:tint="@color/white">
-                    </ImageView>
+                        android:contentDescription="@string/update_profile_picture"
+                        android:src="@drawable/update_profile_picture"
+                        app:tint="@color/white"></ImageView>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/update_profile_icon"
+                        android:layout_centerInParent="true"
                         android:layout_marginTop="10dp"
-                        android:text="@string/update_profile"
-                        android:textSize="15sp"
-                        android:textColor="@color/white"
                         android:fontFamily="@font/questrial"
-                        android:layout_centerInParent="true">
+                        android:gravity="center"
+                        android:text="@string/update_profile"
+                        android:textColor="@color/white"
+                        android:textSize="15sp">
 
                     </TextView>
 
@@ -249,11 +267,12 @@
                     </ImageView>
 
                     <TextView
+                        android:id="@+id/update_username_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/update_username_icon"
                         android:layout_marginTop="10dp"
-                        android:text="@string/update_profile"
+                        android:text="@string/update_username"
                         android:textSize="15sp"
                         android:textColor="@color/white"
                         android:fontFamily="@font/questrial"

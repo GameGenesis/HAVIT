@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.LoginActivity;
@@ -52,6 +55,10 @@ public class ProfileFragment extends Fragment {
 
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
 
+    private FirebaseUser user;
+    private TextView userFullName;
+    private EditText editUsernameField;
+    private TextView updateUsernameText;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +70,24 @@ public class ProfileFragment extends Fragment {
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
+        userFullName = binding.userFullName;
+        userFullName.setVisibility(View.VISIBLE);
+
+        editUsernameField = binding.editUsernameField;
+        editUsernameField.setVisibility(View.GONE);
+
+        editUsernameField.setOnKeyListener((v, keyCode, event) -> {
+            // If the event is a key-down event on the "enter" button
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                // Perform action on key press
+                updateUsername(requireView());
+                return true;
+            }
+            return false;
+        });
 
         configureUserProfileText();
 
@@ -79,6 +104,11 @@ public class ProfileFragment extends Fragment {
 
         MaterialCardView updateProfileButton = binding.updateProfileButton;
         updateProfileButton.setOnClickListener(this::updateProfile);
+
+        MaterialCardView updateUsernameButton = binding.updateUsernameButton;
+        updateUsernameButton.setOnClickListener(this::updateUsername);
+
+        updateUsernameText = binding.updateUsernameText;
 
         setUpProfilePicture();
 
@@ -164,16 +194,51 @@ public class ProfileFragment extends Fragment {
         galleryActivityResultLauncher.launch(intent);
     }
 
-    private void configureUserProfileText() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private void updateUsername(View view) {
+        if (userFullName.getVisibility() == View.VISIBLE) {
+            userFullName.setVisibility(View.GONE);
+            editUsernameField.setVisibility(View.VISIBLE);
+            editUsernameField.requestFocus();
+            updateUsernameText.setText("Confirm Change");
+            configureUserProfileText();
+        }
+        else {
+            userFullName.setVisibility(View.VISIBLE);
+            editUsernameField.setVisibility(View.GONE);
+            updateUsernameText.setText("Change Username");
 
-        TextView userFullName = binding.userFullName;
+            String newUsername = editUsernameField.getText().toString();
+
+            editUsernameField.clearFocus();
+
+            if (newUsername.isEmpty())
+                return;
+
+            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                    .setDisplayName(newUsername)
+                    /*.setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))*/
+                    .build();
+
+            user.updateProfile(profileUpdates)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            configureUserProfileText();
+                            Log.d("Profile", "User profile updated.");
+                        }
+                    });
+        }
+    }
+
+    private void configureUserProfileText() {
         TextView userId = binding.userId;
 
         if (user == null) {
             userFullName.setText(R.string.get_started_text);
+            editUsernameField.setText(R.string.get_started_text);
         } else {
-            userFullName.setText(Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT));
+            String username = Objects.requireNonNull(user.getDisplayName());
+            userFullName.setText(username.toUpperCase(Locale.ROOT));
+            editUsernameField.setText(username);
             userId.setText(Objects.requireNonNull(user.getEmail()));
         }
     }

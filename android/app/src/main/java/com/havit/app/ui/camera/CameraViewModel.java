@@ -48,7 +48,6 @@ public class CameraViewModel extends ViewModel {
         out.close();
     }
 
-    // TODO: save the image to the storage and link it to the json in db
     public void addImageToDatabase(FirebaseUser user, Bitmap bitmap, FragmentActivity activity, String selectedItem) {
         String filePath = "users/" + user.getEmail() + "/" + MainActivity.applyFileNamingScheme(selectedItem) + "/img-" + System.currentTimeMillis();
         MainActivity.saveImageToDatabase(bitmap, activity, filePath);

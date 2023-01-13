@@ -131,6 +131,12 @@ public class EditFragment extends Fragment {
 
         final TextView timelineNameText = binding.timelineNameText;
         final ScrollView scrollView = binding.scrollView;
+        final Button exportButton = binding.exportButton;
+
+        exportButton.setOnClickListener(v -> {
+            PopupDialog popup = new PopupDialog();
+            popup.show(getChildFragmentManager(), "popup");
+        });
 
         editViewModel.getName().observe(getViewLifecycleOwner(), timelineNameText::setText);
 
@@ -380,6 +386,7 @@ public class EditFragment extends Fragment {
     private void populateImageCarousel(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        assert user != null;
         String timeLineDirPath = "users/" + user.getEmail() + "/" + MainActivity.applyFileNamingScheme(Objects.requireNonNull(editViewModel.getName().getValue()));
 
         // Register lifecycle. For activity this will be lifecycle/getLifecycle() and for fragments it will be viewLifecycleOwner/getViewLifecycleOwner().
