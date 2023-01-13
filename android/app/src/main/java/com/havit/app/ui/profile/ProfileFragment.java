@@ -12,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +35,8 @@ import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
 
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Locale;
@@ -47,6 +52,7 @@ public class ProfileFragment extends Fragment {
 
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
 
+
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
         // Hide the action bar...
@@ -56,6 +62,7 @@ public class ProfileFragment extends Fragment {
 
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
 
         configureUserProfileText();
 
@@ -74,6 +81,8 @@ public class ProfileFragment extends Fragment {
         updateProfileButton.setOnClickListener(this::updateProfile);
 
         setUpProfilePicture();
+
+        helpButton();
 
         return root;
     }
@@ -167,5 +176,24 @@ public class ProfileFragment extends Fragment {
             userFullName.setText(Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT));
             userId.setText(Objects.requireNonNull(user.getEmail()));
         }
+    }
+
+    private void helpButton(){
+        RelativeLayout profileView = binding.profileView;
+        LinearLayout firstRowButtons = binding.firstRowButtons;
+        LinearLayout secondRowButtons = binding.secondRowButtons;
+        ImageButton helpButton = binding.helpButton;
+        ImageCarousel helpContent = binding.helpContent;
+
+        helpContent.setVisibility(View.GONE);
+
+        helpButton.setOnClickListener(v -> {
+            helpContent.setVisibility(View.VISIBLE);
+            profileView.setVisibility(View.GONE);
+            firstRowButtons.setVisibility(View.GONE);
+            secondRowButtons.setVisibility(View.GONE);
+
+        });
+
     }
 }
