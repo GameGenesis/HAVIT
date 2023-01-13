@@ -120,6 +120,18 @@ public class CameraFragment extends Fragment {
         View root = binding.getRoot();
         addCameraProvider();
 
+        setUpUIElements();
+
+        detectHorizontalSwipe(root);
+        setUpNavigation();
+
+        return root;
+    }
+
+    /**
+     * References the UI elements in the camera fragment and sets visibility and onClickListeners
+     */
+    private void setUpUIElements() {
         previewView = binding.previewView;
         emptyText = binding.emptyText;
 
@@ -130,7 +142,7 @@ public class CameraFragment extends Fragment {
 
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
-            loadTemplates();
+            loadTimelinesForDropdown();
             hapticFeedback(v);
             handleShutter();
             takePhoto();
@@ -178,13 +190,11 @@ public class CameraFragment extends Fragment {
                 closeImageView();
             }
         });
-
-        detectHorizontalSwipe(root);
-        setUpNavigation();
-
-        return root;
     }
 
+    /**
+     * Sets up the android back key or swipe gesture navigation to close the image view if open or exits the app if not
+     */
     private void setUpNavigation() {
         // When the user uses the back navigation button or gesture
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
@@ -203,7 +213,12 @@ public class CameraFragment extends Fragment {
         requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
     }
 
-    private void loadTemplates() {
+    /**
+     * Loads the user's created timelines from the Firestore database and
+     * sets up dropdown spinner to list the timelines. If there are no spinners,
+     * display a message notifying the user that they need to create a timeline
+     */
+    private void loadTimelinesForDropdown() {
         if (user == null || user.getEmail() == null)
             return;
 
@@ -239,6 +254,10 @@ public class CameraFragment extends Fragment {
         });
     }
 
+    /**
+     * Sets up the spinner dropdown adapter text formatting and values corresponding to the user's timeline.
+     * Also, sorts the timelines depending on what ordering the user has chosen
+     */
     private void setUpSpinner() {
         // Create a new ArrayAdapter
         if (TimelineFragment.isOrderNewest) {
@@ -280,6 +299,9 @@ public class CameraFragment extends Fragment {
         habitSpinner.setAdapter(adapter);
     }
 
+    /**
+     * Take a picture and display the image on the ImageView
+     */
     private void takePhoto() {
         imageView.setVisibility(View.VISIBLE);
         imageCapture.takePicture(ContextCompat.getMainExecutor(requireActivity()), new ImageCapture.OnImageCapturedCallback() {
@@ -302,6 +324,10 @@ public class CameraFragment extends Fragment {
         });
     }
 
+    /**
+     * Display a message to the user notifying them that they do not have any existing timelines
+     * and display a button to take them to the timeline view
+     */
     private void displayEmptyTimelineMessage() {
         emptyText.setVisibility(View.VISIBLE);
         habitSpinner.setVisibility(View.GONE);
@@ -311,6 +337,9 @@ public class CameraFragment extends Fragment {
         addButton.setVisibility(View.GONE);
     }
 
+    /**
+     * Remove the missing timelines message screen
+     */
     private void cancelDisplayEmptyTimelineMessage() {
         emptyText.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.VISIBLE);
@@ -320,6 +349,9 @@ public class CameraFragment extends Fragment {
         addButton.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Close the captured image ImageView and display the camera preview and shutter button
+     */
     private void closeImageView() {
         previewView.setVisibility(View.VISIBLE);
         imageView.setImageBitmap(null);
@@ -337,6 +369,9 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    /**
+     *
+     */
     private void addCameraProvider() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
@@ -349,6 +384,49 @@ public class CameraFragment extends Fragment {
                 // This should never be reached.
             }
         }, ContextCompat.getMainExecutor(requireContext()));
+    }
+
+    @SuppressLint("UnsafeOptInUsageError") // For zero shutter lag
+    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
+        cameraProvider.unbindAll();
+        Preview preview = new Preview.Builder().build();
+
+        preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+        WindowManager windowManager = requireActivity().getWindowManager();
+        Display display = windowManager.getDefaultDisplay();
+
+        int rotation;
+
+        if (display != null) {
+            rotation = display.getRotation();
+
+            imageCapture =
+                new ImageCapture.Builder()
+                    .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+                    .setTargetRotation(rotation)
+                    .setFlashMode(flashMode)
+                        // Below code minimizes the shutter lag...
+                    .setCaptureMode(ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG)
+                    .build();
+
+            ImageAnalysis imageAnalysis =
+                    new ImageAnalysis.Builder()
+                            // enable the following line if RGBA output is needed.
+                            //.setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
+                            .setTargetResolution(new Size(1280, 720))
+                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                            .build();
+
+            Executor executor = Executors.newSingleThreadExecutor();
+
+            imageAnalysis.setAnalyzer(executor, image -> {
+                // Perform image analysis here
+            });
+
+            // Image Provider variable has to be fixed...
+            cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
+        }
     }
 
     public Bitmap captureBitmap(@NonNull ImageProxy image) {
@@ -398,49 +476,6 @@ public class CameraFragment extends Fragment {
         bitmapImage = Bitmap.createBitmap(bitmapImage, 0, 0, bitmapImage.getWidth(), bitmapImage.getHeight(), matrix, true);
 
         return bitmapImage;
-    }
-
-    @SuppressLint("UnsafeOptInUsageError")
-    private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
-        cameraProvider.unbindAll();
-        Preview preview = new Preview.Builder().build();
-
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-        WindowManager windowManager = requireActivity().getWindowManager();
-        Display display = windowManager.getDefaultDisplay();
-
-        int rotation;
-
-        if (display != null) {
-            rotation = display.getRotation();
-
-            imageCapture =
-                new ImageCapture.Builder()
-                    .setTargetAspectRatio(AspectRatio.RATIO_16_9)
-                    .setTargetRotation(rotation)
-                    .setFlashMode(flashMode)
-                        // Below code minimizes the shutter lag...
-                    .setCaptureMode(ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG)
-                    .build();
-
-            ImageAnalysis imageAnalysis =
-                    new ImageAnalysis.Builder()
-                            // enable the following line if RGBA output is needed.
-                            //.setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_RGBA_8888)
-                            .setTargetResolution(new Size(1280, 720))
-                            .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
-                            .build();
-
-            Executor executor = Executors.newSingleThreadExecutor();
-
-            imageAnalysis.setAnalyzer(executor, image -> {
-                // Perform image analysis here
-            });
-
-            // Image Provider variable has to be fixed...
-            cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
-        }
     }
 
     private void flipCamera() {
