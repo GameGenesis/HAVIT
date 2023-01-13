@@ -82,7 +82,7 @@ public class ProfileFragment extends Fragment {
 
         setUpProfilePicture();
 
-        helpButton();
+        helpContent();
 
         return root;
     }
@@ -178,7 +178,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void helpButton(){
+    private void helpContent(){
         RelativeLayout profileView = binding.profileView;
         LinearLayout firstRowButtons = binding.firstRowButtons;
         LinearLayout secondRowButtons = binding.secondRowButtons;
@@ -186,14 +186,23 @@ public class ProfileFragment extends Fragment {
         ImageCarousel helpContent = binding.helpContent;
 
         helpContent.setVisibility(View.GONE);
+        helpButton.setImageResource(R.drawable.ic_baseline_help_24);
+
 
         helpButton.setOnClickListener(v -> {
-            helpContent.setVisibility(View.VISIBLE);
-            profileView.setVisibility(View.GONE);
-            firstRowButtons.setVisibility(View.GONE);
-            secondRowButtons.setVisibility(View.GONE);
-
+            if (helpContent.getVisibility() == View.GONE){
+                helpContent.setVisibility(View.VISIBLE);
+                profileView.setVisibility(View.GONE);
+                firstRowButtons.setVisibility(View.GONE);
+                secondRowButtons.setVisibility(View.GONE);
+                helpButton.setImageResource(R.drawable.ic_baseline_close_24);
+            } else if (helpContent.getVisibility() == View.VISIBLE){
+                helpContent.setVisibility(View.GONE);
+                profileView.setVisibility(View.VISIBLE);
+                firstRowButtons.setVisibility(View.VISIBLE);
+                secondRowButtons.setVisibility(View.VISIBLE);
+                helpButton.setImageResource(R.drawable.ic_baseline_help_24);
+            }
         });
-
     }
 }
