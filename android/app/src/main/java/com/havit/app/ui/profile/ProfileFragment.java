@@ -24,8 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -76,17 +74,15 @@ public class ProfileFragment extends Fragment {
         editUsernameField = binding.editUsernameField;
         editUsernameField.setVisibility(View.GONE);
 
-        editUsernameField.setOnKeyListener(new View.OnKeyListener() {
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                // If the event is a key-down event on the "enter" button
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                        (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    // Perform action on key press
-                    updateUsername(requireView());
-                    return true;
-                }
-                return false;
+        editUsernameField.setOnKeyListener((v, keyCode, event) -> {
+            // If the event is a key-down event on the "enter" button
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
+                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                // Perform action on key press
+                updateUsername(requireView());
+                return true;
             }
+            return false;
         });
 
         configureUserProfileText();
@@ -209,7 +205,7 @@ public class ProfileFragment extends Fragment {
 
             editUsernameField.clearFocus();
 
-            if (newUsername == null || newUsername.isEmpty())
+            if (newUsername.isEmpty())
                 return;
 
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -218,13 +214,10 @@ public class ProfileFragment extends Fragment {
                     .build();
 
             user.updateProfile(profileUpdates)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                configureUserProfileText();
-                                Log.d("Profile", "User profile updated.");
-                            }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            configureUserProfileText();
+                            Log.d("Profile", "User profile updated.");
                         }
                     });
         }
