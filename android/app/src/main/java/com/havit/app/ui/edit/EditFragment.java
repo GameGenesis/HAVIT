@@ -1,10 +1,17 @@
 package com.havit.app.ui.edit;
 
+import android.Manifest;
+import android.content.ContentValues;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.transition.TransitionInflater;
 
 import android.util.Log;
@@ -27,6 +34,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
@@ -36,6 +44,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.hiteshsondhi88.libffmpeg.ExecuteBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
+import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,6 +63,11 @@ import com.havit.app.databinding.FragmentEditBinding;
 import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,6 +83,7 @@ import java.util.Objects;
 
 public class EditFragment extends Fragment {
 
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE = 1;
     private FragmentEditBinding binding;
     private LinearLayout timelineContainer;
     private MaterialCardView timelineWrapper;
@@ -84,6 +103,8 @@ public class EditFragment extends Fragment {
     private boolean isFullScreen = false;
 
     private EditViewModel editViewModel;
+
+    private List<String> imgUrl = new ArrayList<String>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -205,6 +226,8 @@ public class EditFragment extends Fragment {
             }
         });
 
+        Button exportButton = binding.exportButton;
+
         // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
         MenuHost menuHost = requireActivity();
@@ -233,6 +256,7 @@ public class EditFragment extends Fragment {
 
         return root;
     }
+
 
     @SuppressWarnings("unchecked")
     private void retrieveTimestamp() {
@@ -346,6 +370,8 @@ public class EditFragment extends Fragment {
         });
     }
 
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -425,6 +451,7 @@ public class EditFragment extends Fragment {
             for (StorageReference item : items) {
                 item.getDownloadUrl().addOnSuccessListener(uri -> {
                     String url = uri.toString();
+                    imgUrl.add(url);
 
                     list.add(new CarouselItem(url));
                     carousel.setData(list);
