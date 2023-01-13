@@ -226,9 +226,7 @@ public class EditFragment extends Fragment {
             }
         });
 
-        Button exportButton = binding.exportButton;
-
-        // Menu navigation: https://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
+        // Menu navigation: ttps://developer.android.com/jetpack/androidx/releases/activity#1.4.0-alpha01
         // The usage of an interface lets you inject your own implementation
         MenuHost menuHost = requireActivity();
 
