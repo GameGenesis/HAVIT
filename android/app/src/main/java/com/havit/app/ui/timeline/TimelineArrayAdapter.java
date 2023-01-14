@@ -30,11 +30,26 @@ public class TimelineArrayAdapter extends ArrayAdapter<Timeline> {
 
     private final FirebaseUser user;
 
+    /**
+     * Initializes a custom ArrayAdapter to display a list of Timeline objects in a ListView
+     *
+     * @param context - The current context
+     * @param timelines - The list of Timeline objects to be displayed in the ListView
+     */
     public TimelineArrayAdapter(Context context, List<Timeline> timelines) {
         super(context, 0, timelines);
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    /**
+     * Gets a View that displays the data at the specified position in the data set.
+     * It uses the template_item.xml layout to display the data and has 2 buttons, "Compose" and "Edit"
+     *
+     * @param position - The position of the item within the adapter's data set of the item whose view we want
+     * @param convertView - The old view to reuse, if possible
+     * @param parent - The parent that this view will eventually be attached to
+     * @return a View corresponding to the data at the specified position
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // Get the template data for this position
