@@ -6,26 +6,16 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Shader;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
-import android.provider.MediaStore;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.util.DisplayMetrics;
+
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import android.Manifest;
@@ -35,13 +25,8 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.MotionEventCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -56,13 +41,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.databinding.ActivityMainBinding;
-import com.havit.app.ui.profile.ProfileFragment;
 
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -165,9 +147,9 @@ public class MainActivity extends AppCompatActivity {
         return String.valueOf(phraseChars);
     }
 
-    public static int parseStringToMillis(String[] startTimeArray) {
-        int startMinute = Integer.parseInt(startTimeArray[0]);
-        int startSeconds = Integer.parseInt(startTimeArray[1]);
+    public static long parseStringToMillis(String[] startTimeArray) {
+        long startMinute = Integer.parseInt(startTimeArray[0]);
+        long startSeconds = Integer.parseInt(startTimeArray[1]);
 
         return Integer.parseInt(startTimeArray[2]) + startSeconds * 1000 + startMinute * 6000;
     }
