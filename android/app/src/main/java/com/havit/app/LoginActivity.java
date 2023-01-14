@@ -40,18 +40,22 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseUser user;
+    private FirebaseUser user;                  // Current Firebase user
 
-    private TextView textView;
+    private TextView textView;                  // Title text on the login page
 
-    public static String sDefSystemLanguage;
+    public static String sDefSystemLanguage;    // Stores the system locale
 
-    private LinearLayout loginContainer;
+    private ImageCarousel helpContent;          // Image carousel with instructions
 
-    private ImageCarousel helpContent;
+    private Button submitButton, loginButton;   // Get started and Login Buttons
 
-    private Button submitButton, loginButton;
 
+    /**
+     * Called when the activity is first created
+     * Initializes the layout, sets up the onClickListeners for the buttons, and handles the login process
+     * Checks for internet connection and redirects to the error page if there is none
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
         submitButton = binding.submitButton;
         loginButton = binding.loginButton;
 
-        loginContainer = binding.loginContainer;
+        LinearLayout loginContainer = binding.loginContainer;
         helpContent = binding.helpContent;
 
         textView = binding.textView;
@@ -123,6 +127,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+
+    /**
+     * Displays instructions for the user when the app is launched for the first time
+     * @param isVisible A boolean value indicating whether the instructions should be visible or not
+     */
     private void displayInstructions(boolean isVisible){
         if (isVisible) {
             textView.setVisibility(View.GONE);
@@ -140,6 +149,10 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+
+    /**
+     * Initializes the instructions carousel with images of instructions and sets the properties of the carousel
+     */
     private void setUpInstructions(){
         List<CarouselItem> instructionsCarousel = new ArrayList<>();
         int[] instructionImgs = {R.drawable.instructions1, R.drawable.instructions2, R.drawable.instructions3, R.drawable.instructions4, R.drawable.instructions5, R.drawable.instructions6, R.drawable.instructions7};
@@ -157,6 +170,11 @@ public class LoginActivity extends AppCompatActivity {
         helpContent.addData(instructionsCarousel);
     }
 
+
+    /**
+     * Configures the welcome text that is displayed to the user
+     * Checks if the user is logged in or not, and displays appropriate text accordingly.
+     */
     private void configureWelcomeText() {
         if (user == null) {
             textView.setText(R.string.get_started_text);
@@ -169,18 +187,33 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+
+    /**
+     * Called when the activity resumes, it hides the action bar
+     */
     @Override
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(getSupportActionBar()).hide();
     }
 
+
+    /**
+     * Called when the activity is no longer visible to the user
+     * Hides the support action bar to provide a full screen experience
+     */
     @Override
     public void onStop() {
         super.onStop();
         Objects.requireNonNull(getSupportActionBar()).show();
     }
 
+
+    /**
+     * Creates the sign-in intent for the user to sign in
+     * Sets up the available providers for the user to choose from: email, phone, and google
+     * Sets up the theme and logo for the sign-in screen
+     */
     public void createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers
@@ -200,6 +233,11 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_create_intent]
     }
 
+
+    /**
+     * Creates an email link to be sent to the user for sign in.
+     * Sets the settings for android package name, whether to install the app if not available, and the minimum version for the app
+     */
     public void emailLink() {
         // [START auth_fui_email_link]
         ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
@@ -225,6 +263,10 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_email_link]
     }
 
+
+    /**
+     * Catches the email link when the user clicks on the link sent to their email
+     */
     public void catchEmailLink() {
         List<AuthUI.IdpConfig> providers = Collections.emptyList();
 
@@ -246,6 +288,10 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_email_link_catch]
     }
 
+
+    /**
+     * Sign out the current user using Firebase UI
+     */
     // Default context would be the "this" keyword...
     public void signOut() {
         // [START auth_fui_signout]
@@ -257,6 +303,10 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_signout]
     }
 
+
+    /**
+     * Delete the current user using Firebase UI
+     */
     public void delete() {
         // [START auth_fui_delete]
         AuthUI.getInstance()
@@ -267,12 +317,22 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_delete]
     }
 
+
+    /**
+     * For launching the sign in activity with FirebaseAuthUIActivityResultContract and handle the result with a callback method
+     */
     // See: https://developer.android.com/training/basics/intents/result
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             this::onSignInResult
     );
 
+
+    /**
+     * Handles the result of the sign in process
+     * Receives a FirebaseAuthUIAuthenticationResult and checks the result code
+     * @param FirebaseAuthUIAuthenticationResult result
+     */
     // [START auth_fui_result]
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
