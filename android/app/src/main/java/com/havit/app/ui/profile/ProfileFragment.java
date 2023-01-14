@@ -283,7 +283,7 @@ public class ProfileFragment extends Fragment {
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(newUsername)
                     /*.setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))*/
-                    .build();]
+                    .build();
 
             // Update their information on firebase storage
             user.updateProfile(profileUpdates)
