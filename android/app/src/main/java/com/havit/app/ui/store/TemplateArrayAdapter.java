@@ -40,11 +40,25 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
 
     private ImageView templateImageView;
 
+    /**
+     * Custom adapter for displaying a list of templates in a ListView
+     *
+     * @param context The current context
+     * @param templates The list of templates to display
+     */
     public TemplateArrayAdapter(Context context, List<Template> templates) {
         super(context, 0, templates);
         user = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+    /**
+     * Get a View that displays the template data at the specified position in the data set
+     *
+     * @param position The position of the item within the adapter's data set
+     * @param convertView The old view to reuse, if possible
+     * @param parent The parent that this view will eventually be attached to
+     * @return A View corresponding to the data at the specified position
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         notifyDataSetInvalidated();
@@ -66,11 +80,11 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         Button templateButton = convertView.findViewById(R.id.template_button);
         Button templateButton2 = convertView.findViewById(R.id.template_button2);
 
-        // We don't need a secondary button here...
+        // We don't need a secondary button here
         templateButton2.setVisibility(View.GONE);
 
         getThumbnailFromStorage("templates/thumbnails/" + template.id + ".jpg", position);
-        // Currently, the thumbnail image has to be a JPEG file...
+        // Currently, the thumbnail image has to be a JPEG file
 
         templateNameTextView.setText(template.name.toUpperCase(Locale.ROOT));
         templateDescriptionTextView.setText(template.description.toUpperCase(Locale.ROOT));
@@ -100,6 +114,12 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         return convertView;
     }
 
+    /**
+     * Gets the thumbnail image for a given template from the cloud storage bucket
+     *
+     * @param imagePath The path of the image in the firebase storage
+     * @param position The position of the template in the list
+     */
     private void getThumbnailFromStorage(String imagePath, int position) {
         // Get a reference to the Cloud Storage bucket
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -120,9 +140,15 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
         });
     }
 
+    /**
+     * Updates the user's data in the firestore database
+     * It includes adding the user's selected template and its associated timeline data
+     *
+     * @param timelineMetaData A map containing the user's timeline data
+     */
     private void uploadUserData(Map<String, Object> timelineMetaData) {
         MainActivity.updateFirestoreDatabase(user, (documentReference, documentSnapshot) -> {
-            // If the user exists in the database...
+            // If the user exists in the database
             if (documentSnapshot.exists()) {
                 Log.d(TAG, "Document exists");
 
@@ -134,7 +160,7 @@ public class TemplateArrayAdapter extends ArrayAdapter<Template> {
                         .addOnFailureListener(e -> Log.w(TAG, "Error updating document", e));
 
             } else {
-                // If the user does not exist in the database...
+                // If the user does not exist in the database
                 Log.d(TAG, "Document does not exist, adding it");
 
                 Map<String, Object> data = new HashMap<>();
