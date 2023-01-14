@@ -70,12 +70,12 @@ public class ProfileFragment extends Fragment {
 
 
     /**
-     * Sets up the Fragment View
+     * Sets up the Profile Fragment View
      *
-     * @param inflater           a LayoutInflater that inflates the layout for the fragment's UI
-     * @param container          a ViewGroup that is the parent of the fragment's UI
-     * @param savedInstanceState a Bundle that saves the state of the fragment
-     * @return root, a View that is the root of the fragment's UI
+     * @param inflater           a LayoutInflater that inflates the layout for the profile fragment's UI
+     * @param container          a ViewGroup that is the parent of the profile fragment's UI
+     * @param savedInstanceState a Bundle that saves the state of the profile fragment
+     * @return root, a View that is the root of the profile fragment's UI
      */
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
