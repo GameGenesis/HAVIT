@@ -11,7 +11,11 @@ public class Timeline {
         parseTimelineString(metadata);
     }
 
-    // Parsing the value of the user_timelines in user.json located in the Firebase Firestore...
+    /**
+     * Parses the value of the user_timelines in user.json located in the Firebase Firestore
+     *
+     * @param metadata the json data to parse
+     */
     @SuppressWarnings("unchecked")
     private void parseTimelineString(Map<String, Object> metadata) {
         this.name = (String) metadata.get("name");

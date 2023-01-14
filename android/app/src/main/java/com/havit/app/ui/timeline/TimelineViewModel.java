@@ -22,6 +22,11 @@ public class TimelineViewModel extends ViewModel {
 
     private final FirebaseUser user;
 
+    /**
+     * Constructor for TimelineViewModel. Initializes the LiveData objects and sets default values.
+     * TimelineViewModel contains the LiveData objects for the UI to observe and update
+     * accordingly. It also contains the methods for loading and retrieving the timeline data.
+     */
     public TimelineViewModel() {
         mText = new MutableLiveData<>();
         orderButtonName = new MutableLiveData<>();
@@ -33,14 +38,29 @@ public class TimelineViewModel extends ViewModel {
         mText.setValue("THERE'S NOTHING HERE");
     }
 
+    /**
+     * Returns the LiveData object for the list of timelines (getter)
+     *
+     * @return the LiveData object for the list of timelines
+     */
     public LiveData<List<Timeline>> getTimelines() {
         return timelines;
     }
 
+    /**
+     * Returns the LiveData object for the text displayed when there are no timelines (getter)
+     *
+     * @return the LiveData object for the text displayed when there are no timelines
+     */
     public LiveData<String> getText() {
         return mText;
     }
 
+    /**
+     * Returns the LiveData object for the order button name based on the current ordering of the timelines
+     *
+     * @return the LiveData object for the order button name
+     */
     public LiveData<String> getOrderButtonName() {
         if (TimelineFragment.isOrderNewest) {
             orderButtonName.setValue("Sort by Oldest");
@@ -51,6 +71,10 @@ public class TimelineViewModel extends ViewModel {
         return orderButtonName;
     }
 
+    /**
+     * Loads the timelines from the Firestore database and updates the LiveData object for the list of timelines.
+     * The timelines are sorted based on the current ordering specified by TimelineFragment.isOrderNewest
+     */
     public void loadTimelines() {
         timelineList.clear();
 
