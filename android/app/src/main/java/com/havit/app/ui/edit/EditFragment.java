@@ -1,5 +1,15 @@
 package com.havit.app.ui.edit;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+
+import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
+import android.media.MediaExtractor;
+import android.media.MediaFormat;
+import android.media.MediaMuxer;
+
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.pm.PackageManager;
@@ -7,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 
@@ -15,7 +26,7 @@ import android.provider.MediaStore;
 import android.transition.TransitionInflater;
 
 import android.util.Log;
-import android.util.TypedValue;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -30,6 +41,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -50,11 +62,13 @@ import com.github.hiteshsondhi88.libffmpeg.LoadBinaryResponseHandler;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegCommandAlreadyRunningException;
 import com.github.hiteshsondhi88.libffmpeg.exceptions.FFmpegNotSupportedException;
 import com.google.android.material.card.MaterialCardView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.havit.app.MainActivity;
@@ -64,10 +78,13 @@ import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -90,14 +107,25 @@ public class EditFragment extends Fragment {
     private ImageCarousel carousel;
     private SeekBar seekBar;
 
+    private FirebaseUser user;
+    private ByteBuffer audioBuffer;
+
     private Map<String, String> timestamp;
     private ArrayList<int[]> sortedTimestampKeys;
+    private ArrayList<Bitmap> images;
     private String totalLength;
 
-    private int totalLengthMillis;
+    private MediaCodec encoder;
+    private MediaFormat videoFormat;
+    private MediaMuxer muxer;
+    private File tempMusicFile, tempVideoFile;
+
+    private int totalLengthMillis, inputBufferIndex, outputBufferIndex, readSampleSize;
     private int previousEndMillis = 0;
 
     private float weightSum = 100;
+
+    private long intervalUs;
 
     private boolean isFlipColor = true;
     private boolean isFullScreen = false;
@@ -122,6 +150,7 @@ public class EditFragment extends Fragment {
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
         sortedTimestampKeys = new ArrayList<>();
+        images = new ArrayList<>();
 
         editViewModel = new ViewModelProvider(this).get(EditViewModel.class);
 
@@ -129,18 +158,23 @@ public class EditFragment extends Fragment {
 
         View root = binding.getRoot();
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         final TextView timelineNameText = binding.timelineNameText;
         final ScrollView scrollView = binding.scrollView;
         final Button exportButton = binding.exportButton;
 
-        exportButton.setOnClickListener(v -> {
-            PopupDialog popup = new PopupDialog();
-            popup.show(getChildFragmentManager(), "popup");
-        });
-
         editViewModel.getName().observe(getViewLifecycleOwner(), timelineNameText::setText);
 
         retrieveTimestamp();
+
+        exportButton.setOnClickListener(v -> {
+            try {
+                downloadBackgroundMusic();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         timelineContainer = binding.timelineContainer;
         carousel = binding.carousel;
@@ -255,6 +289,162 @@ public class EditFragment extends Fragment {
         return root;
     }
 
+    private void downloadBackgroundMusic() throws IOException {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReferenceFromUrl("gs://havitcentral.appspot.com/templates/evolution.mp3");
+
+        tempMusicFile = File.createTempFile("background-music", "ext");
+
+        Toast.makeText(requireActivity(), "Downloading the Template...", Toast.LENGTH_SHORT).show();
+
+        storageRef.getFile(tempMusicFile).addOnSuccessListener(taskSnapshot -> {
+            // File downloaded successfully
+            try {
+                downloadTimelinePhotos();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).addOnFailureListener(exception -> {
+            // Handle failed download
+        });
+    }
+
+    // GENERATED BY CHATGPT...
+    private void downloadTimelinePhotos() throws IOException {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference folderRef = storage.getReference().child("users/" + user.getEmail() +  "/" + TimelineArrayAdapter.selectedTimeline.name);
+
+        folderRef.listAll().addOnSuccessListener(listResult -> {
+            for (StorageReference item : listResult.getItems()) {
+                item.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                    Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    images.add(image);
+                });
+            }
+
+            // THIS CODE SNIPPET WAS GENERATED BY CHATGPT...
+            try {
+                int bitRate = 8000000; // 8Mbps
+                int frameRate = 30;
+
+                intervalUs = (long) (1000000.0 / frameRate);
+
+                videoFormat = MediaFormat.createVideoFormat("video/avc", 1080, 1920);
+                videoFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
+                videoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, frameRate);
+                videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
+
+                // H.264 format...
+                encoder = MediaCodec.createEncoderByType("video/avc");
+                encoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+                encoder.start();
+
+                inputBufferIndex = encoder.dequeueInputBuffer(0);
+
+                MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+                outputBufferIndex = encoder.dequeueOutputBuffer(bufferInfo, 0);
+
+                if (outputBufferIndex == MediaCodec.INFO_TRY_AGAIN_LATER){
+                    // Not ready yet
+
+                } else if (outputBufferIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED){
+                    // Format Changed, handle it
+
+                } else if (outputBufferIndex < 0){
+                    // Something went wrong
+                }
+
+                combinePhotosIntoVideo();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+
+        PopupDialog popup = new PopupDialog();
+        popup.show(getChildFragmentManager(), "popup");
+    }
+
+    private void combinePhotosIntoVideo() throws IOException {
+        tempVideoFile = File.createTempFile("output-video", "ext");
+
+        muxer = new MediaMuxer(tempVideoFile.getPath(), MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+        int videoTrackIndex = muxer.addTrack(videoFormat);
+        muxer.start();
+
+        int index = 0;
+
+        for (Bitmap image : images) {
+            // Encode the image as a video frame
+            ByteBuffer buffer = encoder.getInputBuffer(inputBufferIndex);
+
+            // Convert a bitmap image into a byte array...
+            byte[] pixels = new byte[image.getByteCount()];
+            ByteBuffer byteBuffer = ByteBuffer.wrap(pixels);
+            image.copyPixelsToBuffer(byteBuffer);
+
+            // Write the image data to the buffer
+            buffer.put(pixels);
+
+            int deltaMillis = sortedTimestampKeys.get(index)[2];
+            int presentationTimeUs = deltaMillis * 1000;
+
+            // Queue the buffer to the encoder
+            encoder.queueInputBuffer(inputBufferIndex, 0, image.getByteCount(), presentationTimeUs, 0);
+
+            // Get the encoded video frame
+            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+
+            int outputBufferIndex = encoder.dequeueOutputBuffer(bufferInfo, 0);
+
+            if (outputBufferIndex >= 0) {
+                ByteBuffer encodedData = encoder.getOutputBuffer(outputBufferIndex);
+                // Write the encoded frame to the muxer
+                muxer.writeSampleData(videoTrackIndex, encodedData, bufferInfo);
+
+                // Update the presentation time for the next frame
+                presentationTimeUs += intervalUs;
+            }
+
+            index++;
+        }
+
+        muxer.stop();
+        muxer.release();
+    }
+
+    private void applyBackgroundMusic() throws IOException {
+        MediaExtractor audioExtractor = new MediaExtractor();
+        audioExtractor.setDataSource(tempMusicFile.getPath());
+
+        readSampleSize = audioExtractor.readSampleData(audioBuffer, 0);
+        audioBuffer = ByteBuffer.allocate(1024*1024);
+
+        int audioTrackIndex = muxer.addTrack(audioExtractor.getTrackFormat(0));
+
+        while (true) {
+            int readSampleSize = audioExtractor.readSampleData(audioBuffer, 0);
+
+            if (readSampleSize < 0) {
+                break;
+            }
+
+            long presentationTime = audioExtractor.getSampleTime();
+
+            MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();
+            bufferInfo.size = readSampleSize;
+            bufferInfo.presentationTimeUs = presentationTime;
+            bufferInfo.flags = MediaCodec.BUFFER_FLAG_KEY_FRAME;
+
+            muxer.writeSampleData(audioTrackIndex, audioBuffer, bufferInfo);
+            audioExtractor.advance();
+        }
+
+        audioExtractor.release();
+    }
 
     @SuppressWarnings("unchecked")
     private void retrieveTimestamp() {
@@ -367,9 +557,7 @@ public class EditFragment extends Fragment {
             }
         });
     }
-
-
-
+    
     @Override
     public void onResume() {
         super.onResume();
@@ -460,6 +648,4 @@ public class EditFragment extends Fragment {
             // Handle any errors
         });
     }
-
-
 }
