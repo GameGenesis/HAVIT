@@ -103,6 +103,13 @@ public class CameraFragment extends Fragment {
 
     private final ArrayList<String> timelineItems = new ArrayList<>();
 
+    /**
+     * Called when the fragment is first created
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to. The fragment should not add the view itself, but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState Bundle containing the state of the fragment if it was previously created
+     */
+
     @SuppressLint("ClickableViewAccessibility")
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

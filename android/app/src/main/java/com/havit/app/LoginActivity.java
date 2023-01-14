@@ -52,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button submitButton, loginButton;
 
+    /**
+     * Called when the fragment is first created
+     * @param savedInstanceState Bundle containing the state of the fragment if it was previously created
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +128,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /*
+     * Display instructions for the user to follow
+     * @param isVisible boolean value to determine if the instructions should be displayed or not
+     */
+
     private void displayInstructions(boolean isVisible){
         if (isVisible) {
             textView.setVisibility(View.GONE);
@@ -139,6 +149,10 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+
+    /*
+     * Sets up the instructions for the user to follow
+     */
 
     private void setUpInstructions(){
         List<CarouselItem> instructionsCarousel = new ArrayList<>();
@@ -157,6 +171,10 @@ public class LoginActivity extends AppCompatActivity {
         helpContent.addData(instructionsCarousel);
     }
 
+    /*
+     * Configures the welcome text for the user
+     */
+
     private void configureWelcomeText() {
         if (user == null) {
             textView.setText(R.string.get_started_text);
@@ -169,17 +187,33 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Part of the Android Activity Lifecycle
+     * @see <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Android Activity Lifecycle</a>
+     */
+
     @Override
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(getSupportActionBar()).hide();
     }
 
+    /*
+     * Part of the Android Activity Lifecycle
+     * Shows the action bar
+     * @see <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Android Activity Lifecycle</a>
+     */
+
     @Override
     public void onStop() {
         super.onStop();
         Objects.requireNonNull(getSupportActionBar()).show();
     }
+
+    /*
+     * Creates the sign in intent
+     * @see <a href="https://firebase.google.com/docs/auth/android/firebaseui">FirebaseUI</a>
+     */
 
     public void createSignInIntent() {
         // [START auth_fui_create_intent]
@@ -199,6 +233,11 @@ public class LoginActivity extends AppCompatActivity {
         signInLauncher.launch(signInIntent);
         // [END auth_fui_create_intent]
     }
+
+    /*
+     * Creates the sign in intent with email link
+     * @see <a href="https://firebase.google.com/docs/auth/android/firebaseui">FirebaseUI</a>
+     */
 
     public void emailLink() {
         // [START auth_fui_email_link]
@@ -225,6 +264,11 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_email_link]
     }
 
+    /*
+     * Catches the email link
+     * @see <a href="https://firebase.google.com/docs/auth/android/firebaseui">FirebaseUI</a>
+     */
+
     public void catchEmailLink() {
         List<AuthUI.IdpConfig> providers = Collections.emptyList();
 
@@ -246,6 +290,11 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_email_link_catch]
     }
 
+    /*
+     * Signs out the user
+     * @see <a href="https://firebase.google.com/docs/auth/android/firebaseui">FirebaseUI</a>
+     */
+
     // Default context would be the "this" keyword...
     public void signOut() {
         // [START auth_fui_signout]
@@ -257,6 +306,11 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_signout]
     }
 
+    /*
+     * Deletes the user profile
+     * @see <a href="https://firebase.google.com/docs/auth/android/firebaseui">FirebaseUI</a>
+     */
+
     public void delete() {
         // [START auth_fui_delete]
         AuthUI.getInstance()
@@ -267,11 +321,21 @@ public class LoginActivity extends AppCompatActivity {
         // [END auth_fui_delete]
     }
 
+    /*
+     * Displays the FireAuthUI sign in intent
+     * @see <a href="https://firebase.google.com/docs/auth/android/firebaseui">FirebaseUI</a>
+     */
+
     // See: https://developer.android.com/training/basics/intents/result
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             this::onSignInResult
     );
+
+    /*
+     * Defines the result of the FireAuthUI sign in intent
+     * @see <a href="https://firebase.google.com/docs/auth/android/firebaseui">FirebaseUI</a>
+     */
 
     // [START auth_fui_result]
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {

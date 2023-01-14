@@ -54,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static int colorAccent;
 
+    /**
+     * Called when the Activity is first created
+     * @param savedInstanceState Bundle containing the state of the fragment if it was previously created
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
+    /*
+     * Asks the user for permission to use the camera
+     * @param requestCode The request code passed in requestPermissions(android.app.Activity, String[], int)
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+     */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -110,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Hides the keyboard when the user touches outside of the EditText
+     * @param ev The motion event
+     * @return True if the event was handled, false otherwise
+     */
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
@@ -118,6 +136,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(ev);
     }
+    
+    /*
+     * Checks if the user is connected to the internet
+     * @param activity The activity
+     * @return True if the user is connected to the internet, false otherwise
+     */
 
     public static boolean isNotConnected(Activity activity) {
         ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -125,13 +149,34 @@ public class MainActivity extends AppCompatActivity {
         return activeNetwork == null || !activeNetwork.isConnectedOrConnecting();
     }
 
+    /*
+     * Applies the file naming scheme to the selected item
+     * Consists of replacing spaces with hyphens and converting the string to lowercase
+     * @param selectedItem The selected item
+     * @return The selected item with the file naming scheme applied
+     */
+
     public static String applyFileNamingScheme(String selectedItem) {
         return selectedItem.replace(" ","-").toLowerCase(Locale.ROOT);
     }
 
+    /*
+     * Decodes the file naming scheme to the selected item
+     * Consists of replacing hyphens with spaces and converting the string to title case
+     * Essentially the opposite of applyFileNamingScheme(String)
+     * @param fileName The file name
+     * @return The file name with the file naming scheme decoded
+     */
+
     public static String decodeFileNamingScheme(String fileName) {
         return toTitleCase(fileName.replace("-", " "));
     }
+
+    /*
+     * Converts the string to title case
+     * @param phrase The string to be converted
+     * @return The string in title case
+     */
 
     public static String toTitleCase(String phrase) {
         // convert the string to an array
@@ -147,12 +192,24 @@ public class MainActivity extends AppCompatActivity {
         return String.valueOf(phraseChars);
     }
 
+    /*
+     * Parses the string that is in the format of "mm:ss:ms" to milliseconds
+     * @param startTimeArray The string that is in the format of "mm:ss:ms"
+     * @return The string in milliseconds
+     */
+
     public static long parseStringToMillis(String[] startTimeArray) {
         long startMinute = Integer.parseInt(startTimeArray[0]);
         long startSeconds = Integer.parseInt(startTimeArray[1]);
 
         return Integer.parseInt(startTimeArray[2]) + startSeconds * 1000 + startMinute * 6000;
     }
+
+    /*
+     * Parses the milliseconds to a string in the format of "mm:ss:ms"
+     * @param millis The milliseconds
+     * @return The string in the format of "mm:ss:ms"
+     */
 
     public static String parseMillisToString(int millis) {
         int startMinute = Math.floorDiv(millis, 6000);
@@ -161,6 +218,13 @@ public class MainActivity extends AppCompatActivity {
 
         return startMinute + ":" + startSeconds + ":" + startMillis;
     }
+
+    /*
+     * Saves the image to the Firebase Storage asynchronously to prevent the app from freezing
+     * @param bitmap The bitmap of the image
+     * @param activity The activity
+     * @param filePath The file path
+     */
 
     public static void saveImageToDatabase(Bitmap bitmap, FragmentActivity activity, String filePath) {
         // Run a new thread for an asynchronous operation, separate from the main thread...
@@ -188,6 +252,12 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
+    /*
+     * Crops the image to a circle for the profile picture
+     * @param bitmap The bitmap of the image
+     * @return The cropped image
+     */
+
     public static Bitmap cropImage(Bitmap bitmap){
         Bitmap circleBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 
@@ -205,10 +275,21 @@ public class MainActivity extends AppCompatActivity {
         return circleBitmap;
     }
 
+    /*
+     * Interface for the updateFirestoreDatabase method
+     * It is used to invoke the method in the MainActivity class
+     */
+
     @FunctionalInterface
     public interface OnTaskSuccessful {
         void invoke(DocumentReference documentReference, DocumentSnapshot documentSnapshot);
     }
+
+    /*
+     * Updates the user's data in the Firestore database
+     * @param user The user
+     * @param onTaskSuccessful The interface
+     */
 
     public static void updateFirestoreDatabase(FirebaseUser user, OnTaskSuccessful onTaskSuccessful) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
