@@ -56,7 +56,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.arthenica.mobileffmpeg.FFmpeg;
+//import com.arthenica.mobileffmpeg.FFmpeg;
+import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.google.android.material.card.MaterialCardView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -401,30 +402,30 @@ public class EditFragment extends Fragment {
 
         Toast.makeText(requireActivity(), "Uploading the exported video to Firebase storage...", Toast.LENGTH_SHORT).show();
 
-        FFmpeg.executeAsync(command, (executionId, returnCode) -> {
-            if (returnCode == 0) {
-                // command execution successful
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
-                StorageReference videoRef = storageRef.child("users/" + user.getEmail() + "/" + TimelineArrayAdapter.selectedTimeline.name + "/" + tempVideoFile.getName());
-                UploadTask uploadTask = videoRef.putFile(Uri.fromFile(tempVideoFile));
-
-                uploadTask.addOnFailureListener(exception -> {
-                    // Handle unsuccessful uploads
-                    Log.e("VIDEO_EXPORT_FAILURE", exception.toString());
-
-                }).addOnSuccessListener(taskSnapshot -> {
-                    // Handle successful uploads
-                    PopupDialog popup = new PopupDialog();
-                    popup.show(getChildFragmentManager(), "popup");
-                });
-
-            } else {
-                // command execution failed
-                // callback for onFailure
-                Log.e("RETURN_CODE_FAILURE", "HMM...");
-            }
-        });
+//        FFmpeg.executeAsync(command, (executionId, returnCode) -> {
+//            if (returnCode == 0) {
+//                // command execution successful
+//                FirebaseStorage storage = FirebaseStorage.getInstance();
+//                StorageReference storageRef = storage.getReference();
+//                StorageReference videoRef = storageRef.child("users/" + user.getEmail() + "/" + TimelineArrayAdapter.selectedTimeline.name + "/" + tempVideoFile.getName());
+//                UploadTask uploadTask = videoRef.putFile(Uri.fromFile(tempVideoFile));
+//
+//                uploadTask.addOnFailureListener(exception -> {
+//                    // Handle unsuccessful uploads
+//                    Log.e("VIDEO_EXPORT_FAILURE", exception.toString());
+//
+//                }).addOnSuccessListener(taskSnapshot -> {
+//                    // Handle successful uploads
+//                    PopupDialog popup = new PopupDialog();
+//                    popup.show(getChildFragmentManager(), "popup");
+//                });
+//
+//            } else {
+//                // command execution failed
+//                // callback for onFailure
+//                Log.e("RETURN_CODE_FAILURE", "HMM...");
+//            }
+//        });
     }
 
     @SuppressWarnings("unchecked")
@@ -469,7 +470,9 @@ public class EditFragment extends Fragment {
                         }
 
                         // Sort the list in ascending order based on the first element of the nested arrays
-                        sortedTimestampKeys.sort(Comparator.comparingLong(a -> a[0]));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            sortedTimestampKeys.sort(Comparator.comparingLong(a -> a[0]));
+                        }
 
                         for (long[] entry : sortedTimestampKeys) {
                             // If the clip is not at the start of the timeline or the difference
@@ -602,15 +605,17 @@ public class EditFragment extends Fragment {
             List<StorageReference> items = listResult.getItems();
 
             // create a custom comparator that compares the file name numbers
-            items.sort((s1, s2) -> {
-                String fileName1 = s1.getName();
-                String fileName2 = s2.getName();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                items.sort((s1, s2) -> {
+                    String fileName1 = s1.getName();
+                    String fileName2 = s2.getName();
 
-                long fileNum1 = Long.parseLong(fileName1.replace("img-", ""));
-                long fileNum2 = Long.parseLong(fileName2.replace("img-", ""));
+                    long fileNum1 = Long.parseLong(fileName1.replace("img-", ""));
+                    long fileNum2 = Long.parseLong(fileName2.replace("img-", ""));
 
-                return Long.compare(fileNum1, fileNum2);
-            });
+                    return Long.compare(fileNum1, fileNum2);
+                });
+            }
 
             // Now items is sorted in an increment order (oldest comes first)
             for (StorageReference item : items) {
