@@ -38,6 +38,11 @@ public class HabitFragment extends Fragment {
     public static String name, time;
     public static ArrayList<String> daysPicked;
 
+    /**
+     * Sets the enter and exit transition for the fragment using the fade transition
+     *
+     * @param savedInstanceState a bundle of the saved state of the fragment
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,15 +53,21 @@ public class HabitFragment extends Fragment {
         setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
 
+    /**
+     * Sets up the Fragment View
+     * Adds the onClickListener to the create button and implements back button menu navigation
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state
+     * @return the view for the fragment's UI
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         // Hide the action bar...
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).show();
 
         daysPicked = new ArrayList<>();
-
-        HabitViewModel habitViewModel =
-                new ViewModelProvider(this).get(HabitViewModel.class);
 
         binding = FragmentHabitBinding.inflate(inflater, container, false);
 
@@ -70,6 +81,7 @@ public class HabitFragment extends Fragment {
         // The usage of an interface lets you inject your own implementation
         MenuHost menuHost = requireActivity();
 
+        // [From the android studio changelog]
         // Add menu items without using the Fragment Menu APIs
         // Note how we can tie the MenuProvider to the viewLifecycleOwner
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
@@ -95,13 +107,24 @@ public class HabitFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Called when the fragment's view is being destroyed.
+     * Sets the binding variable to null to avoid memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
 
-    // Called when the Create Button is pressed
+    /**
+     * Called when the Create Button is pressed.
+     * Retrieves the name and days picked from the UI and
+     * checks if all required fields are filled. If so, it navigates to the timeline fragment.
+     * If not, it displays a popup toast message to inform the user that required fields are empty.
+     *
+     * @param view The current view
+     */
     private void createNewHabit(View view) {
         // Name and Description fields
         name = Objects.requireNonNull(binding.nameFieldEdit.getText()).toString();
