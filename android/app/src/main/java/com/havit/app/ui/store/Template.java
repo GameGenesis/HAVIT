@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/* This is the official schema for the template documents stored in Google Firestore.
+/* This is the official schema for the template documents stored in Firestore.
  * Every HAVIT-generated template on the store has to strictly follow this pattern.
  */
 
@@ -19,6 +19,12 @@ public class Template {
 
     public boolean featured, membershipOnly;
 
+    /**
+     * Initializes a new Template object with the specified template string and id
+     *
+     * @param templateString the json string that contains all the data of the template
+     * @param id the id of the template
+     */
     public Template(String templateString, String id) {
         timestamp = new HashMap<>();
 
@@ -27,6 +33,11 @@ public class Template {
         parseTemplateString(templateString);
     }
 
+    /**
+     * Parses the template string and extracts the values from the JSON object
+     *
+     * @param jsonString the json string that contains all the data of the template
+     */
     private void parseTemplateString(String jsonString) {
         try {
             // Create a JSON object from the JSON string
@@ -49,6 +60,11 @@ public class Template {
         }
     }
 
+    /**
+     * Parses the timestamp string and adds the key-value pairs to the timestamp map
+     *
+     * @param jsonString the json string that contains timestamp data of the template
+     */
     private void parseTimestampString(String jsonString) {
         try {
             // Create a JSON object from the JSON string

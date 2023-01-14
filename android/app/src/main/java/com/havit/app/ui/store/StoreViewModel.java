@@ -23,6 +23,9 @@ public class StoreViewModel extends ViewModel {
     private final MutableLiveData<List<Template>> templates;
     private final List<Template> templateList;
 
+    /**
+     * Initializes and loads the templates data (MutableLiveData)
+     */
     public StoreViewModel() {
         super();
         // Initialize the templates LiveData
@@ -32,10 +35,21 @@ public class StoreViewModel extends ViewModel {
         loadTemplates();
     }
 
+    /**
+     * Getter for the templates LiveData
+     *
+     * @return templates LiveData
+     */
     public LiveData<List<Template>> getTemplates() {
         return templates;
     }
 
+    /**
+     * Loads the templates from Firestore database.
+     * If the task is successful, the documents in the collection are fetched and added to the templateList and
+     * the templateList is then posted to the templates LiveData object.
+     * If the task is unsuccessful, an error message is logged.
+     */
     private void loadTemplates() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference colRef = db.collection("templates");
