@@ -122,7 +122,7 @@ public class CameraFragment extends Fragment {
 
         setUpUIElements();
 
-        detectHorizontalSwipe(root);
+        detectGestures(root);
         setUpNavigation();
 
         return root;
@@ -143,7 +143,7 @@ public class CameraFragment extends Fragment {
         shutterButton = binding.shutterButton;
         shutterButton.setOnClickListener(v -> {
             loadTimelinesForDropdown();
-            hapticFeedback(v);
+            giveHapticFeedback();
             handleShutter();
             takePhoto();
         });
@@ -151,13 +151,13 @@ public class CameraFragment extends Fragment {
         cancelButton = binding.cancelButton;
         cancelButton.setVisibility(View.GONE);
         cancelButton.setOnClickListener(v -> {
-            hapticFeedback(v);
+            giveHapticFeedback();
             closeImageView();
         });
 
         flipButton = binding.flipButton;
         flipButton.setOnClickListener(v -> {
-            hapticFeedback(v);
+            giveHapticFeedback();
             flipCamera();
         });
 
@@ -167,7 +167,7 @@ public class CameraFragment extends Fragment {
         }
 
         flashButton.setOnClickListener(v -> {
-            hapticFeedback(v);
+            giveHapticFeedback();
             toggleFlash();
         });
 
@@ -370,7 +370,7 @@ public class CameraFragment extends Fragment {
     }
 
     /**
-     *
+     * Initializes the camera provider and binds the camera preview.
      */
     private void addCameraProvider() {
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
@@ -386,6 +386,13 @@ public class CameraFragment extends Fragment {
         }, ContextCompat.getMainExecutor(requireContext()));
     }
 
+    /**
+     * Binds the camera preview to the previewView and sets the target rotation.
+     * Also, sets up an ImageCapture and ImageAnalysis to enable taking pictures and analyzing images
+     * (for future-proofing purposes).
+     *
+     * @param cameraProvider The camera provider to bind the preview to.
+     */
     @SuppressLint("UnsafeOptInUsageError") // For zero shutter lag
     private void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
         cameraProvider.unbindAll();
@@ -429,6 +436,14 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    /**
+     * Converts the ImageProxy object to a Bitmap object and corrects the orientation of the image
+     * based on the camera lens and display rotation (flips the image when using the front-facing camera
+     * and converts images to portrait).
+     *
+     * @param image the ImageProxy object to be converted to a Bitmap.
+     * @return the converted and edited Bitmap.
+     */
     public Bitmap captureBitmap(@NonNull ImageProxy image) {
         // Get the image data as a Bitmap
         ByteBuffer buffer = image.getPlanes()[0].getBuffer();
@@ -478,6 +493,10 @@ public class CameraFragment extends Fragment {
         return bitmapImage;
     }
 
+    /**
+     * Toggles the camera lens between the front and back cameras and updates the
+     * lensFacing variable. Also, rebinds the preview with the new settings.
+     */
     private void flipCamera() {
         if (lensFacing == CameraSelector.DEFAULT_FRONT_CAMERA) {
             lensFacing = CameraSelector.DEFAULT_BACK_CAMERA;
@@ -496,7 +515,11 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    /**
+     * Toggles the camera flash mode and updates the flash button icon to match
+     */
     private void toggleFlash() {
+        // There is also ImageCapture.FLASH_MODE_AUTO
         if (imageCapture.getFlashMode() == ImageCapture.FLASH_MODE_OFF) {
             flashMode = ImageCapture.FLASH_MODE_ON;
             imageCapture.setFlashMode(flashMode);
@@ -506,9 +529,12 @@ public class CameraFragment extends Fragment {
             imageCapture.setFlashMode(flashMode);
             flashButton.setImageResource(R.drawable.ic_baseline_flash_off);
         }
-        // There is also ImageCapture.FLASH_MODE_AUTO
     }
 
+    /**
+     * Handles the shutter button animation and sound.
+     * Also, hides certain UI elements and displays others when clicked.
+     */
     private void handleShutter() {
         shutterButton.setScaleX(1.25f);
         shutterButton.setScaleY(1.25f);
@@ -543,12 +569,22 @@ public class CameraFragment extends Fragment {
         }
     }
 
-    private void hapticFeedback(View view) {
+
+    /**
+     * Vibrates the screen slightly for 10 milliseconds
+     */
+    private void giveHapticFeedback() {
         Vibrator vibrator = (Vibrator) requireActivity().getSystemService(VIBRATOR_SERVICE);
         vibrator.vibrate(10);
     }
 
-    private void detectHorizontalSwipe(View view){
+    /**
+     * Detects and handles the double tap gesture to flip the camera between front and back-facing.
+     * Detects the swipe gesture (planned but not yet implemented - to switch between different views)
+     *
+     * @param view the view to detect gestures on
+     */
+    private void detectGestures(View view){
         final GestureDetector gesture = new GestureDetector(getActivity(), new GestureDetector.SimpleOnGestureListener() {
 
             @Override
@@ -590,6 +626,10 @@ public class CameraFragment extends Fragment {
         });
     }
 
+    /**
+     * Called when the fragment's view is being destroyed.
+     * Sets the binding variable to null to avoid memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
