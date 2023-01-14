@@ -41,6 +41,11 @@ public class TimelineFragment extends Fragment {
 
     public static boolean isOrderNewest = true;
 
+    /**
+     * Sets the enter and exit fade transitions
+     *
+     * @param savedInstanceState this fragment gets re-constructed from a previous saved state as given by this parameter
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +56,15 @@ public class TimelineFragment extends Fragment {
         setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
 
+    /**
+     * Load the timelines and set up the new habit and order button.
+     * Observes data from the ViewModel to update the UI.
+     *
+     * @param inflater the LayoutInflater object that can be used to inflate views in the fragment
+     * @param container the parent view that the fragment's UI is attached to
+     * @param savedInstanceState this fragment is being re-constructed from a previous saved state
+     * @return The view for the fragment's UI
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
         // Hide the action bar...
@@ -82,6 +96,11 @@ public class TimelineFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Sets up the observations for timelineViewModel's LiveData objects,
+     * updates the UI with the data, and controls the visibility of
+     * certain views based on the data received.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -104,6 +123,10 @@ public class TimelineFragment extends Fragment {
         });
     }
 
+    /**
+     * Called when the fragment's view is being destroyed.
+     * Sets the binding variable to null to avoid memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
