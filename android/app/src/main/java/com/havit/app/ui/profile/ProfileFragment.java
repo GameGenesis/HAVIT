@@ -13,6 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,8 +38,13 @@ import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentProfileBinding;
 
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -51,10 +59,11 @@ public class ProfileFragment extends Fragment {
     private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
 
     private FirebaseUser user;
-
     private TextView userFullName;
     private EditText editUsernameField;
     private TextView updateUsernameText;
+
+    private ImageCarousel helpContent;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
@@ -107,6 +116,12 @@ public class ProfileFragment extends Fragment {
         updateUsernameText = binding.updateUsernameText;
 
         setUpProfilePicture();
+
+        helpContent = binding.helpContent;
+
+        toggleHelpContent();
+
+        setHelpContent();
 
         return root;
     }
@@ -235,5 +250,47 @@ public class ProfileFragment extends Fragment {
             editUsernameField.setText(username);
             userId.setText(Objects.requireNonNull(user.getEmail()));
         }
+    }
+
+    private void toggleHelpContent(){
+        RelativeLayout profileView = binding.profileView;
+        LinearLayout firstRowButtons = binding.firstRowButtons;
+        LinearLayout secondRowButtons = binding.secondRowButtons;
+        ImageButton helpButton = binding.helpButton;
+
+
+        helpContent.setVisibility(View.GONE);
+        helpButton.setImageResource(R.drawable.ic_baseline_help_24);
+
+
+        helpButton.setOnClickListener(v -> {
+            if (helpContent.getVisibility() == View.GONE){
+                helpContent.setVisibility(View.VISIBLE);
+                profileView.setVisibility(View.GONE);
+                firstRowButtons.setVisibility(View.GONE);
+                secondRowButtons.setVisibility(View.GONE);
+                helpButton.setImageResource(R.drawable.ic_baseline_close_24);
+            } else if (helpContent.getVisibility() == View.VISIBLE){
+                helpContent.setVisibility(View.GONE);
+                profileView.setVisibility(View.VISIBLE);
+                firstRowButtons.setVisibility(View.VISIBLE);
+                secondRowButtons.setVisibility(View.VISIBLE);
+                helpButton.setImageResource(R.drawable.ic_baseline_help_24);
+            }
+        });
+    }
+
+    private void setHelpContent(){
+        List<CarouselItem> instructionsCarousel = new ArrayList<>();
+        int[] instructionImgs = {R.drawable.instructions1, R.drawable.instructions2, R.drawable.instructions3, R.drawable.instructions4, R.drawable.instructions5, R.drawable.instructions6, R.drawable.instructions7};
+
+        helpContent.registerLifecycle(getLifecycle());
+//        helpContent.setShowBottomShadow(false);
+
+        for (int addItem : instructionImgs){
+            instructionsCarousel.add(new CarouselItem(addItem));
+        }
+
+        helpContent.addData(instructionsCarousel);
     }
 }
