@@ -54,13 +54,12 @@ public class MainActivity extends AppCompatActivity {
 
     public static int colorAccent;                          // accent color value
 
-
     /**
-     * Called when the activity is first created
+     * Called when the Activity is first created
      * Sets the bottom navigation and setup action bar with navigation controller
-     *
-     * @param Bundle savedInstanceState contains the data it most recently supplied
+     * @param savedInstanceState Bundle containing the state of the fragment if it was previously created
      */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,14 +103,13 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
     }
 
-
-    /**
-     * Called when the user grants or denies permission request
-     *
-     * @param int requestCode The request code passed in requestPermissions(android.app.Activity, String[], int)
-     * @param String[] permissions The requested permissions. Never null
-     * @param int[] grantResults The grant results for the corresponding permissions which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
+    /*
+     * Asks the user for permission to use the camera
+     * @param requestCode The request code passed in requestPermissions(android.app.Activity, String[], int)
+     * @param permissions The requested permissions. Never null.
+     * @param grantResults The grant results for the corresponding permissions which is either PERMISSION_GRANTED or PERMISSION_DENIED. Never null.
      */
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -125,14 +123,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    /**
-     * Dispatches touch events to the activity
-     * Checks if the current focus of the activity is not null and hide the soft input window
-     *
-     * @param MotionEvent ev The motion event being dispatched
-     * @return boolean Return true if the event was handled, false otherwise
+    /*
+     * Hides the keyboard when the user touches outside of the EditText
+     * @param ev The motion event
+     * @return True if the event was handled, false otherwise
      */
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (getCurrentFocus() != null) {
@@ -156,26 +152,27 @@ public class MainActivity extends AppCompatActivity {
         return activeNetwork == null || !activeNetwork.isConnectedOrConnecting();
     }
 
-
-    /**
-     * Applies a file naming scheme to the given selectedItem
-     * Replaces all spaces with '-' and converts the string to lowercase
-     *
-     * @param String selectedItem The selected item that needs to be converted to the desired format
-     * @return String the selected item in the desired format
+    /*
+     * Applies the file naming scheme to the selected item
+     * Consists of replacing spaces with hyphens and converting the string to lowercase
+     * 
+     * @param selectedItem The selected item
+     * @return The selected item with the file naming scheme applied
      */
+
     public static String applyFileNamingScheme(String selectedItem) {
         return selectedItem.replace(" ","-").toLowerCase(Locale.ROOT);
     }
 
-
-    /**
-     * Decodes a file naming scheme for the given fileName
-     * It replaces all '-' with spaces and converts the string to title case
-     *
-     * @param String fileName The file name that needs to be converted to the desired format
-     * @return String the file name in the desired format
+    /*
+     * Decodes the file naming scheme to the selected item
+     * Consists of replacing hyphens with spaces and converting the string to title case
+     * Essentially the opposite of applyFileNamingScheme(String)
+     * 
+     * @param fileName The file name
+     * @return The file name with the file naming scheme decoded
      */
+
     public static String decodeFileNamingScheme(String fileName) {
         return toTitleCase(fileName.replace("-", " "));
     }
@@ -234,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /**
-     * Saves an image to a database
+     * Saves the image to the Firebase Storage asynchronously to prevent the app from freezing
      * Takes a bitmap, the current activity, and a file path to convert the bitmap and upload it to the firebase storage
      *
      * @param Bitmap bitmap The image that needs to be saved
@@ -291,25 +288,23 @@ public class MainActivity extends AppCompatActivity {
         return circleBitmap;
     }
 
-
-    /**
-     * Represents a function which takes in two arguments, a DocumentReference and a DocumentSnapshot and returns nothing
-     *
-     * @param DocumentReference documentReference represents the reference to the document that was created, modified or deleted
-     * @param DocumentSnapshot documentSnapshot represents the snapshot of the document
+    /*
+     * Interface for the updateFirestoreDatabase method
+     * It is used to invoke the method in the MainActivity class
      */
+
     @FunctionalInterface
     public interface OnTaskSuccessful {
         void invoke(DocumentReference documentReference, DocumentSnapshot documentSnapshot);
     }
 
-
-    /**
-     * Updates the Firestore database
-     *
-     * @param FirebaseUser user the current user
-     * @param OnTaskSuccessful onTaskSuccessful an interface that contains the logic that needs to be executed when the task is successful.
+    /*
+     * Updates the user's data in the Firestore database
+     * 
+     * @param user The user
+     * @param onTaskSuccessful The interface
      */
+
     public static void updateFirestoreDatabase(FirebaseUser user, OnTaskSuccessful onTaskSuccessful) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference = db.collection("users").document(Objects.requireNonNull(user.getEmail()));
