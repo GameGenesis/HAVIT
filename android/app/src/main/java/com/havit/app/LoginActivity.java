@@ -2,7 +2,10 @@ package com.havit.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -19,7 +22,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.havit.app.databinding.ActivityLoginBinding;
+import com.havit.app.ui.profile.ProfileFragment;
 
+import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
+import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,6 +45,12 @@ public class LoginActivity extends AppCompatActivity {
     private TextView textView;
 
     public static String sDefSystemLanguage;
+
+    private LinearLayout loginContainer;
+
+    private ImageCarousel helpContent;
+
+    private Button submitButton, loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +89,30 @@ public class LoginActivity extends AppCompatActivity {
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Button button = binding.submitButton;
+        submitButton = binding.submitButton;
+        loginButton = binding.loginButton;
+
+        loginContainer = binding.loginContainer;
+        helpContent = binding.helpContent;
 
         textView = binding.textView;
 
-        button.setOnClickListener(v -> {
+        textView.setVisibility(View.VISIBLE);
+        submitButton.setVisibility(View.VISIBLE);
+        loginButton.setVisibility(View.GONE);
+        helpContent.setVisibility(View.GONE);
+
+        submitButton.setOnClickListener(v -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                displayInstructions(true);
+            } else {
+                Intent i = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(i);
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
+
+        loginButton.setOnClickListener(v -> {
             if (FirebaseAuth.getInstance().getCurrentUser() == null) {
                 createSignInIntent();
             } else {
@@ -90,11 +123,47 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void displayInstructions(boolean isVisible){
+        if (isVisible) {
+            textView.setVisibility(View.GONE);
+            submitButton.setVisibility(View.GONE);
+            loginButton.setVisibility(View.VISIBLE);
+            helpContent.setVisibility(View.VISIBLE);
+
+            setUpInstructions();
+        } else {
+            textView.setVisibility(View.VISIBLE);
+            submitButton.setVisibility(View.VISIBLE);
+            loginButton.setVisibility(View.GONE);
+            helpContent.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void setUpInstructions(){
+        List<CarouselItem> instructionsCarousel = new ArrayList<>();
+        int[] instructionImgs = {R.drawable.instructions1, R.drawable.instructions2, R.drawable.instructions3, R.drawable.instructions4, R.drawable.instructions5, R.drawable.instructions6, R.drawable.instructions7};
+
+        helpContent.registerLifecycle(getLifecycle());
+        helpContent.setAutoPlay(true);
+        helpContent.setAutoPlayDelay(3500);
+        helpContent.setTouchToPause(true);
+        helpContent.setInfiniteCarousel(false);
+
+        for (int addItem : instructionImgs){
+            instructionsCarousel.add(new CarouselItem(addItem));
+        }
+
+        helpContent.addData(instructionsCarousel);
+    }
+
     private void configureWelcomeText() {
         if (user == null) {
             textView.setText(R.string.get_started_text);
             textView.setTextSize(48);
         } else {
+            loginButton.setVisibility(View.GONE);
+            helpContent.setVisibility(View.GONE);
             textView.setText(String.format("YOU'RE BACK,\n%s", Objects.requireNonNull(user.getDisplayName()).toUpperCase(Locale.ROOT)));
             textView.setTextSize(24);
         }
@@ -208,6 +277,8 @@ public class LoginActivity extends AppCompatActivity {
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
+            displayInstructions(false);
+
             // Successfully signed in
             user = FirebaseAuth.getInstance().getCurrentUser();
             configureWelcomeText();
