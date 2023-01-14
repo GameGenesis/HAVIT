@@ -177,13 +177,16 @@ public class ProfileFragment extends Fragment {
         assert user != null;
         final String profilePictureFilepath = "users/" + user.getEmail() + "/profile-picture";
 
+        // Set listener for gallery activity
         galleryActivityResultLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), result -> {
                     if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                        // getting the data from the result and the image uri
                         Intent data = result.getData();
                         Uri imageUri = data.getData();
                         profileImage.setImageURI(imageUri);
 
+                        // setting the selected image as the profile picture
                         try {
                             InputStream inputStream = requireActivity().getContentResolver().openInputStream(imageUri);
                             profileViewModel.profilePictureBitmap = BitmapFactory.decodeStream(inputStream);
@@ -228,7 +231,6 @@ public class ProfileFragment extends Fragment {
         auth.useAppLanguage();
 
         assert emailAddress != null;
-
         auth.sendPasswordResetEmail(emailAddress)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -257,6 +259,7 @@ public class ProfileFragment extends Fragment {
      * @param view The view that triggers the function call.
      */
     private void updateUsername(View view) {
+        // If the view was showing the user's name, change it to the editText to allow them to type their desired name
         if (userFullName.getVisibility() == View.VISIBLE) {
             userFullName.setVisibility(View.GONE);
             editUsernameField.setVisibility(View.VISIBLE);
@@ -273,14 +276,16 @@ public class ProfileFragment extends Fragment {
 
             editUsernameField.clearFocus();
 
+            // Error handling for empty strings
             if (newUsername.isEmpty())
                 return;
 
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(newUsername)
                     /*.setPhotoUri(Uri.parse("https://example.com/jane-q-user/profile.jpg"))*/
-                    .build();
+                    .build();]
 
+            // Update their information on firebase storage
             user.updateProfile(profileUpdates)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
@@ -299,6 +304,7 @@ public class ProfileFragment extends Fragment {
     private void configureUserProfileText() {
         TextView userId = binding.userId;
 
+        // Set their default name and email values
         if (user == null) {
             userFullName.setText(R.string.get_started_text);
             editUsernameField.setText(R.string.get_started_text);
@@ -314,28 +320,37 @@ public class ProfileFragment extends Fragment {
      * Toggles the help content view on the profile screen when help button clicked
      */
     private void toggleHelpContent(){
-        RelativeLayout profileView = binding.profileView;
-        LinearLayout firstRowButtons = binding.firstRowButtons;
-        LinearLayout secondRowButtons = binding.secondRowButtons;
-        ImageButton helpButton = binding.helpButton;
+        RelativeLayout profileView = binding.profileView;           // profile ui wrapper
+        LinearLayout firstRowButtons = binding.firstRowButtons;     // logout and reset password buttons
+        LinearLayout secondRowButtons = binding.secondRowButtons;   // change profile picture and name buttons
+        ImageButton helpButton = binding.helpButton;                // help button
 
 
+        // Initialize the help content (instructions) and help button visibility
         helpContent.setVisibility(View.GONE);
         helpButton.setImageResource(R.drawable.ic_baseline_help_24);
 
-
+        // Set onclick listenr for the help button
         helpButton.setOnClickListener(v -> {
+            // If the help button is clicked
             if (helpContent.getVisibility() == View.GONE){
+                // Set visibility for contents on the profile page
                 helpContent.setVisibility(View.VISIBLE);
                 profileView.setVisibility(View.GONE);
                 firstRowButtons.setVisibility(View.GONE);
                 secondRowButtons.setVisibility(View.GONE);
+
+                // Change help button to close button
                 helpButton.setImageResource(R.drawable.ic_baseline_close_24);
+            // If the close button i sclicked
             } else if (helpContent.getVisibility() == View.VISIBLE){
+                // Set visibility for contents on the profile page
                 helpContent.setVisibility(View.GONE);
                 profileView.setVisibility(View.VISIBLE);
                 firstRowButtons.setVisibility(View.VISIBLE);
                 secondRowButtons.setVisibility(View.VISIBLE);
+
+                // Change close button to help button
                 helpButton.setImageResource(R.drawable.ic_baseline_help_24);
             }
         });
@@ -346,19 +361,24 @@ public class ProfileFragment extends Fragment {
      * Sets the instructions content for the help view carousel
      */
     private void setHelpContent(){
+        // list of carousel views
         List<CarouselItem> instructionsCarousel = new ArrayList<>();
+        // list of instruction drawables
         int[] instructionImgs = {R.drawable.instructions1, R.drawable.instructions2, R.drawable.instructions3, R.drawable.instructions4, R.drawable.instructions5, R.drawable.instructions6, R.drawable.instructions7};
 
+        // Layout and visual attributes for the help content carousel view
         helpContent.registerLifecycle(getLifecycle());
         helpContent.setAutoPlay(true);
         helpContent.setAutoPlayDelay(3500);
         helpContent.setTouchToPause(true);
         helpContent.setInfiniteCarousel(true);
 
+        // add all the instruction drawables to the list of carousel views
         for (int addItem : instructionImgs){
             instructionsCarousel.add(new CarouselItem(addItem));
         }
 
+        // set the carousel view
         helpContent.addData(instructionsCarousel);
     }
 }
