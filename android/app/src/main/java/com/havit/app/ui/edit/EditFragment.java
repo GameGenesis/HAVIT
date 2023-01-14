@@ -57,7 +57,6 @@ import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.arthenica.mobileffmpeg.FFmpeg;
-import com.github.hiteshsondhi88.libffmpeg.FFmpeg;
 import com.google.android.material.card.MaterialCardView;
 
 import com.google.firebase.auth.FirebaseAuth;
