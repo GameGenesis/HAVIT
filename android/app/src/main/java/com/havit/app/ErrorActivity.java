@@ -12,6 +12,11 @@ import java.util.Objects;
 
 public class ErrorActivity extends AppCompatActivity {
 
+    /**
+     * Sets up the layout for the activity, hides the action bar,
+     * and sets up a button to navigate to the LoginActivity when clicked.
+     * @param savedInstanceState a Bundle containing the activity's previously saved state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
