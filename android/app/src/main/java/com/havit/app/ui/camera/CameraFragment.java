@@ -109,7 +109,7 @@ public class CameraFragment extends Fragment {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Hide the action bar...
+        // Hide the action bar
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
         viewModel = new ViewModelProvider(this).get(CameraViewModel.class);
@@ -183,7 +183,7 @@ public class CameraFragment extends Fragment {
         addButton.setVisibility(View.GONE);
         addButton.setOnClickListener(v -> {
             if (bitmapImage != null) {
-                // Gets the string of the selected template...
+                // Gets the string of the selected template
                 String selectedItem = habitSpinner.getSelectedItem().toString();
 
                 viewModel.addImageToDatabase(user, bitmapImage, requireActivity(), selectedItem);
@@ -295,7 +295,7 @@ public class CameraFragment extends Fragment {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Apply the adapter to the spinner...
+        // Apply the adapter to the spinner
         habitSpinner.setAdapter(adapter);
     }
 
@@ -308,7 +308,7 @@ public class CameraFragment extends Fragment {
             @Override
             public void onCaptureSuccess(@NonNull ImageProxy image) {
                 bitmapImage = captureBitmap(image);
-                // If the user hasn't created any timelines...
+                // If the user hasn't created any timelines
                 if (timelineItems.isEmpty()) {
                     displayEmptyTimelineMessage();
                 }
@@ -413,7 +413,7 @@ public class CameraFragment extends Fragment {
                     .setTargetAspectRatio(AspectRatio.RATIO_16_9)
                     .setTargetRotation(rotation)
                     .setFlashMode(flashMode)
-                        // Below code minimizes the shutter lag...
+                        // Below code minimizes the shutter lag
                     .setCaptureMode(ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG)
                     .build();
 
@@ -431,7 +431,7 @@ public class CameraFragment extends Fragment {
                 // Perform image analysis here
             });
 
-            // Image Provider variable has to be fixed...
+            // Image Provider variable has to be fixed
             cameraProvider.bindToLifecycle(getViewLifecycleOwner(), lensFacing, imageCapture, imageAnalysis, preview);
         }
     }
@@ -462,9 +462,9 @@ public class CameraFragment extends Fragment {
             matrix.postRotate(90);
 
         } else {
-            // Flip the image horizontally...
+            // Flip the image horizontally
             matrix.postScale(-1.0f, 1.0f);
-            // For selfie images...
+            // For selfie images
             matrix.postRotate(90);
         }
 
@@ -562,7 +562,7 @@ public class CameraFragment extends Fragment {
             }
         }, 300);
 
-        // Play the snap sound...
+        // Play the snap sound
         if (forceCameraSound || am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
             MediaActionSound sound = new MediaActionSound();
             sound.play(MediaActionSound.SHUTTER_CLICK);
