@@ -285,7 +285,10 @@ public class ProfileFragment extends Fragment {
         int[] instructionImgs = {R.drawable.instructions1, R.drawable.instructions2, R.drawable.instructions3, R.drawable.instructions4, R.drawable.instructions5, R.drawable.instructions6, R.drawable.instructions7};
 
         helpContent.registerLifecycle(getLifecycle());
-//        helpContent.setShowBottomShadow(false);
+        helpContent.setAutoPlay(true);
+        helpContent.setAutoPlayDelay(3500);
+        helpContent.setTouchToPause(true);
+        helpContent.setInfiniteCarousel(true);
 
         for (int addItem : instructionImgs){
             instructionsCarousel.add(new CarouselItem(addItem));
