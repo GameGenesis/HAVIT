@@ -1,36 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_container"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="72dp"
-    android:gravity="center"
-    tools:context=".LoginActivity">
+    android:layout_width="match_parent">
 
-    <TextView
-        android:id="@+id/text_view"
-        android:layout_width="387dp"
-        android:layout_height="105dp"
-        android:layout_margin="5dp"
-        android:layout_marginBottom="250dp"
-        android:fontFamily="@font/major_mono_display"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textAlignment="center"
-        android:textSize="48sp" />
+    <org.imaginativeworld.whynotimagecarousel.ImageCarousel
+        android:id="@+id/help_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <Button
-        android:id="@+id/submit_button"
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
-        android:layout_height="59dp"
-        android:layout_margin="5dp"
-        android:layout_marginTop="250dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
+        android:textColor="@color/navy"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="695dp"
         android:fontFamily="@font/questrial"
-        android:text="@string/login_submit_button"
-        android:textSize="20sp" />
+        android:text="Login  |  Sign Up"
+        android:textSize="15sp" />
 
-</LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/login_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="72dp"
+        android:gravity="center"
+        tools:context=".LoginActivity">
+
+        <TextView
+            android:id="@+id/text_view"
+            android:layout_width="387dp"
+            android:layout_height="105dp"
+            android:layout_margin="5dp"
+            android:layout_marginBottom="250dp"
+            android:fontFamily="@font/major_mono_display"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textSize="48sp" />
+
+        <Button
+            android:id="@+id/submit_button"
+            android:layout_width="wrap_content"
+            android:layout_height="59dp"
+            android:layout_margin="5dp"
+            android:layout_marginTop="250dp"
+            android:fontFamily="@font/questrial"
+            android:text="@string/login_submit_button"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+</FrameLayout>
