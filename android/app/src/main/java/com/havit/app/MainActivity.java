@@ -147,9 +147,9 @@ public class MainActivity extends AppCompatActivity {
         return String.valueOf(phraseChars);
     }
 
-    public static int parseStringToMillis(String[] startTimeArray) {
-        int startMinute = Integer.parseInt(startTimeArray[0]);
-        int startSeconds = Integer.parseInt(startTimeArray[1]);
+    public static long parseStringToMillis(String[] startTimeArray) {
+        long startMinute = Integer.parseInt(startTimeArray[0]);
+        long startSeconds = Integer.parseInt(startTimeArray[1]);
 
         return Integer.parseInt(startTimeArray[2]) + startSeconds * 1000 + startMinute * 6000;
     }
