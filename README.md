@@ -11,7 +11,17 @@
 [Software Project Plan](https://lynjeong.notion.site/Software-Project-Plan-3a25cd6001224308a9ca8408c7de8aa2)
 
 ---
+## Known Bugs
 
+**Other smaller bugs and unresolved feature implementations can be found under the *Issues* tab**
+
+- The export feature does not download the compiled video (using the FFmpeg library)
+
+- Larger timelines that require longer load times may scroll through the carousel before displaying the images
+
+- If there is a bad network connection, the app may alert the user that they have no timelines
+
+---
 ## Tips & Tricks
 
 - This is a project written in one and only **Java**, without using Jetpack Compose or any other fancy features. To run it, open it on Android Studio.
