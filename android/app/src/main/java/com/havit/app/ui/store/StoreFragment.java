@@ -32,6 +32,15 @@ public class StoreFragment extends Fragment {
 
     public static ArrayList<String> templateNames;
 
+    /**
+     * Creates the view for the store fragment and updates the list view with the stored templates.
+     * Also, sets up back button navigation
+     *
+     * @param inflater The LayoutInflater object that is used to inflate views in the fragment
+     * @param container the parent view that the fragment's UI is attached to
+     * @param savedInstanceState this fragment gets re-constructed from a previous saved state as given by this parameter
+     * @return the View for the fragment's UI, or null
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         templateNames = new ArrayList<>();
@@ -56,6 +65,7 @@ public class StoreFragment extends Fragment {
         // The usage of an interface lets you inject your own implementation
         MenuHost menuHost = requireActivity();
 
+        // [From the android studio changelog]
         // Add menu items without using the Fragment Menu APIs
         // Note how we can tie the MenuProvider to the viewLifecycleOwner
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
@@ -81,6 +91,11 @@ public class StoreFragment extends Fragment {
         return root;
     }
 
+    /**
+     * Sets up the enter and exit transitions. Called after onAttach and before onCreateView
+     *
+     * @param savedInstanceState this fragment gets re-constructed from a previous saved state as given by this parameter
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +105,10 @@ public class StoreFragment extends Fragment {
         setExitTransition(inflater.inflateTransition(R.transition.fade));
     }
 
+    /**
+     * Called when the fragment's view is being destroyed.
+     * Sets the binding variable to null to avoid memory leaks.
+     */
     @Override
     public void onDestroyView() {
         super.onDestroyView();
