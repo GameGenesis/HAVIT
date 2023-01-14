@@ -50,52 +50,85 @@ import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Provides the user with a profile view.
+ * Includes the app instructions, user's name, profile picture, and the options to update their username, reset their password, and log out of their account.
+ */
 public class ProfileFragment extends Fragment {
 
-    private ProfileViewModel profileViewModel;
+    private ProfileViewModel profileViewModel;  // instance of the ProfileViewModel class
 
-    private FragmentProfileBinding binding;
+    private FragmentProfileBinding binding;     // instance of the FragmentProfileBinding class
 
-    private ActivityResultLauncher<Intent> galleryActivityResultLauncher;
+    private ActivityResultLauncher<Intent> galleryActivityResultLauncher;   // instance of the ActivityResultLauncher class
 
-    private FirebaseUser user;
-    private TextView userFullName;
-    private EditText editUsernameField;
-    private TextView updateUsernameText;
+    private FirebaseUser user;              // instance of the FirebaseUser class, which represents the currently signed-in user
+    private TextView userFullName;          // displays the user's full name
+    private EditText editUsernameField;     // allows the user to edit their username
+    private TextView updateUsernameText;    // displays the update username text
+    private ImageCarousel helpContent;      // displays the instruction images
 
-    private ImageCarousel helpContent;
 
+    /**
+     * Sets up the Fragment View
+     *
+     * @param inflater           a LayoutInflater that inflates the layout for the fragment's UI
+     * @param container          a ViewGroup that is the parent of the fragment's UI
+     * @param savedInstanceState a Bundle that saves the state of the fragment
+     * @return root, a View that is the root of the fragment's UI
+     */
     public View onCreateView(@NonNull LayoutInflater inflater,
         ViewGroup container, Bundle savedInstanceState) {
-        // Hide the action bar...
+
+        // Hide the action bar
         Objects.requireNonNull(((AppCompatActivity) requireActivity()).getSupportActionBar()).hide();
 
+        // Initialize profileViewModel
         profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
 
+        // Inflate binding
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
+        // Set user variable as currently signed in user
         user = FirebaseAuth.getInstance().getCurrentUser();
 
+        // Initialize the variables and bind with layout
         userFullName = binding.userFullName;
-        userFullName.setVisibility(View.VISIBLE);
-
         editUsernameField = binding.editUsernameField;
+        updateUsernameText = binding.updateUsernameText;
+        helpContent = binding.helpContent;
+
+        // Set visibility for text field and edit text
+        userFullName.setVisibility(View.VISIBLE);
         editUsernameField.setVisibility(View.GONE);
 
-        editUsernameField.setOnKeyListener((v, keyCode, event) -> {
-            // If the event is a key-down event on the "enter" button
-            if ((event.getAction() == KeyEvent.ACTION_DOWN) &&
-                    (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                // Perform action on key press
-                updateUsername(requireView());
-                return true;
-            }
-            return false;
-        });
-
+        setEnterButtonListener();
         configureUserProfileText();
+        setProfileButtonsListner();
+        setUpProfilePicture();
+        toggleHelpContent();
+        setHelpContent();
 
+        return root;
+    }
+
+
+    /**
+     * Sets the binding variable to null
+     * Called when the fragment's view is destroyed
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+
+
+    /**
+     * Sets OnClickListeners for logout, reset password, update profile and update username buttons
+     */
+    private void setProfileButtonsListner(){
         MaterialCardView logoutButton = binding.logoutButton;
 
         logoutButton.setOnClickListener(v -> {
@@ -112,31 +145,35 @@ public class ProfileFragment extends Fragment {
 
         MaterialCardView updateUsernameButton = binding.updateUsernameButton;
         updateUsernameButton.setOnClickListener(this::updateUsername);
-
-        updateUsernameText = binding.updateUsernameText;
-
-        setUpProfilePicture();
-
-        helpContent = binding.helpContent;
-
-        toggleHelpContent();
-
-        setHelpContent();
-
-        return root;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+
+    /**
+     * Sets an OnKeyListener for the editUsernameField
+     * Listens for the enter key and calls the updateUsername() method when pressed
+     */
+    private void setEnterButtonListener(){
+        editUsernameField.setOnKeyListener((v, keyCode, event) -> {
+            if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                updateUsername(requireView());
+                return true;
+            }
+            return false;
+        });
     }
 
+
+    /**
+     * Sets up the profile picture for the user by allowing them to select an image from the gallery
+     * Uploads the image to Firebase Storage and retrieves the profile picture from Firebase Storage if it exists.
+     */
     private void setUpProfilePicture() {
+        // Circle view for the profile img
         CircleImageView profileImage = binding.profileImage;
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
+        // Set path for the profile picture for firebase storage
         assert user != null;
         final String profilePictureFilepath = "users/" + user.getEmail() + "/profile-picture";
 
@@ -164,6 +201,7 @@ public class ProfileFragment extends Fragment {
             return;
         }
 
+        // Storage reference for the firebase storage
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(profilePictureFilepath);
 
         // Download the image file
@@ -176,8 +214,13 @@ public class ProfileFragment extends Fragment {
             // Handle any errors
             Log.d("profile", exception.getMessage());
         });
-}
+    }
 
+
+    /**
+     * Sends a password reset email to the currently logged in user's email address.
+     * @param view The view that triggers the function call.
+     */
     private void resetPassword(View view) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String emailAddress = Objects.requireNonNull(auth.getCurrentUser()).getEmail();
@@ -198,11 +241,21 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
+
+    /**
+     * Updates the user's profile picture by allowing them to choose an image from their gallery
+     * @param view The view that triggers the function call.
+     */
     private void updateProfile(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryActivityResultLauncher.launch(intent);
     }
 
+
+    /**
+     * Updates the user's name by allowing them to enter their desired name on editText view
+     * @param view The view that triggers the function call.
+     */
     private void updateUsername(View view) {
         if (userFullName.getVisibility() == View.VISIBLE) {
             userFullName.setVisibility(View.GONE);
@@ -238,6 +291,11 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+
+    /**
+     * Configures the user's name by default when first launched
+     * Retrieves name and user's email address
+     */
     private void configureUserProfileText() {
         TextView userId = binding.userId;
 
@@ -252,6 +310,9 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * Toggles the help content view on the profile screen when help button clicked
+     */
     private void toggleHelpContent(){
         RelativeLayout profileView = binding.profileView;
         LinearLayout firstRowButtons = binding.firstRowButtons;
@@ -280,6 +341,10 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+
+    /**
+     * Sets the instructions content for the help view carousel
+     */
     private void setHelpContent(){
         List<CarouselItem> instructionsCarousel = new ArrayList<>();
         int[] instructionImgs = {R.drawable.instructions1, R.drawable.instructions2, R.drawable.instructions3, R.drawable.instructions4, R.drawable.instructions5, R.drawable.instructions6, R.drawable.instructions7};
