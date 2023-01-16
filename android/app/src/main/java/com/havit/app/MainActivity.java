@@ -43,6 +43,7 @@ import com.google.firebase.storage.StorageReference;
 import com.havit.app.databinding.ActivityMainBinding;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -71,6 +72,14 @@ public class MainActivity extends AppCompatActivity {
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return;
         }
+
+//        try {
+//            // Sends the account credential token to the Flask_RESTful server...
+//            LoginActivity.sendAccountTokenToServer();
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         storageReference = FirebaseStorage.getInstance().getReference();
 

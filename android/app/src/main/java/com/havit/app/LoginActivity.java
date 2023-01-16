@@ -2,10 +2,9 @@ package com.havit.app;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -22,17 +21,24 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.havit.app.databinding.ActivityLoginBinding;
-import com.havit.app.ui.profile.ProfileFragment;
 
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
+
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /* Google Firebase related code snippets from
  * https://firebase.google.com/docs/auth/android/firebaseui
@@ -42,13 +48,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private FirebaseUser user;                  // Current Firebase user
 
-    private TextView textView;                  // Title text on the login page
-
     public static String sDefSystemLanguage;    // Stores the system locale
 
     private ImageCarousel helpContent;          // Image carousel with instructions
-
     private Button submitButton, loginButton;   // Get started and Login Buttons
+    private TextView textView;                  // Title text on the login page
+
 
 
      /* Called when the activity is first created
@@ -96,10 +101,7 @@ public class LoginActivity extends AppCompatActivity {
 
         submitButton = binding.submitButton;
         loginButton = binding.loginButton;
-
-        LinearLayout loginContainer = binding.loginContainer;
         helpContent = binding.helpContent;
-
         textView = binding.textView;
 
         textView.setVisibility(View.VISIBLE);
@@ -333,18 +335,20 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Handles the result of the sign in process
      * Receives a FirebaseAuthUIAuthenticationResult and checks the result code
-     * @param FirebaseAuthUIAuthenticationResult result
+     * @param result contains credentials data returned from the FirebaseAuthUI
      */
 
     // [START auth_fui_result]
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
+
         if (result.getResultCode() == RESULT_OK) {
             displayInstructions(false);
 
             // Successfully signed in
             user = FirebaseAuth.getInstance().getCurrentUser();
             configureWelcomeText();
+
         } else {
             // Sign in failed. If response is null the user canceled the
             // sign-in flow using the back button. Otherwise check
@@ -354,4 +358,44 @@ public class LoginActivity extends AppCompatActivity {
     }
     // [END auth_fui_result]
 
+    /**
+     * Sends the Firebase credentials
+     * that is securely encrypted
+     * into a token to the server-side,
+     * written in Flask (Python)...
+     */
+
+    public static void sendAccountTokenToServer() throws IOException {
+        AtomicReference<String> firebaseToken = new AtomicReference<>();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        OkHttpClient client = new OkHttpClient();
+
+        assert user != null;
+        user.getIdToken(true)
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    firebaseToken.set(task.getResult().getToken());
+                    // Send the token to your server
+                } else {
+                    // Handle error
+                }
+            });
+
+        // create request body
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("firebase_token", firebaseToken.get())
+                .build();
+
+        // create request
+        Request request = new Request.Builder()
+                .url("http://your_nextjs_server_url/api/auth")
+                .post(requestBody)
+                .build();
+
+        // execute request
+        Response response = client.newCall(request).execute();
+    }
 }
