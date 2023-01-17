@@ -1,5 +1,7 @@
 ![ic_launcher_round](https://user-images.githubusercontent.com/35755386/209804411-ac4fadb7-2978-4075-81aa-12fb11967a83.png)
 
+# HAVIT: Daily Habit Tracker
+
 **HAVIT** brings an unique set of features that combines social media, video editing platform, and a daily habit tracker.
 
 ---
