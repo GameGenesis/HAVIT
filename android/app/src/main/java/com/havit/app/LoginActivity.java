@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import com.havit.app.databinding.ActivityLoginBinding;
+import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
 import org.imaginativeworld.whynotimagecarousel.ImageCarousel;
 import org.imaginativeworld.whynotimagecarousel.model.CarouselItem;
@@ -34,6 +35,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -56,12 +60,12 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-     /* Called when the activity is first created
+    /* Called when the activity is first created
      * Initializes the layout, sets up the onClickListeners for the buttons, and handles the login process
      * Checks for internet connection and redirects to the error page if there is none
      * @param savedInstanceState Bundle containing the state of the fragment if it was previously created
      */
-     
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -129,13 +133,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-    
+
     /**
      * Displays instructions for the user when the app is launched for the first time
+     *
      * @param isVisible A boolean value indicating whether the instructions should be visible or not
      */
-     
-    private void displayInstructions(boolean isVisible){
+
+    private void displayInstructions(boolean isVisible) {
         if (isVisible) {
             textView.setVisibility(View.GONE);
             submitButton.setVisibility(View.GONE);
@@ -157,7 +162,7 @@ public class LoginActivity extends AppCompatActivity {
      * Initializes the instructions carousel with images of instructions and sets the properties of the carousel
      */
 
-    private void setUpInstructions(){
+    private void setUpInstructions() {
         List<CarouselItem> instructionsCarousel = new ArrayList<>();
         int[] instructionImgs = {R.drawable.instructions1, R.drawable.instructions2, R.drawable.instructions3, R.drawable.instructions4, R.drawable.instructions5, R.drawable.instructions6, R.drawable.instructions7};
 
@@ -167,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
         helpContent.setTouchToPause(true);
         helpContent.setInfiniteCarousel(false);
 
-        for (int addItem : instructionImgs){
+        for (int addItem : instructionImgs) {
             instructionsCarousel.add(new CarouselItem(addItem));
         }
 
@@ -190,18 +195,18 @@ public class LoginActivity extends AppCompatActivity {
             textView.setTextSize(24);
         }
     }
-    
+
     /*
      * Part of the Android Activity Lifecycle
      * @see <a href="https://developer.android.com/guide/components/activities/activity-lifecycle">Android Activity Lifecycle</a>
      */
-     
+
     @Override
     public void onResume() {
         super.onResume();
         Objects.requireNonNull(getSupportActionBar()).hide();
     }
-    
+
     /**
      * Called when the activity is no longer visible to the user
      * Hides the support action bar to provide a full screen experience
@@ -242,7 +247,7 @@ public class LoginActivity extends AppCompatActivity {
      * Creates an email link to be sent to the user for sign in.
      * Sets the settings for android package name, whether to install the app if not available, and the minimum version for the app
      */
-     
+
     public void emailLink() {
         // [START auth_fui_email_link]
         ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
@@ -335,6 +340,7 @@ public class LoginActivity extends AppCompatActivity {
     /**
      * Handles the result of the sign in process
      * Receives a FirebaseAuthUIAuthenticationResult and checks the result code
+     *
      * @param result contains credentials data returned from the FirebaseAuthUI
      */
 
@@ -358,44 +364,43 @@ public class LoginActivity extends AppCompatActivity {
     }
     // [END auth_fui_result]
 
-    /**
-     * Sends the Firebase credentials
-     * that is securely encrypted
-     * into a token to the server-side,
-     * written in Flask (Python)...
-     */
-
-    public static void sendAccountTokenToServer() throws IOException {
-        AtomicReference<String> firebaseToken = new AtomicReference<>();
-
+    public static void sendUserTokenToServer() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        OkHttpClient client = new OkHttpClient();
 
         assert user != null;
         user.getIdToken(true)
-            .addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    firebaseToken.set(task.getResult().getToken());
-                    // Send the token to your server
-                } else {
-                    // Handle error
-                }
-            });
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String accessToken = task.getResult().getToken();
 
-        // create request body
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("firebase_token", firebaseToken.get())
-                .build();
+                        // Send the access token to the Next.js API function
+                        OkHttpClient client = new OkHttpClient();
 
-        // create request
-        Request request = new Request.Builder()
-                .url("http://your_nextjs_server_url/api/auth")
-                .post(requestBody)
-                .build();
+                        assert accessToken != null;
+                        RequestBody body = new FormBody.Builder()
+                                .add("firebase_token", accessToken)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://havit.space/api/firebase-auth")
+                                .post(body)
+                                .build();
 
-        // execute request
-        Response response = client.newCall(request).execute();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+
+                                }
+                            }
+                        });
+                    } else {
+                        // Handle error
+                    }
+                });
     }
 }
