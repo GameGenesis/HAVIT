@@ -9,6 +9,7 @@ from io import BytesIO
 bucket = storage.bucket('gs://havitcentral.appspot.com')
 
 async def export_video(user_email, timeline_name, template_name):
+    # UNFINISHED LOGIC: define duration (seconds) for each image - List[float]
     # Get the images from the specified folder in the storage bucket
     image_files = await bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
     images = await asyncio.gather(*(file.download() for file in image_files))
