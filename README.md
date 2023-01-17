@@ -17,7 +17,7 @@
 
 **Other smaller bugs and unresolved feature implementations can be found under the *Issues* tab**
 
-- The export feature does not download the compiled video (using the FFmpeg library)
+- The export feature does not download the compiled video (Server-side logic work in progress)
 
 - Larger timelines that require longer load times may scroll through the carousel before displaying the images
 
