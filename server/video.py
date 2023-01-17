@@ -8,6 +8,7 @@ from io import BytesIO
 # Create a reference to the Firebase Storage bucket
 bucket = storage.bucket('gs://havitcentral.appspot.com')
 
+# https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
 async def export_video(user_email, timeline_name, template_name):
     # UNFINISHED LOGIC: define duration (seconds) for each image - List[float]
     # Get the images from the specified folder in the storage bucket
