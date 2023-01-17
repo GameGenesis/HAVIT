@@ -4,25 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 
-import android.media.MediaCodec;
-import android.media.MediaCodecInfo;
-import android.media.MediaExtractor;
-import android.media.MediaFormat;
-import android.media.MediaMuxer;
-
-import android.Manifest;
-import android.content.ContentValues;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-
-import android.net.Uri;
-
 import android.os.Build;
 import android.os.Bundle;
 
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.transition.TransitionInflater;
 
 import android.util.Log;
@@ -46,7 +30,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
@@ -56,9 +40,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.arthenica.mobileffmpeg.FFmpeg;
-import com.google.android.material.card.MaterialCardView;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -67,7 +48,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentEditBinding;
@@ -75,13 +55,7 @@ import com.havit.app.ui.timeline.Timeline;
 import com.havit.app.ui.timeline.TimelineArrayAdapter;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-
-import java.nio.ByteBuffer;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -94,6 +68,14 @@ import java.util.List;
 
 import java.util.Map;
 import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class EditFragment extends Fragment {
 
@@ -174,11 +156,15 @@ public class EditFragment extends Fragment {
         retrieveTimestamp();
 
         exportButton.setOnClickListener(v -> {
-            try {
-                downloadBackgroundMusic();
+            /*try {
+                combinePhotosIntoVideo();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
+
+            // Handle successful uploads
+            PopupDialog popup = new PopupDialog();
+            popup.show(getChildFragmentManager(), "popup");
         });
 
         timelineContainer = binding.timelineContainer;
@@ -294,72 +280,6 @@ public class EditFragment extends Fragment {
         return root;
     }
 
-
-    /**
-     * Downloads a background music file from Firebase Storage.
-     * @throws IOException if there is an issue creating the temporary music file.
-     */
-    private void downloadBackgroundMusic() throws IOException {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReferenceFromUrl("gs://havitcentral.appspot.com/templates/evolution.mp3");
-
-        tempMusicFile = File.createTempFile("background-music", "ext");
-
-        Toast.makeText(requireActivity(), "Downloading the Template...", Toast.LENGTH_SHORT).show();
-
-        storageRef.getFile(tempMusicFile).addOnSuccessListener(taskSnapshot -> {
-            // File downloaded successfully
-            downloadTimelinePhotos(() -> {
-                try {
-                    combinePhotosIntoVideo();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-
-        }).addOnFailureListener(exception -> {
-            // Handle failed download
-        });
-    }
-
-    /**
-     * Download images from the Firebase storage and store them in an ArrayList
-     * Calls the combinePhotosIntoVideo() method to combine the images into a video
-     */
-
-    private void downloadTimelinePhotos(final OnDownloadComplete callback) {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference folderRef = storage.getReference().child("users/" + user.getEmail() +  "/" + TimelineArrayAdapter.selectedTimeline.name);
-
-        folderRef.listAll().addOnSuccessListener(listResult -> {
-            int counter = 0;
-
-            for (StorageReference item : listResult.getItems()) {
-                int finalCounter = counter;
-
-                item.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
-                    Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    images.add(image);
-
-                    if (finalCounter == imagesSize - 1) {
-                        callback.onDownloadComplete();
-                    }
-
-                }).addOnFailureListener(exception -> {
-                    Log.e("ERROR_APPENDING_IMAGES", String.valueOf(exception));
-                });
-
-                counter++;
-            }
-
-            imagesSize = counter - 1;
-        });
-    }
-
-    interface OnDownloadComplete {
-        void onDownloadComplete();
-    }
-
     /**
      * Combines the bitmap images in the ArrayList into a video
      * Uses FFmpeg library to concatenate the images and adds background music to the final video
@@ -368,99 +288,46 @@ public class EditFragment extends Fragment {
      */
 
     private void combinePhotosIntoVideo() throws IOException {
-        List<String> cmd = new ArrayList<>();
-        cmd.add("-y");
+        user.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String accessToken = task.getResult().getToken();
 
-        String inputFilePaths = "";
+                        // Send the access token to the Next.js API function
+                        OkHttpClient client = new OkHttpClient();
 
-        int index = 0;
+                        assert accessToken != null;
+                        RequestBody body = new FormBody.Builder()
+                                .add("timeline_name", TimelineArrayAdapter.selectedTimeline.name)
+                                .add("template_name", TimelineArrayAdapter.selectedTimeline.selectedTemplate)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://havit.space/api/export-video")
+                                .post(body)
+                                .build();
 
-        for (Bitmap image : images) {
-            File tempImageFile = File.createTempFile("temp-image", ".jpg");
-            OutputStream os = new FileOutputStream(tempImageFile);
-            image.compress(Bitmap.CompressFormat.JPEG, 100, os);
-            os.close();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                e.printStackTrace();
+                            }
 
-            long deltaTimeMillis = sortedTimestampKeys.get(index)[2];
-            long seconds = (long) deltaTimeMillis / 1000;
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    // Get the file name of the combined image from the response
+                                    assert response.body() != null;
+                                    String fileName = response.body().string();
 
-            inputFilePaths += " -i " + tempImageFile.getAbsolutePath() + " -t " + seconds;
-
-            index++;
-        }
-
-        Log.d("INPUT_FILE_PATHS", inputFilePaths);
-
-        cmd.add(inputFilePaths);
-
-        // Add the background music
-        cmd.add("-i");
-        cmd.add(tempMusicFile.getAbsolutePath());
-
-        cmd.add("-filter_complex");
-        String filterComplex = "";
-
-        for (int i = 0; i < imagesSize; i++) {
-            filterComplex += "[" + i + ":v]";
-        }
-        filterComplex += "concat=n=" + imagesSize + ":v=1";
-        filterComplex += "[video];";
-        filterComplex += "[" + imagesSize + ":a]";
-        filterComplex += "volume=1.5[audio]";
-
-        Log.d("FILTER_COMPLEX", filterComplex);
-
-        cmd.add(filterComplex);
-
-        cmd.add("-map");
-        cmd.add("[video]");
-        cmd.add("-map");
-        cmd.add("[audio]");
-
-        cmd.add("-c:v");
-        cmd.add("libx264");
-        cmd.add("-crf");
-        cmd.add("23");
-        cmd.add("-preset");
-        cmd.add("veryfast");
-        cmd.add("-c:a");
-        cmd.add("aac");
-        cmd.add("-b:a");
-        cmd.add("48k");
-        cmd.add("-ar");
-        cmd.add("22050");
-
-        tempVideoFile = File.createTempFile("output-video", "ext");
-        cmd.add(tempVideoFile.getAbsolutePath());
-
-        String[] command = cmd.toArray(new String[0]);
-
-        Toast.makeText(requireActivity(), "Uploading the exported video to Firebase storage...", Toast.LENGTH_SHORT).show();
-
-        FFmpeg.executeAsync(command, (executionId, returnCode) -> {
-            if (returnCode == 0) {
-                // command execution successful
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
-                StorageReference videoRef = storageRef.child("users/" + user.getEmail() + "/" + TimelineArrayAdapter.selectedTimeline.name + "/" + tempVideoFile.getName());
-                UploadTask uploadTask = videoRef.putFile(Uri.fromFile(tempVideoFile));
-
-                uploadTask.addOnFailureListener(exception -> {
-                    // Handle unsuccessful uploads
-                    Log.e("VIDEO_EXPORT_FAILURE", exception.toString());
-
-                }).addOnSuccessListener(taskSnapshot -> {
-                    // Handle successful uploads
-                    PopupDialog popup = new PopupDialog();
-                    popup.show(getChildFragmentManager(), "popup");
+                                    // Download the combined image from Firebase Storage
+                                    // downloadImage(fileName);
+                                }
+                            }
+                        });
+                    } else {
+                        // Handle error
+                    }
                 });
-
-            } else {
-                // command execution failed
-                // callback for onFailure
-                Log.e("RETURN_CODE_FAILURE", "HMM...");
-            }
-        });
     }
 
 
@@ -511,9 +378,7 @@ public class EditFragment extends Fragment {
                         }
 
                         // Sort the list in ascending order based on the first element of the nested arrays
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            sortedTimestampKeys.sort(Comparator.comparingLong(a -> a[0]));
-                        }
+                        sortedTimestampKeys.sort(Comparator.comparingLong(a -> a[0]));
 
                         for (long[] entry : sortedTimestampKeys) {
                             // If the clip is not at the start of the timeline or the difference
@@ -663,17 +528,15 @@ public class EditFragment extends Fragment {
             List<StorageReference> items = listResult.getItems();
 
             // create a custom comparator that compares the file name numbers
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                items.sort((s1, s2) -> {
-                    String fileName1 = s1.getName();
-                    String fileName2 = s2.getName();
+            items.sort((s1, s2) -> {
+                String fileName1 = s1.getName();
+                String fileName2 = s2.getName();
 
-                    long fileNum1 = Long.parseLong(fileName1.replace("img-", ""));
-                    long fileNum2 = Long.parseLong(fileName2.replace("img-", ""));
+                long fileNum1 = Long.parseLong(fileName1.replace("img-", ""));
+                long fileNum2 = Long.parseLong(fileName2.replace("img-", ""));
 
-                    return Long.compare(fileNum1, fileNum2);
-                });
-            }
+                return Long.compare(fileNum1, fileNum2);
+            });
 
             // Now items is sorted in an increment order (oldest comes first)
             for (StorageReference item : items) {
