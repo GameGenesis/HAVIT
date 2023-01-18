@@ -50,4 +50,6 @@
 
 </tr></table>
 
-![UML class](https://user-images.githubusercontent.com/35755386/208787080-85a6a410-15bb-47c8-8af6-9ebfef9e678a.jpeg)
+![UPDATED  UML class](https://user-images.githubusercontent.com/35755386/213202974-12e839bc-a33c-4e6b-ab6b-dc99fb8bffe1.png)
+
+
