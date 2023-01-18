@@ -2,17 +2,13 @@
 import os
 import cv2 
 from PIL import Image 
-from firebase_admin import storage, firestore
 from io import BytesIO
-
-# Create a reference to the Firebase Storage bucket
-bucket = storage.bucket('gs://havitcentral.appspot.com')
+import config
 
 # https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
 async def export_video(user_email, timeline_name, template_name):
-    # UNFINISHED LOGIC: define duration (seconds) for each image - List[float]
     # Get the images from the specified folder in the storage bucket
-    image_files = await bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
+    image_files = await config.bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
     images = await asyncio.gather(*(file.download() for file in image_files))
 
     mean_height = 0
@@ -56,10 +52,10 @@ async def export_video(user_email, timeline_name, template_name):
             image_data = file.read()
 
     # Calling the generate_video function
-    generate_video(images, user_email, timeline_name, duration)
+    generate_video(images, user_email, timeline_name, template_name)
 
 # Video Generating function
-def generate_video(images, user_email, timeline_name, duration, fps=30):
+def generate_video(images, user_email, timeline_name, template_name, fps=30):
     video_name = f'./temp/{user_email}/{timeline_name}.avi'
 
     frame = cv2.imread(BytesIO(images[0]))
@@ -72,17 +68,21 @@ def generate_video(images, user_email, timeline_name, duration, fps=30):
     fourcc = cv2.VideoWriter_fourcc(*"MP42")
     video = cv2.VideoWriter(video_name, fourcc, float(fps), (width, height)) 
 
+    duration = get_data_from_firestore(template_name)
+    
     # Appending the images to the video one by one
     for i, image in enumerate(images): 
-        for _ in range(int(fps * duration[i])):  # Repeat each frame for the specified duration
+        # Duration is in milliseconds, so we need to convert it to seconds
+        for _ in range(int(fps * duration[i] / 1000)):  # Repeat each frame for the specified duration
             video.write(cv2.imread(BytesIO(image)))
+            # Haven't implemented the gap between frames yet
       
     # Deallocating memories taken for window creation
     cv2.destroyAllWindows() 
     video.release()  # releasing the video generated
 
     # Create a reference to the video in Firebase Storage
-    video_blob = bucket.blob("users/" + user_email + "/" + timeline_name + "/" + video_name)
+    video_blob = config.bucket.blob("users/" + user_email + "/" + timeline_name + "/" + video_name)
 
     # Open the video file
     with open(video_name, "rb") as video_file:
@@ -90,9 +90,27 @@ def generate_video(images, user_email, timeline_name, duration, fps=30):
         video_blob.upload_from_file(video_file)
 
 def get_data_from_firestore(template_name):
-    # Get a reference to the Firestore database
-    # Unfinished logic; retrieve timestamp data from Firestore
-    db = firestore.client()
+    doc_ref = config.db.collection('templates').document(template_name)
 
-    doc_ref = db.collection('templates').document(template_name)
- 
+    doc = doc_ref.get()
+
+    duration = []
+
+    if doc.exists:
+        # Iterate through the map field
+        for key, value in doc.to_dict().get("timestamp").items():
+            key_list = key.split("-")
+
+            start_time_str = key_list[0]
+            start_millis = int(start_time_str[0:2]) * 60000 + int(start_time_str[2:4]) * 1000 + int(start_time_str[4:6])
+            
+            end_time_str = key_list[1]
+            end_millis = int(end_time_str[0:2]) * 60000 + int(end_time_str[2:4]) * 1000 + int(end_time_str[4:6])
+
+            delta_millis = end_millis - start_millis
+
+            duration.append([start_millis, end_millis, delta_millis])
+
+    return duration
+            
+# TO DO: ADD MEMBERSHIP_ENABLED BOOLEAN TO FIRESTORE USER.JSON AS WELL AS FIRST_TIME_USER BOOLEAN
