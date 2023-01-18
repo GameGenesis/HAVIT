@@ -80,4 +80,5 @@ def get_video():
 
 if __name__ == '__main__':
     # python api.py (Windows) OR python3 api.py (macOS/Linux)
-    app.run()
+    port = int(os.environ.get("PORT", 5000)) 
+    app.run(host='0.0.0.0', port=port)
