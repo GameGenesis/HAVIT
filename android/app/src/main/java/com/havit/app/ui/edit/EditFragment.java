@@ -48,6 +48,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.havit.app.LoginActivity;
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentEditBinding;
@@ -156,15 +157,7 @@ public class EditFragment extends Fragment {
         retrieveTimestamp();
 
         exportButton.setOnClickListener(v -> {
-            /*try {
-                combinePhotosIntoVideo();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-
-            // Handle successful uploads
-            PopupDialog popup = new PopupDialog();
-            popup.show(getChildFragmentManager(), "popup");
+            sendUserTokenToServer();
         });
 
         timelineContainer = binding.timelineContainer;
@@ -287,6 +280,44 @@ public class EditFragment extends Fragment {
      * @throws IOException if an error occurs when trying to create a temporary file for the video or the images
      */
 
+    private void sendUserTokenToServer() {
+        assert user != null;
+        user.getIdToken(true)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String accessToken = task.getResult().getToken();
+
+                        // Send the access token to the Next.js API function
+                        OkHttpClient client = new OkHttpClient();
+
+                        assert accessToken != null;
+                        RequestBody body = new FormBody.Builder()
+                                .add("firebase_token", accessToken)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("https://havit.space/api/firebase-auth")
+                                .post(body)
+                                .build();
+
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                if (response.isSuccessful()) {
+                                    combinePhotosIntoVideo();
+                                }
+                            }
+                        });
+                    } else {
+                        // Handle error
+                    }
+                });
+    }
+
     private void combinePhotosIntoVideo() throws IOException {
         user.getIdToken(true)
                 .addOnCompleteListener(task -> {
@@ -316,11 +347,9 @@ public class EditFragment extends Fragment {
                             public void onResponse(Call call, Response response) throws IOException {
                                 if (response.isSuccessful()) {
                                     // Get the file name of the combined image from the response
-                                    assert response.body() != null;
-                                    String fileName = response.body().string();
-
-                                    // Download the combined image from Firebase Storage
-                                    // downloadImage(fileName);
+                                    // Handle successful uploads
+                                    PopupDialog popup = new PopupDialog();
+                                    popup.show(getChildFragmentManager(), "popup");
                                 }
                             }
                         });
