@@ -4,14 +4,12 @@ export default function Home() {
     return (
         <div className="home">
             <Typography
-                as="a"
+                as="big"
                 href="#"
                 variant="h1"
-                className="mr-4 cursor-pointer py-1.5 font-normal">
+                className="text-5xl mr-4 cursor-pointer py-1.5 font-normal">
                     WELCOME BACK.
             </Typography>
-
-            <p>Home page</p>
         </div>
     );
 }
