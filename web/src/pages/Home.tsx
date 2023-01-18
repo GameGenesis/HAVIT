@@ -5,7 +5,6 @@ export default function Home() {
         <div className="home">
             <Typography
                 as="big"
-                href="#"
                 variant="h1"
                 className="text-5xl mr-4 cursor-pointer py-1.5 font-normal">
                     WELCOME BACK.
@@ -15,10 +14,9 @@ export default function Home() {
 
             <Typography
                 as="big"
-                href="#"
                 variant="h1"
                 className="text-3xl mr-4 cursor-pointer py-1.5 font-normal">
-                    Our app brings an unique set of features that combines social media, video editing platform, and a daily habit tracker.
+                    <span className="bg-purple-600 text-white p-1 rounded">Our app</span> brings an <span className="bg-yellow-600 text-white p-1 rounded">unique set</span> of features that combines <span className="underline underline-offset-4 decoration-purple-600">social media</span>, <span className="underline underline-offset-4 decoration-purple-600">video editing platform</span>, and a <span className="underline underline-offset-4 decoration-purple-600">daily habit tracker</span>.
             </Typography>
 
             <br />

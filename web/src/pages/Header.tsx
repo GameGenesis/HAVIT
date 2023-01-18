@@ -19,14 +19,14 @@ export default function Header() {
   }, []);
  
   const navList = (
-    <ul className="mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
+    <ul className="text-black mb-4 mt-2 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       <Typography
         as="li"
         variant="small"
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <a href="#" className="flex items-center hover:font-bold">
           TIMELINES.
         </a>
       </Typography>
@@ -36,7 +36,7 @@ export default function Header() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <a href="#" className="flex items-center hover:font-bold">
           FEED.
         </a>
       </Typography>
@@ -46,7 +46,7 @@ export default function Header() {
         color="blue-gray"
         className="p-1 font-normal"
       >
-        <a href="#" className="flex items-center">
+        <a href="#" className="flex items-center hover:font-bold">
           CAMERA.
         </a>
       </Typography>
@@ -60,7 +60,7 @@ export default function Header() {
           as="a"
           href="/"
           variant="h1"
-          className="title mr-4 cursor-pointer py-1.5 font-normal"
+          className="title mr-4 cursor-pointer py-1.5 font-normal hover:font-bold"
         >
           <span>HAVIT.</span>
         </Typography>

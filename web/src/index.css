@@ -8,11 +8,13 @@
 body {
   margin: 0;
   text-transform: uppercase;
+  color: black;
   font-family: 'Questrial', sans-serif;
 }
 
 .title {
   font-family: 'Major Mono Display', monospace;
+  color: black;
 }
 
 code {
