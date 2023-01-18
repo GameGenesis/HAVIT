@@ -5,12 +5,16 @@ from PIL import Image
 from io import BytesIO
 import config
 
+# For the reference, check out:
 # https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
+
 async def export_video(user_email, timeline_name, template_name):
     # Get the images from the specified folder in the storage bucket
     image_files = await config.bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
     images = await asyncio.gather(*(file.download() for file in image_files))
 
+    global mean_width, mean_height
+    
     mean_height = 0
     mean_width = 0
     
@@ -27,6 +31,7 @@ async def export_video(user_email, timeline_name, template_name):
     # to be set with same width and height. Otherwise
     # images not equal to that width height will not get 
     # embedded into the video
+
     mean_width = int(mean_width / num_of_images)
     mean_height = int(mean_height / num_of_images)
 
@@ -69,13 +74,30 @@ def generate_video(images, user_email, timeline_name, template_name, fps=30):
     video = cv2.VideoWriter(video_name, fourcc, float(fps), (width, height)) 
 
     duration = get_data_from_firestore(template_name)
+
+    previous_end_time = 0;
     
     # Appending the images to the video one by one
     for i, image in enumerate(images): 
         # Duration is in milliseconds, so we need to convert it to seconds
-        for _ in range(int(fps * duration[i] / 1000)):  # Repeat each frame for the specified duration
+        current_start_time = duration[i][0] / 1000
+        current_end_time = duration[i][1] / 1000
+
+        # Create a new image with a size of (300, 300)
+        black_image = Image.new('RGB', (mean_width, mean_height), (0, 0, 0))
+
+        # Save the image as an object in memory
+        black_image_object = image.tobytes()
+
+        if (current_start_time - previous_end_time) > 0:
+            # Add a gap between the previous frame and the current frame
+            for _ in range(int(fps * (current_start_time - previous_end_time))):
+                # Add a black frame
+                video.write(cv2.imread(BytesIO(black_image_object)))
+        
+        for _ in range(int(fps * current_end_time - current_start_time)):
+            # Repeat each frame for the specified duration
             video.write(cv2.imread(BytesIO(image)))
-            # Haven't implemented the gap between frames yet
       
     # Deallocating memories taken for window creation
     cv2.destroyAllWindows() 
@@ -107,9 +129,7 @@ def get_data_from_firestore(template_name):
             end_time_str = key_list[1]
             end_millis = int(end_time_str[0:2]) * 60000 + int(end_time_str[2:4]) * 1000 + int(end_time_str[4:6])
 
-            delta_millis = end_millis - start_millis
-
-            duration.append([start_millis, end_millis, delta_millis])
+            duration.append([start_millis, end_millis])
 
     return duration
             
