@@ -104,7 +104,7 @@ def generate_video(images, user_email, timeline_name, template_name, fps=30):
     video.release()  # releasing the video generated
 
     # Create a reference to the video in Firebase Storage
-    video_blob = config.bucket.blob("users/" + user_email + "/" + timeline_name + "/" + video_name)
+    video_blob = config.bucket.blob("users/" + user_email + "/" + timeline_name + "/" + timeline_name)
 
     # Open the video file
     with open(video_name, "rb") as video_file:
