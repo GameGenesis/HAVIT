@@ -8,10 +8,10 @@ import config
 # For the reference, check out:
 # https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
 
-async def export_video(user_email, timeline_name, template_name):
+def export_video(user_email, timeline_name, template_name):
     # Get the images from the specified folder in the storage bucket
-    image_files = await config.bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
-    images = await asyncio.gather(*(file.download() for file in image_files))
+    image_files = config.bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
+    images = asyncio.gather(*(file.download() for file in image_files))
 
     global mean_width, mean_height
     

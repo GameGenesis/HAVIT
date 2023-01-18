@@ -332,6 +332,7 @@ public class EditFragment extends Fragment {
                                 .add("timeline_name", TimelineArrayAdapter.selectedTimeline.name)
                                 .add("template_name", TimelineArrayAdapter.selectedTimeline.selectedTemplate)
                                 .build();
+
                         Request request = new Request.Builder()
                                 .url("https://havit.space/api/export-video")
                                 .post(body)
@@ -347,9 +348,21 @@ public class EditFragment extends Fragment {
                             public void onResponse(Call call, Response response) throws IOException {
                                 if (response.isSuccessful()) {
                                     // Get the file name of the combined image from the response
-                                    // Handle successful uploads
-                                    PopupDialog popup = new PopupDialog();
-                                    popup.show(getChildFragmentManager(), "popup");
+                                    int statusCode = response.code();
+
+                                    Log.d("SERVER_RETURN_STATUS", String.valueOf(statusCode));
+
+                                    if (statusCode == 200) {
+                                        // Success...
+                                        PopupDialog popup = new PopupDialog();
+                                        popup.show(getChildFragmentManager(), "popup");
+
+                                    } else if (statusCode == 400) {
+                                        // Failure...
+                                        requireActivity().runOnUiThread(new Thread(() -> {
+                                            Toast.makeText(requireContext(), "Failed to generate the video", Toast.LENGTH_SHORT).show();
+                                        }));
+                                    }
                                 }
                             }
                         });
