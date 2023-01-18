@@ -13,7 +13,7 @@ WORKDIR /
 # Don't forget "--from"! It acts as a bridge that connects two seperate stages
 COPY --from=build-step app ./app
 WORKDIR /app
-RUN apt-get update && apt-get install -y python3-dev
+RUN apt-get update && apt-get install -y python3-dev mesa-utils libgl1-mesa-glx
 COPY server ./server
 WORKDIR /app/server
 RUN pip3 install -r ./requirements.txt
