@@ -363,44 +363,4 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
     // [END auth_fui_result]
-
-    public static void sendUserTokenToServer() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        assert user != null;
-        user.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        String accessToken = task.getResult().getToken();
-
-                        // Send the access token to the Next.js API function
-                        OkHttpClient client = new OkHttpClient();
-
-                        assert accessToken != null;
-                        RequestBody body = new FormBody.Builder()
-                                .add("firebase_token", accessToken)
-                                .build();
-                        Request request = new Request.Builder()
-                                .url("https://havit.space/api/firebase-auth")
-                                .post(body)
-                                .build();
-
-                        client.newCall(request).enqueue(new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                if (response.isSuccessful()) {
-
-                                }
-                            }
-                        });
-                    } else {
-                        // Handle error
-                    }
-                });
-    }
 }
