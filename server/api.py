@@ -13,7 +13,7 @@ CORS(app, resources={r'/api/*': {'origins': '*'}})
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-cred = credentials.Certificate(PROJECT_ROOT + "/assets/credentials.json")
+cred = credentials.Certificate(PROJECT_ROOT.replace("/app", "") + "/assets/credentials.json")
 firebase_admin.initialize_app(cred, name='havit-api')
 
 # For Flask to React Routing...
