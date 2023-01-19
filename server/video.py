@@ -4,14 +4,26 @@ import cv2
 from PIL import Image 
 from io import BytesIO
 from flask import current_app
+from firebase_admin import credentials, firestore, storage, auth
 import config
 
 # For the reference, check out:
 # https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
 
-def export_video(user_email, timeline_name, template_name):
+def export_video(firebase_token, timeline_name, template_name):
+    decoded_token = auth.verify_id_token(firebase_token)
+
+    user = auth.get_user(user_id)
+    user_email = user.email
+
+    cred = credentials.Certificate("./assets/credentials.json")
+    firebase_admin.initialize_app(cred, name='havit-api')
+
+    db = firestore.client()
+    bucket = storage.bucket('gs://havitcentral.appspot.com')
+
     # Get the images from the specified folder in the storage bucket
-    image_files = config.bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
+    image_files = bucket.get_files({ prefix: 'users/' + user_email + '/' + timeline_name + '/' })
     images = asyncio.gather(*(file.download() for file in image_files))
 
     global mean_width, mean_height
@@ -107,7 +119,7 @@ def generate_video(images, user_email, timeline_name, template_name, fps=30):
     current_app.logger.info("users/" + user_email + "/" + timeline_name + "/export.avi")
 
     # Create a reference to the video in Firebase Storage
-    video_blob = config.bucket.blob("users/" + user_email + "/" + timeline_name + "/export.avi")
+    video_blob = bucket.blob("users/" + user_email + "/" + timeline_name + "/export.avi")
 
     # Open the video file
     with open(video_name, "rb") as video_file:
@@ -115,7 +127,7 @@ def generate_video(images, user_email, timeline_name, template_name, fps=30):
         video_blob.upload_from_file(video_file)
 
 def get_data_from_firestore(template_name):
-    doc_ref = config.db.collection('templates').document(template_name)
+    doc_ref = db.collection('templates').document(template_name)
 
     doc = doc_ref.get()
 
