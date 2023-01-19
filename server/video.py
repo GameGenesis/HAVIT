@@ -20,7 +20,6 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
 
     current_app.logger.info(f'Email: {user_email}')
 
-    db = firestore.client()
     bucket = storage.bucket('havitcentral.appspot.com')
 
     # Get the images from the specified folder in the storage bucket
@@ -125,6 +124,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
 
 
 def get_data_from_firestore(template_name):
+    db = firestore.client()
     doc_ref = db.collection('templates').document(template_name)
 
     doc = doc_ref.get()
