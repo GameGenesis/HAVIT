@@ -4,6 +4,7 @@ import cv2
 from PIL import Image 
 from io import BytesIO
 from flask import current_app
+import firebase_admin
 from firebase_admin import credentials, firestore, storage, auth
 
 # Function to generate video
