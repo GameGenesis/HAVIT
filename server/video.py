@@ -5,17 +5,22 @@ from PIL import Image
 from io import BytesIO
 from flask import current_app
 import firebase_admin
-from firebase_admin import firestore, storage, auth
+from firebase_admin import firestore, storage, auth, credentials
 
 # Function to generate video
 # For the reference, check out:
 # https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
 
 def export_video(firebase_token, timeline_name, template_name):
+    cred = credentials.Certificate("assets/credentials.json")
+    firebase_admin.initialize_app(cred, name='havit-api')
+
     decoded_token = auth.verify_id_token(firebase_token)
 
     user = auth.get_user(user_id)
     user_email = user.email
+
+    current_app.logger.info(f'Email: {user_email}')
 
     db = firestore.client()
     bucket = storage.bucket('gs://havitcentral.appspot.com')

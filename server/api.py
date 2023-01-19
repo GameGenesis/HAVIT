@@ -1,20 +1,17 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
-import os, firebase_admin
-
-from firebase_admin import credentials
+import os
 
 from video import export_video
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='/')
 
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+
 CORS(app, resources={r'/api/*': {'origins': '*'}})
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-cred = credentials.Certificate(PROJECT_ROOT.replace("/app", "") + "/assets/credentials.json")
-firebase_admin.initialize_app(cred, name='havit-api')
 
 # For Flask to React Routing...
 @app.errorhandler(404)
