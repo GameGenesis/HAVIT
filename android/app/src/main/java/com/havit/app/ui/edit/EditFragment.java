@@ -294,7 +294,7 @@ public class EditFragment extends Fragment {
                                 .add("firebase_token", accessToken)
                                 .build();
                         Request request = new Request.Builder()
-                                .url("https://havit.space/api/firebase-auth")
+                                .url("https://www.havit.space/api/firebase-auth")
                                 .post(body)
                                 .build();
 
@@ -333,7 +333,7 @@ public class EditFragment extends Fragment {
                                 .build();
 
                         Request request = new Request.Builder()
-                                .url("https://havit.space/api/export-video")
+                                .url("https://www.havit.space/api/export-video")
                                 .post(body)
                                 .build();
 
