@@ -124,24 +124,24 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     os.rmdir(f'./temp/{user_email}/{timeline_name}/')
 
 
-    def get_data_from_firestore(template_name):
-        doc_ref = db.collection('templates').document(template_name)
+def get_data_from_firestore(template_name):
+    doc_ref = db.collection('templates').document(template_name)
 
-        doc = doc_ref.get()
+    doc = doc_ref.get()
 
-        duration = []
+    duration = []
 
-        if doc.exists:
-            # Iterate through the map field
-            for key, value in doc.to_dict().get("timestamp").items():
-                key_list = key.split("-")
+    if doc.exists:
+        # Iterate through the map field
+        for key, value in doc.to_dict().get("timestamp").items():
+            key_list = key.split("-")
 
-                start_time_str = key_list[0]
-                start_millis = int(start_time_str[0:2]) * 60000 + int(start_time_str[2:4]) * 1000 + int(start_time_str[4:6])
-                
-                end_time_str = key_list[1]
-                end_millis = int(end_time_str[0:2]) * 60000 + int(end_time_str[2:4]) * 1000 + int(end_time_str[4:6])
+            start_time_str = key_list[0]
+            start_millis = int(start_time_str[0:2]) * 60000 + int(start_time_str[2:4]) * 1000 + int(start_time_str[4:6])
+            
+            end_time_str = key_list[1]
+            end_millis = int(end_time_str[0:2]) * 60000 + int(end_time_str[2:4]) * 1000 + int(end_time_str[4:6])
 
-                duration.append([start_millis, end_millis])
+            duration.append([start_millis, end_millis])
 
-        return duration
+    return duration
