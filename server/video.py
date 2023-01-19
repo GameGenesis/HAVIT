@@ -12,10 +12,13 @@ from firebase_admin import firestore, storage, auth, credentials
 # https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
 
 def export_video(firebase_token, timeline_name, template_name):
-    cred = credentials.Certificate("assets/credentials.json")
-    firebase_admin.initialize_app(cred, name='havit-api')
+    # Set up the credentials as an environmental variable
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "assets/credentials.json"
+
+    default_app = firebase_admin.initialize_app()
 
     decoded_token = auth.verify_id_token(firebase_token)
+    user_id = decoded_token['uid']
 
     user = auth.get_user(user_id)
     user_email = user.email
