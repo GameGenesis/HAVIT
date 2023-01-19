@@ -59,6 +59,8 @@ def firebase_auth():
         return {'status': 'success', 'user_id': decoded_token['uid']}, 200
 
     except config.auth.AuthError as e:
+        app.logger.error(e)
+
         return {'status': 'error', 'message': str(e)}, 400
 
 @app.route('/api/export-video', methods=['POST'])
@@ -75,10 +77,13 @@ def get_video():
 
         return {'status': 'success'}, 200
     
-    except:
+    except Exception as e:
+        app.logger.error(e)
+
         return {'status': 'error'}, 400
 
 if __name__ == '__main__':
     # python api.py (Windows) OR python3 api.py (macOS/Linux)
     port = int(os.environ.get("PORT", 5000)) 
+    
     app.run(host='0.0.0.0', port=port)
