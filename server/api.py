@@ -70,7 +70,7 @@ def firebase_auth():
         return {'status': 'error', 'message': str(e)}, 400
 
 @app.route('/api/export-video', methods=['POST'])
-@cross_origin
+@cross_origin()
 def get_video():
     timeline_name = request.form['timeline_name']
     template_name = request.form['template_name']
