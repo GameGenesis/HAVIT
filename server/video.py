@@ -6,6 +6,7 @@ from io import BytesIO
 from flask import current_app
 from firebase_admin import credentials, firestore, storage, auth
 
+# Function to generate video
 # For the reference, check out:
 # https://www.geeksforgeeks.org/python-create-video-using-multiple-images-using-opencv/
 
