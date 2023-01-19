@@ -3,6 +3,7 @@ import os
 import cv2 
 from PIL import Image 
 from io import BytesIO
+from flask import current_app
 import config
 
 # For the reference, check out:
@@ -102,6 +103,8 @@ def generate_video(images, user_email, timeline_name, template_name, fps=30):
     # Deallocating memories taken for window creation
     cv2.destroyAllWindows() 
     video.release()  # releasing the video generated
+
+    current_app.logger.info("users/" + user_email + "/" + timeline_name + "/export.avi")
 
     # Create a reference to the video in Firebase Storage
     video_blob = config.bucket.blob("users/" + user_email + "/" + timeline_name + "/export.avi")

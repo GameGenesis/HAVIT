@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +47,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.havit.app.LoginActivity;
+
 import com.havit.app.MainActivity;
 import com.havit.app.R;
 import com.havit.app.databinding.FragmentEditBinding;
@@ -347,22 +346,8 @@ public class EditFragment extends Fragment {
                             @Override
                             public void onResponse(Call call, Response response) throws IOException {
                                 if (response.isSuccessful()) {
-                                    // Get the file name of the combined image from the response
-                                    int statusCode = response.code();
-
-                                    Log.d("SERVER_RETURN_STATUS", String.valueOf(statusCode));
-
-                                    if (statusCode == 200) {
-                                        // Success...
-                                        PopupDialog popup = new PopupDialog();
-                                        popup.show(getChildFragmentManager(), "popup");
-
-                                    } else if (statusCode == 400) {
-                                        // Failure...
-                                        requireActivity().runOnUiThread(new Thread(() -> {
-                                            Toast.makeText(requireContext(), "Failed to generate the video", Toast.LENGTH_SHORT).show();
-                                        }));
-                                    }
+                                    PopupDialog popup = new PopupDialog();
+                                    popup.show(getChildFragmentManager(), "popup");
                                 }
                             }
                         });
