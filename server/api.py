@@ -49,36 +49,22 @@ def serve():
     else:
         return {'status': 'error', 'message': 'Endpoint not found'}, 404
 
-@app.route('/api/firebase-auth', methods=['POST'])
-@cross_origin()
-def firebase_auth():
-    # Get the Firebase credentials from the request
-    firebase_token = request.form['firebase_token']
-
-    # Verify the Firebase token using the Firebase Admin SDK
-    try:
-        decoded_token = config.auth.verify_id_token(firebase_token)
-        print("Successfully verified Firebase token: ", decoded_token);
-
-        config.initialize_app()
-
-        return {'status': 'success', 'user_id': decoded_token['uid']}, 200
-
-    except config.auth.AuthError as e:
-        app.logger.error(e)
-
-        return {'status': 'error', 'message': str(e)}, 400
-
 @app.route('/api/export-video', methods=['POST'])
 @cross_origin()
 def get_video():
     timeline_name = request.form['timeline_name']
     template_name = request.form['template_name']
+    firebase_token = request.form['firebase_token']
 
     user = config.auth.get_user(user_id)
     email = user.email
 
     try:
+        decoded_token = config.auth.verify_id_token(firebase_token)
+
+        print("Successfully verified Firebase token: ", decoded_token);
+
+        config.initialize_app()
         export_video(email, timeline_name, template_name)
 
         return {'status': 'success'}, 200

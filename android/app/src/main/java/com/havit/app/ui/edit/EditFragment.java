@@ -156,7 +156,7 @@ public class EditFragment extends Fragment {
         retrieveTimestamp();
 
         exportButton.setOnClickListener(v -> {
-            sendUserTokenToServer();
+            combinePhotosIntoVideo();
         });
 
         timelineContainer = binding.timelineContainer;
@@ -276,11 +276,9 @@ public class EditFragment extends Fragment {
      * Combines the bitmap images in the ArrayList into a video
      * Uses FFmpeg library to concatenate the images and adds background music to the final video
      * The final video is then uploaded to the Firebase storage
-     * @throws IOException if an error occurs when trying to create a temporary file for the video or the images
      */
 
-    private void sendUserTokenToServer() {
-        assert user != null;
+    private void combinePhotosIntoVideo() {
         user.getIdToken(true)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -292,42 +290,6 @@ public class EditFragment extends Fragment {
                         assert accessToken != null;
                         RequestBody body = new FormBody.Builder()
                                 .add("firebase_token", accessToken)
-                                .build();
-                        Request request = new Request.Builder()
-                                .url("https://www.havit.space/api/firebase-auth")
-                                .post(body)
-                                .build();
-
-                        client.newCall(request).enqueue(new Callback() {
-                            @Override
-                            public void onFailure(Call call, IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            @Override
-                            public void onResponse(Call call, Response response) throws IOException {
-                                if (response.isSuccessful()) {
-                                    combinePhotosIntoVideo();
-                                }
-                            }
-                        });
-                    } else {
-                        // Handle error
-                    }
-                });
-    }
-
-    private void combinePhotosIntoVideo() throws IOException {
-        user.getIdToken(true)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        String accessToken = task.getResult().getToken();
-
-                        // Send the access token to the Next.js API function
-                        OkHttpClient client = new OkHttpClient();
-
-                        assert accessToken != null;
-                        RequestBody body = new FormBody.Builder()
                                 .add("timeline_name", TimelineArrayAdapter.selectedTimeline.name)
                                 .add("template_name", TimelineArrayAdapter.selectedTimeline.selectedTemplate)
                                 .build();
