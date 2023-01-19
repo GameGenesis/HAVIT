@@ -17,9 +17,6 @@ def export_video(firebase_token, timeline_name, template_name):
     user = auth.get_user(user_id)
     user_email = user.email
 
-    cred = credentials.Certificate("./assets/credentials.json")
-    firebase_admin.initialize_app(cred, name='havit-api')
-
     db = firestore.client()
     bucket = storage.bucket('gs://havitcentral.appspot.com')
 
