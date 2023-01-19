@@ -13,7 +13,7 @@ from firebase_admin import firestore, storage, auth, credentials
 
 def export_video(firebase_token, timeline_name, template_name):
     # Set up the credentials as an environmental variable
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "assets/credentials.json"
+    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "assets/havitcentral-b63dac00aa76.json"
 
     default_app = firebase_admin.initialize_app()
 
