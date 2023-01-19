@@ -25,7 +25,10 @@ def not_found(e):
     DOM File
         Returns a HTML script that contains the visual elements of the website
     '''
-    return app.send_static_file('index.html')
+    if request.method == 'GET':
+        return app.send_static_file('index.html')
+    else:
+        return {'status': 'error', 'message': 'Endpoint not found'}, 404
 
 @app.route('/') 
 def serve():
@@ -41,10 +44,13 @@ def serve():
     DOM File
         Returns a HTML script that contains the visual elements of the website
     '''
-    return app.send_static_file('index.html')
+    if request.method == 'GET':
+        return app.send_static_file('index.html')
+    else:
+        return {'status': 'error', 'message': 'Endpoint not found'}, 404
 
 @app.route('/api/firebase-auth', methods=['POST'])
-@cross_origin(origin='*', headers=['Content-Type', 'Authorization'])
+@cross_origin()
 def firebase_auth():
     # Get the Firebase credentials from the request
     firebase_token = request.form['firebase_token']
