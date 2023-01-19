@@ -136,11 +136,19 @@ def get_data_from_firestore(template_name):
         for key, value in doc.to_dict().get("timestamp").items():
             key_list = key.split("-")
 
-            start_time_str = key_list[0]
-            start_millis = int(start_time_str[0:2]) * 60000 + int(start_time_str[2:4]) * 1000 + int(start_time_str[4:6])
+            start_time_array = key_list[0].split(":")
+            start_time_minute = int(start_time_array[0]) * 60
+            start_time_second = int(start_time_array[1])
+            start_time_millis = int(start_time_array[2])
+
+            start_millis = (start_time_minute + start_time_second) * 1000 + start_time_millis
             
-            end_time_str = key_list[1]
-            end_millis = int(end_time_str[0:2]) * 60000 + int(end_time_str[2:4]) * 1000 + int(end_time_str[4:6])
+            end_time_array = key_list[1].split(":")
+            end_time_minute = int(end_time_array[0]) * 60
+            end_time_second = int(end_time_array[1])
+            end_time_millis = int(end_time_array[2])
+
+            end_millis = (end_time_minute + end_time_second) * 1000 + end_time_millis
 
             duration.append([start_millis, end_millis])
 
