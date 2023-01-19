@@ -1,9 +1,9 @@
 #config.py
 import firebase_admin
-from firebase_admin import credentials, firestore, storage, auth
+from firebase_admin import credentials, firestore, storage
 
 def initialize_app():
-    global cred, db, bucket
+    global cred, db, bucket, auth
     
     cred = credentials.Certificate("./assets/credentials.json")
     firebase_admin.initialize_app(cred, name='havit-api')
@@ -11,4 +11,6 @@ def initialize_app():
 
     db = firestore.client()
     bucket = storage.bucket('gs://havitcentral.appspot.com')
+
+    auth = firebase_admin.auth
     
