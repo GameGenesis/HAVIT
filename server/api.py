@@ -3,7 +3,7 @@ from flask_cors import CORS, cross_origin
 
 import os, firebase_admin
 
-from video import export_video
+from video import start_exporting_video
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='/')
 
