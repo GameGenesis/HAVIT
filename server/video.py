@@ -94,7 +94,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
 
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(video_name, fourcc, fps, (mean_width, mean_height))
+    out = cv2.VideoWriter(str(video_name), fourcc, fps, (mean_width, mean_height))
     duration = get_data_from_firestore(template_name)
 
     previous_end_time = 0;

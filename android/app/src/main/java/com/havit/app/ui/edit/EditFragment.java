@@ -151,7 +151,8 @@ public class EditFragment extends Fragment {
         final ScrollView scrollView = binding.scrollView;
         final Button exportButton = binding.exportButton;
 
-        editViewModel.getName().observe(getViewLifecycleOwner(), timelineNameText::setText);
+        // TO DO: LIMIT THE NUMBER OF PHOTOS THAT CAN BE UPLOADED ONTO ONE TIMELINE...
+        editViewModel.getTemplateName().observe(getViewLifecycleOwner(), timelineNameText::setText);
 
         retrieveTimestamp();
 
@@ -291,7 +292,7 @@ public class EditFragment extends Fragment {
                         RequestBody body = new FormBody.Builder()
                                 .add("firebase_token", accessToken)
                                 .add("timeline_name", TimelineArrayAdapter.selectedTimeline.name)
-                                .add("template_name", TimelineArrayAdapter.selectedTimeline.selectedTemplate)
+                                .add("template_name", MainActivity.applyFileNamingScheme(TimelineArrayAdapter.selectedTimeline.selectedTemplate))
                                 .build();
 
                         // VVIP: Make SURE that there's WWW on the address...
