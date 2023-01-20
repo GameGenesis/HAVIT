@@ -1,9 +1,9 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
-import os, firebase_admin
+import os, firebase_admin, asyncio
 
-from video import start_exporting_video
+from video import export_video
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='/')
 
@@ -79,7 +79,7 @@ def get_video():
     firebase_token = request.form['firebase_token']
 
     try:
-        start_exporting_video(firebase_token, timeline_name, template_name)
+        asyncio.ensure_future(export_video(firebase_token, timeline_name, template_name)(firebase_token, timeline_name, template_name))
         return {'status': 'success'}, 200
 
     except Exception as e:

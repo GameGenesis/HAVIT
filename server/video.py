@@ -5,10 +5,7 @@ from io import BytesIO
 from flask import current_app
 from firebase_admin import firestore, storage, auth, credentials
 
-async def start_exporting_video(firebase_token, timeline_name, template_name, fps=30):
-    await export_video(firebase_token, timeline_name, template_name)
-
-def export_video(firebase_token, timeline_name, template_name, fps=30):
+async def export_video(firebase_token, timeline_name, template_name, fps=30):
     '''
     This function is used to export a video from the images in the Firebase Storage Bucket
 
@@ -40,7 +37,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     bucket = storage.bucket('havitcentral.appspot.com')
 
     # Get the images from the specified folder in the storage bucket
-    blobs = bucket.list_blobs(prefix='users/' + user_email + '/' + timeline_name + '/')
+    blobs = await bucket.list_blobs(prefix='users/' + user_email + '/' + timeline_name + '/')
 
     image_files = []
 
@@ -54,7 +51,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     
     # Download the images to the local directory
     for index, blob in enumerate(image_files):
-        blob.download_to_filename(f'./temp/{user_email}/{timeline_name}/IMG_{index}')
+        await blob.download_to_filename(f'./temp/{user_email}/{timeline_name}/IMG_{index}')
 
     mean_height = 0
     mean_width = 0
