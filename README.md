@@ -18,8 +18,6 @@ https://www.havit.space
 
 <table><tr>
 
-<td valign="center"><img width="300" alt="Screenshot-2" src="https://user-images.githubusercontent.com/35755386/213597125-81c72dc5-365b-40d0-ba8c-db52f1966af7.png"></td>
-
 <td valign="center"><img width="300" alt="Screenshot-3" src="https://user-images.githubusercontent.com/35755386/213597146-7b062310-df93-488d-9dc6-e84036f26eb4.png"></td>
 
 <td valign="center"><img width="300" alt="Screenshot-4" src="https://user-images.githubusercontent.com/35755386/213597161-cd6da778-b4bc-4d40-ba5e-7a4c33982afd.png"></td>
