@@ -63,8 +63,8 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     
     num_of_images = len(image_files)
 
-    for image_file in image_files:
-        image = Image.open(BytesIO(image_file.download_as_string()))
+    for index in range(num_of_images):
+        image = Image.open(f'./temp/{user_email}/{timeline_name}/IMG_{index}')
         width, height = image.size
         mean_width += width
         mean_height += height
@@ -79,7 +79,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     mean_height = int(mean_height / num_of_images)
 
     # Resizing of the images to give them same width and height 
-    for index, image_file in enumerate(image_files):
+    for index in range(num_of_images):
         im = Image.open(f'./temp/{user_email}/{timeline_name}/IMG_{index}')
     
         width, height = im.size   
