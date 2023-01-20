@@ -103,14 +103,18 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
         # Create a new image with a size of (300, 300)
         black_image = Image.new('RGB', (mean_width, mean_height), (0, 0, 0))
 
-        # Save the image as an object in memory
-        black_image_object = image.tobytes()
+        # Save the image to a file path
+        black_image_file_path = './temp/black_image.jpg'
+
+        # If you want to save as PNG, black_image.save(file_path, format='PNG')
+        black_image.save(black_image_file_path)
 
         if (current_start_time - previous_end_time) > 0:
             # Add a gap between the previous frame and the current frame
             for _ in range(int(fps * (current_start_time - previous_end_time))):
                 # Add a black frame
-                out.write(cv2.imread(BytesIO(black_image_object)))
+                gap = cv2.imread(black_image_file_path)
+                out.write(gap)
         
         for _ in range(int(fps * current_end_time - current_start_time)):
             # Repeat each frame for the specified duration
@@ -134,6 +138,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
         os.remove(f'./temp/{user_email}/{timeline_name}/IMG_{index}')
 
     # delete temp folder
+    os.rmdir(f'/temp/black_image.jpg')
     os.rmdir(f'./temp/{user_email}/{timeline_name}/')
 
 
