@@ -18,8 +18,6 @@ https://www.havit.space
 
 <table><tr>
 
-<td valign="center"><img width="300" alt="Screenshot-1" src="https://user-images.githubusercontent.com/35755386/213597121-758e6a33-d72c-479d-a5ad-737bb134262f.png"></td>
-
 <td valign="center"><img width="300" alt="Screenshot-2" src="https://user-images.githubusercontent.com/35755386/213597125-81c72dc5-365b-40d0-ba8c-db52f1966af7.png"></td>
 
 <td valign="center"><img width="300" alt="Screenshot-3" src="https://user-images.githubusercontent.com/35755386/213597146-7b062310-df93-488d-9dc6-e84036f26eb4.png"></td>
@@ -28,7 +26,6 @@ https://www.havit.space
 
 <td valign="center"><img width="300" alt="Screenshot-5" src="https://user-images.githubusercontent.com/35755386/213597165-01129c78-c6d7-4886-b257-91c5bb1b5162.png"></td>
 
-<td valign="center"><img width="300" alt="Screenshot-6" src="https://user-images.githubusercontent.com/35755386/213597176-b1967d4b-37cf-4285-8143-f374afcd04b9.png"></td>
 
 <td valign="center"><img width="300" alt="Screenshot-7" src="https://user-images.githubusercontent.com/35755386/213597182-8f16f327-549c-4aa2-a604-25315db092de.png"></td>
 
