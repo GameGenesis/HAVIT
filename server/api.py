@@ -80,13 +80,12 @@ async def get_video():
 
     try:
         await export_video(firebase_token, timeline_name, template_name)
-
-        return {'status': 'success'}, 200
-    
+        
     except Exception as e:
         app.logger.error(e)
-
         return {'status': 'error'}, 400
+    
+    return {'status': 'success'}, 200
 
 if __name__ == '__main__':
     # python api.py (Windows) OR python3 api.py (macOS/Linux)
