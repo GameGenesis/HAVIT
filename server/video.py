@@ -138,8 +138,8 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
         os.remove(f'./temp/{user_email}/{timeline_name}/IMG_{index}')
 
     # delete temp folder
-    os.rmdir(f'/temp/black_image.jpg')
-    os.rmdir(f'./temp/{user_email}/{timeline_name}/')
+    os.remove(f'/temp/black_image.jpg')
+    os.remove(f'./temp/{user_email}/{timeline_name}/export.avi')
 
 
 def get_data_from_firestore(template_name):
