@@ -24,7 +24,6 @@ https://www.havit.space
 
 <td valign="center"><img width="300" alt="Screenshot-5" src="https://user-images.githubusercontent.com/35755386/213597165-01129c78-c6d7-4886-b257-91c5bb1b5162.png"></td>
 
-
 <td valign="center"><img width="300" alt="Screenshot-7" src="https://user-images.githubusercontent.com/35755386/213597182-8f16f327-549c-4aa2-a604-25315db092de.png"></td>
 
 </tr></table>
