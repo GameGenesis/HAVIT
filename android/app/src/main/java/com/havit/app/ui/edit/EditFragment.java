@@ -294,6 +294,7 @@ public class EditFragment extends Fragment {
                                 .add("template_name", TimelineArrayAdapter.selectedTimeline.selectedTemplate)
                                 .build();
 
+                        // VVIP: Make SURE that there's WWW on the address...
                         Request request = new Request.Builder()
                                 .url("https://www.havit.space/api/export-video")
                                 .post(body)
