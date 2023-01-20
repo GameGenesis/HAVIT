@@ -25,7 +25,17 @@ export default function Home() {
                 <span>Development in Progress</span>
             </button>
             
-            <img src="screenshot.png" alt="screenshot" className="mt-5" />
+            <table className="mt-5"><tr>
+
+                <td valign="middle"><img width="500" alt="Screenshot-3" src="https://user-images.githubusercontent.com/35755386/213597146-7b062310-df93-488d-9dc6-e84036f26eb4.png" /></td>
+
+                <td valign="middle"><img width="500" alt="Screenshot-4" src="https://user-images.githubusercontent.com/35755386/213597161-cd6da778-b4bc-4d40-ba5e-7a4c33982afd.png" /></td>
+
+                <td valign="middle"><img width="500" alt="Screenshot-5" src="https://user-images.githubusercontent.com/35755386/213597165-01129c78-c6d7-4886-b257-91c5bb1b5162.png" /></td>
+
+                <td valign="middle"><img width="500" alt="Screenshot-7" src="https://user-images.githubusercontent.com/35755386/213597182-8f16f327-549c-4aa2-a604-25315db092de.png" /></td>
+
+            </tr></table>
         </div>
     );
 }
