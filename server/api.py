@@ -61,7 +61,7 @@ def serve():
 
 @app.route('/api/export-video', methods=['POST'])
 @cross_origin()
-async def get_video():
+def get_video():
     '''
     This function is used to export a video from the images in the Firebase Storage Bucket
     
@@ -74,18 +74,17 @@ async def get_video():
     JSON
         Returns a JSON object with the status of the video export
     '''
-    timeline_name = str(request.form.get('timeline_name'))
-    template_name = str(request.form.get('template_name'))
+    timeline_name = request.form['timeline_name']
+    template_name = request.form['template_name']
     firebase_token = request.form['firebase_token']
 
     try:
-        await export_video(firebase_token, timeline_name, template_name)
-        
+        start_exporting_video(firebase_token, timeline_name, template_name)
+        return {'status': 'success'}, 200
+
     except Exception as e:
         app.logger.error(e)
         return {'status': 'error'}, 400
-    
-    return {'status': 'success'}, 200
 
 if __name__ == '__main__':
     # python api.py (Windows) OR python3 api.py (macOS/Linux)

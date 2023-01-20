@@ -5,6 +5,9 @@ from io import BytesIO
 from flask import current_app
 from firebase_admin import firestore, storage, auth, credentials
 
+async def start_exporting_video(firebase_token, timeline_name, template_name, fps=30):
+    await export_video(firebase_token, timeline_name, template_name)
+
 def export_video(firebase_token, timeline_name, template_name, fps=30):
     '''
     This function is used to export a video from the images in the Firebase Storage Bucket
