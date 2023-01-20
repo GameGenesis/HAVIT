@@ -15,6 +15,21 @@ https://www.havit.space
 [Software Project Plan](https://lynjeong.notion.site/Software-Project-Plan-3a25cd6001224308a9ca8408c7de8aa2)
 
 ---
+
+<table><tr>
+
+<td valign="center"><img width="500" alt="Screenshot-3" src="https://user-images.githubusercontent.com/35755386/213597146-7b062310-df93-488d-9dc6-e84036f26eb4.png"></td>
+
+<td valign="center"><img width="500" alt="Screenshot-4" src="https://user-images.githubusercontent.com/35755386/213597161-cd6da778-b4bc-4d40-ba5e-7a4c33982afd.png"></td>
+
+<td valign="center"><img width="500" alt="Screenshot-5" src="https://user-images.githubusercontent.com/35755386/213597165-01129c78-c6d7-4886-b257-91c5bb1b5162.png"></td>
+
+<td valign="center"><img width="500" alt="Screenshot-7" src="https://user-images.githubusercontent.com/35755386/213597182-8f16f327-549c-4aa2-a604-25315db092de.png"></td>
+
+</tr></table>
+
+---
+
 ## Known Bugs
 
 **Other smaller bugs and unresolved feature implementations can be found under the *Issues* tab**
@@ -41,16 +56,6 @@ https://www.havit.space
 - One of the main benefits of using LiveData is that it is lifecycle-aware, which means it will automatically stop emitting updates when the associated lifecycle owner (such as an activity or fragment) is in the "destroyed" state, and it will only start emitting updates again when the lifecycle owner is in the "started" or "resumed" state. This helps to avoid memory leaks and other problems caused by updating UI elements when they are not being displayed.
 
 ---
-
-<table><tr>
-
-<td valign="center"><img width="500" alt="Screenshot-1" src="https://user-images.githubusercontent.com/35755386/209806062-aa66f78e-09e1-4977-bdb6-287b388a3ae6.jpg"></td>
-
-<td valign="center"><img width="500" alt="Screenshot-2" src="https://user-images.githubusercontent.com/35755386/209806112-05018597-1650-4651-b947-81b790a424c1.jpg"></td>
-
-<td valign="center"><img width="500" alt="Screenshot-3" src="https://user-images.githubusercontent.com/35755386/209806135-f04ba766-6055-4f02-9344-5b8ea22ec4a9.jpg"></td>
-
-</tr></table>
 
 ![UPDATED  UML class (1)](https://user-images.githubusercontent.com/35755386/213203379-0308f0e5-f242-4988-ba24-29fdfa69fe6d.png)
 
