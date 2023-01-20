@@ -3,7 +3,6 @@ import cv2
 from PIL import Image 
 from io import BytesIO
 from flask import current_app
-import firebase_admin
 from firebase_admin import firestore, storage, auth, credentials
 
 def export_video(firebase_token, timeline_name, template_name, fps=30):
@@ -25,10 +24,6 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     -------
     None
     '''
-    # Set up the credentials as an environmental variable
-    os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "assets/havitcentral-b63dac00aa76.json"
-
-    default_app = firebase_admin.initialize_app()
 
     decoded_token = auth.verify_id_token(firebase_token)
     user_id = decoded_token['uid']
