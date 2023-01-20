@@ -141,6 +141,8 @@ async def export_video(firebase_token, timeline_name, template_name, fps=30):
     os.remove(f'/temp/black_image.jpg')
     os.remove(f'./temp/{user_email}/{timeline_name}/export.avi')
 
+    return {'status': 'success'}, 200
+
 
 def get_data_from_firestore(template_name):
     '''
