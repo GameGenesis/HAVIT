@@ -69,8 +69,8 @@ def get_video():
     JSON
         Returns a JSON object with the status of the video export
     '''
-    timeline_name = request.form['timeline_name']
-    template_name = request.form['template_name']
+    timeline_name = str(request.form.get('timeline_name'))
+    template_name = str(request.form.get('template_name'))
     firebase_token = request.form['firebase_token']
 
     try:

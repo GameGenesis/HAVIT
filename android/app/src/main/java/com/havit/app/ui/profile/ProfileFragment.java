@@ -264,13 +264,13 @@ public class ProfileFragment extends Fragment {
             userFullName.setVisibility(View.GONE);
             editUsernameField.setVisibility(View.VISIBLE);
             editUsernameField.requestFocus();
-            updateUsernameText.setText("Confirm Change");
+            updateUsernameText.setText("CONFIRM CHANGE");
             configureUserProfileText();
         }
         else {
             userFullName.setVisibility(View.VISIBLE);
             editUsernameField.setVisibility(View.GONE);
-            updateUsernameText.setText("Change Username");
+            updateUsernameText.setText("CHANGE USERNAME");
 
             String newUsername = editUsernameField.getText().toString();
 
@@ -312,7 +312,7 @@ public class ProfileFragment extends Fragment {
             String username = Objects.requireNonNull(user.getDisplayName());
             userFullName.setText(username.toUpperCase(Locale.ROOT));
             editUsernameField.setText(username);
-            userId.setText(Objects.requireNonNull(user.getEmail()));
+            userId.setText(Objects.requireNonNull(Objects.requireNonNull(user.getEmail()).toUpperCase(Locale.ROOT)));
         }
     }
 
