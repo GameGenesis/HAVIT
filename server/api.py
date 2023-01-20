@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
-import os, firebase_admin, asyncio
+import os, firebase_admin
 
 from video import export_video
 
@@ -61,7 +61,7 @@ def serve():
 
 @app.route('/api/export-video', methods=['POST'])
 @cross_origin()
-def get_video():
+async def get_video():
     '''
     This function is used to export a video from the images in the Firebase Storage Bucket
     
@@ -79,7 +79,7 @@ def get_video():
     firebase_token = request.form['firebase_token']
 
     try:
-        asyncio.create_task(export_video(firebase_token, timeline_name, template_name)(firebase_token, timeline_name, template_name))
+        await export_video(firebase_token, timeline_name, template_name)(firebase_token, timeline_name, template_name)
         return {'status': 'success'}, 200
 
     except Exception as e:
