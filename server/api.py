@@ -18,10 +18,12 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def not_found(e):   
     '''
     This function is used to redirect the user to the React Router page
+
     Parameters
     ----------
     e: Exception
         The exception that was raised
+
     Returns
     -------
     DOM File
@@ -41,6 +43,7 @@ def serve():
     Parameters
     ----------
     None
+
     Returns
     -------
     DOM File
@@ -54,6 +57,18 @@ def serve():
 @app.route('/api/export-video', methods=['POST'])
 @cross_origin()
 def get_video():
+    '''
+    This function is used to export a video from the images in the Firebase Storage Bucket
+    
+    Parameters
+    ----------
+    None
+
+    Returns
+    -------
+    JSON
+        Returns a JSON object with the status of the video export
+    '''
     timeline_name = request.form['timeline_name']
     template_name = request.form['template_name']
     firebase_token = request.form['firebase_token']

@@ -7,6 +7,24 @@ import firebase_admin
 from firebase_admin import firestore, storage, auth, credentials
 
 def export_video(firebase_token, timeline_name, template_name, fps=30):
+    '''
+    This function is used to export a video from the images in the Firebase Storage Bucket
+
+    Parameters
+    ----------
+    firebase_token: String
+        The Firebase token of the user
+    timeline_name: String
+        The name of the timeline
+    template_name: String
+        The name of the template
+    fps: Integer
+        The frames per second of the video
+
+    Returns
+    -------
+    None
+    '''
     # Set up the credentials as an environmental variable
     os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "assets/havitcentral-b63dac00aa76.json"
 
@@ -124,6 +142,15 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
 
 
 def get_data_from_firestore(template_name):
+    '''
+    Get the data from the firestore database
+    
+    Parameters:
+        template_name (str): The name of the template
+
+    Returns:
+        duration (list): A list of tuples containing the start and end time of each frame
+    '''
     db = firestore.client()
     doc_ref = db.collection('templates').document(template_name)
 
