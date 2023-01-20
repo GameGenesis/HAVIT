@@ -79,7 +79,7 @@ def get_video():
     firebase_token = request.form['firebase_token']
 
     try:
-        asyncio.ensure_future(export_video(firebase_token, timeline_name, template_name)(firebase_token, timeline_name, template_name))
+        asyncio.create_task(export_video(firebase_token, timeline_name, template_name)(firebase_token, timeline_name, template_name))
         return {'status': 'success'}, 200
 
     except Exception as e:
