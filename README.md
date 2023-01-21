@@ -49,7 +49,7 @@ https://www.havit.space
 
 - Minimum SDK level is set to version 23, while the Target SDK level is 33. Camera feature uses the latest CameraX API by Google.
 
-- On public repo, conceal ```android/app/google-services.json```, ```template_uploader/havitcentral-b63dac00aa76.json```, and ```server/assets/havitcentral-b63dac00aa76.json``` as they contain the API keys for Firebase.
+- On public repo, conceal ```android/app/google-services.json```, ```template_uploader/havitcentral-b63dac00aa76.json```, and ```server/worker/havitcentral-b63dac00aa76.json``` as they contain the API keys for Firebase.
 
 - To refresh & install new dependencies written on ```build.gradle```, simply go to *File* settings on your desktop's top navigation bar, then hit *Sync Project with Gradle* button!
 
