@@ -1,7 +1,7 @@
 # FOR BACK-END DEPLOYMENT... (FLASK)
 FROM python:3.10.4-slim
 WORKDIR /app
-RUN apt-get update && apt-get install -y python3-dev redis-server
+RUN apt-get update && apt-get install -y python3-dev mesa-utils libgl1-mesa-glx libglib2.0-0 redis-server
 COPY server/worker ./worker
 WORKDIR /app/worker
 RUN pip3 install -r ./requirements.txt
