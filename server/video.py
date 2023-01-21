@@ -85,7 +85,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
         # Saving the resized image
         imResize.save(f'./temp/{user_email}/{timeline_name}/IMG_{index}', 'JPEG', quality = 95)
 
-    video_name = f'./temp/{user_email}/{timeline_name}/export.avi'
+    video_name = f'./temp/{user_email}/{timeline_name}.avi'
 
     # Define the codec and create VideoWriter object
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
@@ -130,7 +130,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     out.release()
 
     # Upload the video file to the storage bucket
-    video_blob = bucket.blob(f'users/{user_email}/{timeline_name}/export.avi')
+    video_blob = bucket.blob(f'users/{user_email}/{timeline_name}.avi')
     video_blob.upload_from_filename(video_name)
 
     # Delete the temp images
@@ -139,7 +139,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
 
     # delete temp folder
     os.remove(f'/temp/black_image.jpg')
-    os.remove(f'./temp/{user_email}/{timeline_name}/export.avi')
+    os.remove(f'./temp/{user_email}/{timeline_name}.avi')
 
 
 def get_data_from_firestore(template_name):
@@ -167,7 +167,7 @@ def get_data_from_firestore(template_name):
             start_time_array = key_list[0].split(":")
             start_time_minute = int(start_time_array[0]) * 60
             start_time_second = int(start_time_array[1])
-            start_time_millis = int(start_time_array[2])
+            start_time_millis = int(start_time_array[2]) * 100
 
             start_millis = (start_time_minute + start_time_second) * 1000 + start_time_millis
             

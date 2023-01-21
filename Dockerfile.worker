@@ -1,0 +1,11 @@
+# FOR BACK-END DEPLOYMENT... (FLASK)
+FROM python:3.10.4-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y python3-dev 
+COPY server/worker ./worker
+WORKDIR /app/worker
+RUN pip3 install -r ./requirements.txt
+# Pretty much pass everything in the root folder except for the client folder, as we do NOT want to overwrite the pre-generated client folder that is already in the ./app folder
+EXPOSE 5000
+ENTRYPOINT ["python"]
+CMD ["run.py"]

@@ -216,10 +216,11 @@ public class MainActivity extends AppCompatActivity {
      * @return long the total time in milliseconds
      */
     public static long parseStringToMillis(String[] startTimeArray) {
-        long startMinute = Integer.parseInt(startTimeArray[0]);
+        long startMinute = Integer.parseInt(startTimeArray[0]) * 60;
         long startSeconds = Integer.parseInt(startTimeArray[1]);
+        long startMillis = Integer.parseInt(startTimeArray[2]) * 100;
 
-        return Integer.parseInt(startTimeArray[2]) + startSeconds * 1000 + startMinute * 6000;
+        return (startMinute + startSeconds) * 1000 + startMillis;
     }
 
 
@@ -231,9 +232,9 @@ public class MainActivity extends AppCompatActivity {
      * @return String the time in the format "minutes:seconds:milliseconds"
      */
     public static String parseMillisToString(int millis) {
-        int startMinute = Math.floorDiv(millis, 6000);
-        int startSeconds = Math.floorDiv(millis % 6000, 1000);
-        int startMillis = millis % 6000 % 1000;
+        int startMinute = Math.floorDiv(millis, (60 * 1000));
+        int startSeconds = Math.floorDiv(millis % (60 * 1000), 1000);
+        int startMillis = millis % (60 * 1000) % 1000;
 
         return startMinute + ":" + startSeconds + ":" + startMillis;
     }
