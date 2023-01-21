@@ -9,7 +9,7 @@ import os, firebase_admin, asyncio
 
 from rq import Queue
 
-from worker.run import conn
+from worker.run import conn, export_video
 
 q = Queue(connection=conn)
 
