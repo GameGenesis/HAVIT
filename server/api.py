@@ -6,6 +6,8 @@ import os, firebase_admin, asyncio
 from rq import Queue
 
 from worker.run import conn
+
+# Bottom line is in the perspective of the worker, the worker is in the same directory as the worker folder
 from video import export_video
 
 q = Queue(connection=conn)
