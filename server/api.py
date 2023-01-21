@@ -5,7 +5,7 @@ from PIL import Image
 from io import BytesIO
 from flask import current_app
 
-import os, firebase_admin, asyncio
+import os, asyncio
 
 from rq import Queue
 
@@ -20,11 +20,6 @@ app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 CORS(app, resources={r'/api/*': {'origins': '*'}})
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Set up the credentials as an environmental variable
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "assets/havitcentral-b63dac00aa76.json"
-
-default_app = firebase_admin.initialize_app()
 
 # For Flask to React Routing...
 @app.errorhandler(404)

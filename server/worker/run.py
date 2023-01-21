@@ -13,6 +13,11 @@ redis_url = os.getenv('REDIS_URL', 'redis://localhost:6379')
 
 conn = redis.from_url(redis_url)
 
+# Set up the credentials as an environmental variable
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "havitcentral-b63dac00aa76.json"
+
+default_app = firebase_admin.initialize_app()
+
 # https://devcenter.heroku.com/articles/python-rq
 # https://github.com/sammachin/alexaweb/issues/6
 
