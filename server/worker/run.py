@@ -5,7 +5,7 @@ from rq import Worker, Queue, Connection
 
 from firebase_admin import firestore, storage, auth, credentials
 
-import os, cv2
+import os, cv2, firebase_admin
 
 listen = ['high', 'default', 'low']
 
