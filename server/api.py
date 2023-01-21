@@ -4,7 +4,7 @@ from flask_cors import CORS, cross_origin
 import os, firebase_admin, asyncio
 
 from rq import Queue
-from worker import conn
+from worker.run import conn
 
 from video import export_video
 
