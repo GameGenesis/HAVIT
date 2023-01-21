@@ -9,7 +9,8 @@ import os, asyncio
 
 from rq import Queue
 
-from worker.run import conn, export_video
+from worker.run import conn
+from utils import export_video
 
 q = Queue(connection=conn)
 
