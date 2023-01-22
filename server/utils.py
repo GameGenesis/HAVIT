@@ -33,8 +33,6 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
     user = auth.get_user(user_id)
     user_email = user.email
 
-    current_app.logger.info(f'Email: {user_email}')
-
     # VVIP: Do NOT write gs:// in front of the bucket name
     bucket = storage.bucket('havitcentral.appspot.com')
 

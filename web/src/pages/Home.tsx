@@ -7,7 +7,7 @@ export default function Home() {
                 as="big"
                 variant="h1"
                 className="text-5xl mr-4 cursor-pointer py-1.5 font-normal">
-                    WELCOME BACK.
+                    <b>I am, Because You are.</b>
             </Typography>
 
             <br />
@@ -21,9 +21,9 @@ export default function Home() {
 
             <br />
 
-            <button type="button" className="inline-block mt-2 px-6 py-2 border-2 border-gray-800 text-gray-800 text-xs font-bold leading-tight uppercase rounded-full hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">
-                <span>Development in Progress</span>
-            </button>
+            <button className="mt-5 font-bold text-black bg-transparent border-2 border-black py-1 px-2 focus:outline-none hover:bg-black hover:text-white rounded text-lg">
+                    <a href="/">Development in Progress.</a>
+                </button>
             
             <table className="mt-5"><tr>
 
