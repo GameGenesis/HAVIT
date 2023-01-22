@@ -2,6 +2,9 @@ from firebase_admin import firestore, storage, auth, credentials
 
 import os, cv2, firebase_admin
 
+from PIL import Image 
+from io import BytesIO
+
 # Set up the credentials as an environmental variable
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "havitcentral-b63dac00aa76.json"
 

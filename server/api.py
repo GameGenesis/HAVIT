@@ -1,10 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
-from PIL import Image 
-from io import BytesIO
-from flask import current_app
-
 import os, asyncio
 
 from rq import Queue
