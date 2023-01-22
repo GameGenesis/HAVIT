@@ -601,6 +601,7 @@ public class CameraFragment extends Fragment {
 
             @Override
             public boolean onDoubleTap(MotionEvent e) {
+                giveHapticFeedback();
                 flipCamera();
                 return true;
             }
@@ -615,8 +616,10 @@ public class CameraFragment extends Fragment {
                         return false;
                     if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                         Log.d("TOUCH", "Right to Left");
+                        // Navigation.findNavController(requireView()).navigate(R.id.action_camera_to_timeline);
                     } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
                         Log.d("TOUCH", "Left to Right");
+                        // Navigation.findNavController(requireView()).navigate(R.id.action_camera_to_profile);
                     }
                 } catch (Exception e) {
                     // nothing
