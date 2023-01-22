@@ -7,11 +7,11 @@ export default function NoPage() {
                 as="a"
                 href="#"
                 variant="h1"
-                className="mr-4 cursor-pointer py-1.5 font-normal">
-                    404 ERROR.
+                className="mr-4 cursor-pointer py-1.5 font-bold">
+                    404 Error.
             </Typography>
             
-            <p>Page not found</p>
+            <p>Page not found!</p>
         </div>
     );
 }
