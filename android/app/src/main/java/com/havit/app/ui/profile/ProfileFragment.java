@@ -270,7 +270,7 @@ public class ProfileFragment extends Fragment {
         else {
             userFullName.setVisibility(View.VISIBLE);
             editUsernameField.setVisibility(View.GONE);
-            updateUsernameText.setText("CHANGE USERNAME");
+            updateUsernameText.setText("CHANGE NAME");
 
             String newUsername = editUsernameField.getText().toString();
 
