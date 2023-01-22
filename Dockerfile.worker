@@ -3,6 +3,7 @@ FROM python:3.10.4-slim
 WORKDIR /app
 RUN apt-get update && apt-get install -y python3-dev mesa-utils libgl1-mesa-glx libglib2.0-0 redis-server
 COPY server/worker.py ./worker.py
+COPY server/utils.py ./utils.py
 COPY server/requirements.txt ./requirements.txt
 RUN pip3 install -r ./requirements.txt
 # Pretty much pass everything in the root folder except for the client folder, as we do NOT want to overwrite the pre-generated client folder that is already in the ./app folder
