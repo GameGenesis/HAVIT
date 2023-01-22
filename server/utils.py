@@ -110,7 +110,7 @@ def export_video(firebase_token, timeline_name, template_name, fps=30):
             # Add a gap between the previous frame and the current frame
             for _ in range(int(fps * (current_start_time - previous_end_time))):
                 # Add a black frame
-                gap = cv2.imread(BytesIO(black_image.tobytes()))
+                gap = cv2.imread(BytesIO(black_image))
                 out.write(gap)
         
         for _ in range(int(fps * current_end_time - current_start_time)):
