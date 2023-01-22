@@ -91,7 +91,7 @@ public class CameraFragment extends Fragment {
 
     private FloatingActionButton shutterButton;
     private ImageButton cancelButton, flipButton, flashButton;
-    private Button addButton, createHabitButton;
+    private Button addButton, createHabitButton, socialButton;
 
     private Spinner habitSpinner;
     private ImageCapture imageCapture;
@@ -153,6 +153,11 @@ public class CameraFragment extends Fragment {
             giveHapticFeedback();
             handleShutter();
             takePhoto();
+        });
+
+        socialButton = binding.socialButton;
+        socialButton.setOnClickListener(v -> {
+
         });
 
         cancelButton = binding.cancelButton;
@@ -341,6 +346,7 @@ public class CameraFragment extends Fragment {
         createHabitButton.setVisibility(View.VISIBLE);
         imageView.setVisibility(View.GONE);
         previewView.setVisibility(View.GONE);
+        socialButton.setVisibility(View.GONE);
         addButton.setVisibility(View.GONE);
     }
 
@@ -353,6 +359,7 @@ public class CameraFragment extends Fragment {
         createHabitButton.setVisibility(View.GONE);
         imageView.setVisibility(View.VISIBLE);
         previewView.setVisibility(View.VISIBLE);
+        socialButton.setVisibility(View.GONE);
         addButton.setVisibility(View.VISIBLE);
     }
 
@@ -364,6 +371,7 @@ public class CameraFragment extends Fragment {
         imageView.setImageBitmap(null);
         imageView.setVisibility(View.GONE);
         shutterButton.show();
+        socialButton.setVisibility(View.VISIBLE);
         cancelButton.setVisibility(View.GONE);
         addButton.setVisibility(View.GONE);
         habitSpinner.setVisibility(View.GONE);
