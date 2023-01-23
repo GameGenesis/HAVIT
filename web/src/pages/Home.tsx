@@ -21,9 +21,13 @@ export default function Home() {
 
             <br />
 
+            <button className="mt-5 mr-2 font-bold text-white bg-black border-2 border-black py-1 px-2 focus:outline-none hover:bg-transparent hover:text-black rounded text-lg">
+                <a href="/">Development in Progress.</a>
+            </button>
+
             <button className="mt-5 font-bold text-black bg-transparent border-2 border-black py-1 px-2 focus:outline-none hover:bg-black hover:text-white rounded text-lg">
-                    <a href="/">Development in Progress.</a>
-                </button>
+                <a href="/tech">Our Integration with DALL-E 2.</a>
+            </button>
             
             <table className="mt-5"><tr>
 
