@@ -1,14 +1,14 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 
-import os, asyncio
+import os
 
-from rq import Queue
+# from rq import Queue
 
-from worker import conn
-from utils import export_video
+# from worker import conn
+# from utils import export_video
 
-q = Queue(connection=conn)
+# q = Queue(connection=conn)
 
 app = Flask(__name__, static_folder='../web/build', static_url_path='/')
 
@@ -79,7 +79,7 @@ def get_video():
     firebase_token = request.form['firebase_token']
 
     try:
-        result = q.enqueue(export_video, firebase_token, timeline_name, template_name, result_ttl=5000)
+        # result = q.enqueue(export_video, firebase_token, timeline_name, template_name, result_ttl=5000)
         return {'status': 'success'}, 200
 
     except Exception as e:
