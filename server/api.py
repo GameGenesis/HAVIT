@@ -3,6 +3,8 @@ from flask_cors import CORS, cross_origin
 
 import os
 
+# SERVER-SIDE CODE OF THE HAVIT APP
+
 # from rq import Queue
 
 # from worker import conn
