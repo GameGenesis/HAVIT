@@ -1,11 +1,1 @@
-{
-  "type": "service_account",
-  "project_id": "havitcentral",
-  "private_key_id": "b63dac00aa76669c210c3af8f289171bbcd1bef2",
-  "private_key": "Enter Private Key Here"
-  "client_id": "113032755355962823889",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-ysnki%40havitcentral.iam.gserviceaccount.com"
-}
+
